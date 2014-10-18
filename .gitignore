@@ -7,9 +7,9 @@ target/
 .DS_Store
 
 *.class
- 
+
 # Package Files #
-*.jar
+# *.jar commented out to upload libraries
 *.war
 *.ear
 *.db
