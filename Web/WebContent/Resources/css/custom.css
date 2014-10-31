@@ -1,0 +1,9 @@
+@CHARSET "US-ASCII";
+.header {
+	background-color: #e7dab7;
+	height: 50px;
+}
+
+.formContainer {
+	padding: 10px;
+}
