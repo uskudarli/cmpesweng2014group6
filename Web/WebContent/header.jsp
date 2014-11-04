@@ -5,10 +5,15 @@
 
 <div class="header">
 	<!-- Hide if logged in -->
-	<a href="loginRegister.jsp">Login/Register</a>
+	<%
+		if(request.getSession().getAttribute("loggedIn")=="true")
+			out.println("<a href='profile.jsp'>Profile</a>");
+		else
+			out.println("<a href='loginRegister.jsp'>Login/Register</a>");
+			
+	%>
 	<a href="index.jsp">Home</a>
 	<!-- TODO session check, show only if logged in -->
-	<a href="profile.jsp">Profile</a>
 </div>
 
 
