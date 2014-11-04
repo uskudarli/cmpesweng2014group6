@@ -4,8 +4,11 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/Resources/css/custom.css">
 
 <div class="header">
+	<!-- Hide if logged in -->
 	<a href="loginRegister.jsp">Login/Register</a>
 	<a href="index.jsp">Home</a>
+	<!-- TODO session check, show only if logged in -->
+	<a href="profile.jsp">Profile</a>
 </div>
 
 
