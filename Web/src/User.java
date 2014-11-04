@@ -42,6 +42,20 @@ public class User {
 		}
 	}
 	
+	Boolean Login()
+	{
+		db = new DatabaseService();
+		User temp = db.findUserByEmail(Email);
+		if(temp.getEmail() != null)
+		{
+			if(temp.getPassword() == Password)
+				return true;
+			else
+				return false;
+		}else
+			return false;
+	}
+	
 	public int getUserId() {
 		return UserId;
 	}

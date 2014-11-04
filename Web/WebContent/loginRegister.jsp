@@ -17,8 +17,7 @@
 			<div class="col-xs-6">
 				<div style="padding: 10px">
 					<h2>Login</h2>
-					<form id="loginForm" method="post"
-						class="loginForm form-horizontal">
+					<form id="loginForm" method="post" class="loginForm form-horizontal" action="Login" name="login">
 						<div class="form-group">
 							<input class="form-control" type="text" value="" name="email"
 								placeholder="E-mail"></input>
@@ -28,7 +27,7 @@
 								placeholder="Password"></input>
 						</div>
 						<div class="form-group">
-							<button type="submit" class="btn btn-default">Submit</button>
+							<button id="loginButton" type="submit" class="btn btn-default">Submit</button>
 						</div>
 						<a href="" data-toggle="modal" data-target="#myModal"> Forgot password? </a>
 					</form>
@@ -38,7 +37,7 @@
 			<div class="col-xs-6">
 				<div style="padding: 10px">
 					<h2>Register</h2>
-					<form id="registerForm" method="post" class="loginForm form-horizontal" action="Register">
+					<form id="registerForm" method="post" class="loginForm form-horizontal" action="Register" name="register">
 						<div class="form-group">
 							<input class="form-control" id="regUname" type="text" value=""
 								name="name" placeholder="Name"></input>
@@ -52,7 +51,7 @@
 								name="password" placeholder="Password"></input>
 						</div>
 						<div class="form-group">
-							<button type="submit" class="btn btn-default">Register</button>
+							<button id="registerButton" type="submit" class="btn btn-default">Register</button>
 						</div>
 					</form>
 				</div>
@@ -100,7 +99,7 @@
 					Registration is successful!
 				</div>
 				<div class="modal-footer">
-					<form id="redirectHome" method="post" class="form-horizontal" action="Home">
+					<form id="redirectHome" method="post" class="form-horizontal" action="index">
 						<input type="button" name="registerRedirect" value="Ok" id="submit"/>
 					</form>
 				</div>
@@ -120,6 +119,29 @@
 				</div>
 				<div class="modal-body">
 					This email address is already registered!
+				</div>
+				<div class="modal-footer">
+
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="modal fade bs-example-modal-sm" id="loginError" tabindex="-1"
+		role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+					</button>
+					<h4 class="modal-title" id="myModalLabel">Error</h4>
+				</div>
+				<div class="modal-body">
+					<%
+					request.getAttribute("message");
+					%>
 				</div>
 				<div class="modal-footer">
 
