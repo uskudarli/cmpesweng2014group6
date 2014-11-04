@@ -1,5 +1,6 @@
 
 $(document).ready(function() {
+	errorCheck();
     $('#registerForm').bootstrapValidator({
     	feedbackIcons: {
             valid: 'glyphicon glyphicon-ok',
@@ -78,24 +79,6 @@ $(document).ready(function() {
         	  type: "POST",
         	  url: $form.attr("action"),
         	  data: $form.serialize(),
-        	  success: function(data)
-        	  {
-        		  if(data == "true")
-    			  {
-        			  $('#registerSuccess').modal('show');
-    			  }
-        		  else
-    			  {
-        			  $form.trigger('reset');
-        			  $form.data('bootstrapValidator').resetForm();
-        			  $('#registerError').modal('show');
-    			  }
-        		  
-        	  },
-        	  error: function(data)
-        	  {
-        		  alert("error");
-        	  }
         	  
     	});
     });
@@ -140,23 +123,18 @@ $(document).ready(function() {
         	  type: "POST",
         	  url: $form.attr("action"),
         	  data: $form.serialize(),
-        	  success: function(data)
-        	  {
-        		  if(data == "false")
-    			  {
-        			  $form.trigger('reset');
-        			  $form.data('bootstrapValidator').resetForm();
-        			  $('#loginError').modal('show');
-    			  }
-        		  
-        	  },
-        	  error: function(data)
-        	  {
-        		  alert("error");
-        	  }
-        	  
+ 
     	});
     });
+    
 
 });
+
+function errorCheck()
+{
+	if($('input[name=error]').val()=="true"){
+		$('#errorPop').modal('show');
+		$('input[name=error]').val("false");
+	}
+}
 

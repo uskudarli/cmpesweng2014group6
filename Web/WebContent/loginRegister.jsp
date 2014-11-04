@@ -90,24 +90,10 @@
 		</div>
 	</div>
 	
-	<div class="modal fade bs-example-modal-sm" id="registerSuccess" tabindex="-1"
-		role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-		<div class="modal-dialog modal-sm">
-			<div class="modal-content">
-				
-				<div class="modal-body">
-					Registration is successful!
-				</div>
-				<div class="modal-footer">
-					<form id="redirectHome" method="post" class="form-horizontal" action="index">
-						<input type="button" name="registerRedirect" value="Ok" id="submit"/>
-					</form>
-				</div>
-			</div>
-		</div>
-	</div>
 	
-	<div class="modal fade bs-example-modal-sm" id="registerError" tabindex="-1"
+	
+	
+	<div class="modal fade bs-example-modal-sm" id="errorPop" tabindex="-1"
 		role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-sm">
 			<div class="modal-content">
@@ -118,29 +104,8 @@
 					<h4 class="modal-title" id="myModalLabel">Error</h4>
 				</div>
 				<div class="modal-body">
-					This email address is already registered!
-				</div>
-				<div class="modal-footer">
-
-					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-				</div>
-			</div>
-		</div>
-	</div>
-	
-	<div class="modal fade bs-example-modal-sm" id="loginError" tabindex="-1"
-		role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-		<div class="modal-dialog modal-sm">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal">
-						<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
-					</button>
-					<h4 class="modal-title" id="myModalLabel">Error</h4>
-				</div>
-				<div class="modal-body">
-					<%
-					request.getAttribute("message");
+					<%=
+					request.getAttribute("message")
 					%>
 				</div>
 				<div class="modal-footer">
@@ -150,6 +115,6 @@
 			</div>
 		</div>
 	</div>
-
+	<input type="hidden" name="error" value="<%=request.getAttribute("error")%>" />
 </body>
 </html>

@@ -47,15 +47,21 @@ public class Register extends HttpServlet {
 		user.setCreatedOn(timestamp);
 		user.setUpdatedOn(timestamp);
 		Boolean result = user.Register();
+		HttpSession session = request.getSession();
 			if(result)
 			{
-				HttpSession session = request.getSession();
+				
 				session.setAttribute("loggedIn", "true");
 				session.setAttribute("email", request.getParameter("email"));
 				response.getWriter().write("true");
 				request.getRequestDispatcher("index.jsp").forward(request, response);
 			}else
-				response.getWriter().write("false");
+			{
+				session.setAttribute("loggedIn", "false");
+				request.setAttribute("error", "true");
+				request.setAttribute("message", "This email address is already registered!");
+				request.getRequestDispatcher("loginRegister.jsp").forward(request, response);
+			}
 
 	}
 }

@@ -44,14 +44,15 @@ public class Login extends HttpServlet {
 		HttpSession session = request.getSession();
 		if(result)
 		{
-			session.setAttribute("loggedIn", true);
+			session.setAttribute("loggedIn", "true");
 			session.setAttribute("email", user.getEmail());
 			response.getWriter().write("true");
 			request.getRequestDispatcher("index.jsp").forward(request, response);
 		}else
 		{
+			session.setAttribute("loggedIn", "false");
 			request.setAttribute("error", "true");
-			request.setAttribute("message", "Email address or password is not correct!");
+			request.setAttribute("message", "Email or password is not correct!");
 			request.getRequestDispatcher("loginRegister.jsp").forward(request, response);
 		}
 	}

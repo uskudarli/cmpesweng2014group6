@@ -48,7 +48,7 @@ public class User {
 		User temp = db.findUserByEmail(Email);
 		if(temp.getEmail() != null)
 		{
-			if(temp.getPassword() == Password)
+			if(temp.getPassword().equals(Password))
 				return true;
 			else
 				return false;
