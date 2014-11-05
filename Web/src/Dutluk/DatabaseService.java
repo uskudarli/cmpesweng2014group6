@@ -103,6 +103,48 @@ public class DatabaseService {
 		return null;
 	}
 	
+	public Boolean Update(User user)
+	{
+		try
+		{
+			Class.forName(JDBC_DRIVER);
+			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			pstmt = conn.prepareStatement("UPDATE Users SET Name=?, Birthdate=?, Gender=?, Phone=?, Bio=?, LastUpdate=? WHERE Mail = ?");
+			pstmt.setString(1, user.getName());
+			//pstmt.setDate(2, user.getBirthdate());
+			pstmt.setTimestamp(3, null);
+			pstmt.setNull(4, 0);
+			pstmt.setString(5, user.getPhone());
+			pstmt.setString(6, user.getBio());
+			java.util.Date today = new java.util.Date();
+			pstmt.setTimestamp(7, new java.sql.Timestamp(today.getTime()));
+			pstmt.executeQuery();
+			
+			return true;
+		}catch(SQLException se){
+	         //Handle errors for JDBC
+	         se.printStackTrace();
+		}catch(Exception e){
+	         //Handle errors for Class.forName
+	         e.printStackTrace();
+	    }finally{
+	         //finally block used to close resources
+	   		try{
+	   			if(stmt!=null)
+	   				stmt.close();
+	   		}catch(SQLException se2){
+	   		}// nothing we can do
+	   		try{
+	   			if(conn!=null)
+	   				conn.close();
+	   		}catch(SQLException se){
+	   			se.printStackTrace();
+	   		}//end finally try
+	    }
+		return null;
+		
+	}
+	
 	public void executeStmt(PreparedStatement stmt)
 	{
 		

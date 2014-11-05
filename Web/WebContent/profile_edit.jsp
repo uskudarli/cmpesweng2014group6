@@ -17,13 +17,13 @@
 			request.getRequestDispatcher("loginRegister.jsp").forward(request,response);
 		}else if(newSession.getAttribute("email") == null)
 			request.getRequestDispatcher("loginRegister.jsp").forward(request,response);
-		else
+		else if(request.getAttribute("name") == null 
+				|| request.getAttribute("birthdate") == null
+				|| request.getAttribute("phone") == null
+				|| request.getAttribute("bio") == null)
 		{
-			DatabaseService db = new DatabaseService();
-			User user = db.findUserByEmail(newSession.getAttribute("email").toString());
-			out.write(user.getPassword());
-		}
-		
+			request.getRequestDispatcher("loginRegister.jsp").forward(request,response);	
+		}	
 	%>
 	<jsp:include page="header.jsp" />
 	<jsp:include page="footer.jsp" />
@@ -37,21 +37,24 @@
 					<form id="editForm" method="post"
 						class="editForm form-horizontal">
 						<div class="form-group">
-							Name: <input class="form-control" id="editUname" type="text" value=""
-								name="name" placeholder="Name"></input>
-							Birthdate: <input class="form-control" id="editBirthdate" type=text value=""
-								name="name" placeholder="Birthdate"></input>
-							Gender: <input class="form-control" id="editGender" type="text" value=""
-								name="name" placeholder="Gender"></input>
-							Phone: <input class="form-control" id="editPhone" type="text" value=""
-								name="name" placeholder="Phone"></input>
-							Bio: <input class="form-control" id="editBio" type="text" value=""
+							Name: <input class="form-control" name="editUname" type="text" value="<%= request.getAttribute("name").toString() %>" placeholder="Name"/>
+							Birthdate: <input class="form-control" name="editBirthdate" type=text value="<%= request.getAttribute("birthdate").toString() %>"
+								name="name" placeholder="dd/mm/yyyy"></input>
+							Gender: 
+							<select class= "form-control" name="editGender">
+								<option value="female">Female</option>
+								<option value="male">Male</option>
+							</select>
+							Phone: <input class="form-control" name="editPhone" type="text" value="<%= request.getAttribute("phone").toString() %>"
+								name="name" placeholder="5"></input>
+							Bio: <input class="form-control" name="editBio" type="text" value="<%= request.getAttribute("bio").toString() %>"
 								name="name" placeholder="Bio"></input>	
 								
 						</div>
 						<div class="form-group">
-							<button type="submit" class="btn btn-default">Submit</button>
+							<button id="editProfileButton" type="submit" class="btn btn-default">Save</button>
 						</div>
+						<input type="hidden" name="func" value="edit" />
 					</form>
 				</div>
 			</div>

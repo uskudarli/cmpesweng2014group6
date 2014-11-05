@@ -48,6 +48,8 @@ public class Login extends HttpServlet {
 			logOut(request,response);
 		}else if(action.equals("login"))
 			logIn(request, response);
+		else if(action.equals("edit"))
+			edit(request,response);
 		
 		
 	}
@@ -110,11 +112,49 @@ public class Login extends HttpServlet {
 			{
 				DatabaseService db = new DatabaseService();
 				User user = db.findUserByEmail(session.getAttribute("email").toString());
-				//request.setAttribute("user", user);
-				//request.getRequestDispatcher("profile_edit.jsp").forward(request, response);
-				response.sendRedirect("profile_edit.jsp");
+				request.setAttribute("name", user.getName());
+				if(user.getBirthdate() == null)
+					request.setAttribute("birthdate", "");
+				else
+					request.setAttribute("birthdate", user.getBirthdate());
+				if(user.getPhone()==null)
+					request.setAttribute("phone", "");
+				else
+					request.setAttribute("phone", user.getPhone());
+				if(user.getBio()==null)
+					request.setAttribute("bio", "");
+				else
+					request.setAttribute("bio", user.getBio());
+				
+				request.setAttribute("gender", "");
+				request.getRequestDispatcher("profile_edit.jsp").forward(request, response);
+				//response.sendRedirect("profile_edit.jsp");
 			}
 		}
 		
+	}
+	
+	void edit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	{
+		HttpSession session = request.getSession();
+		if(session == null)
+		{
+			response.sendRedirect("loginRegister.jsp");
+		}else
+		{
+			if(session.getAttribute("email") == null)
+			{
+				response.sendRedirect("loginRegister.jsp");
+			}else
+			{
+				DatabaseService db = new DatabaseService();
+				User user = db.findUserByEmail(session.getAttribute("email").toString());
+				
+				// edit function will be implemented
+				
+				request.getRequestDispatcher("profile_edit.jsp").forward(request, response);
+				//response.sendRedirect("profile_edit.jsp");
+			}
+		}
 	}
 }

@@ -97,7 +97,7 @@ $(document).ready(function() {
                         message: 'The email address is required and cannot be empty'
                     },
                     emailAddress: {
-                        message: 'The email address is not a valid'
+                        message: 'The email address is not valid'
                     }
                 }
             },
@@ -114,6 +114,35 @@ $(document).ready(function() {
             }
         }
     });
+    
+    $('#editForm').bootstrapValidator({
+    	feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            editPhone: {
+            	validators: {
+            		regexp:
+            			{
+            				regexp: /^5\d{9}/,
+            				message: 'The phone number is not valid'
+            			}
+            	}
+            }
+        }
+    });
+    
+    $("#editProfileButton").click(function(e)
+	{
+    	var $form = $('#editForm');
+    	$.ajax({
+    		type: "POST",
+    		url: "Login",
+    		data: $form.serialize()
+    	});
+	});
     
     $("#loginButton").click(function(e){
     	var $form = $("#loginForm");
