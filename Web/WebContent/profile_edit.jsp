@@ -8,17 +8,22 @@
 
 </head>
 <body>
+	<%@ page import="Dutluk.*" %>
 	<%
 		HttpSession newSession = request.getSession();
 		if(newSession == null)
 		{
+			System.out.println("aa");
 			request.getRequestDispatcher("loginRegister.jsp").forward(request,response);
-		}else if(newSession.getAttribute("user") == null)
+		}else if(newSession.getAttribute("email") == null)
 			request.getRequestDispatcher("loginRegister.jsp").forward(request,response);
 		else
 		{
-			
+			DatabaseService db = new DatabaseService();
+			User user = db.findUserByEmail(newSession.getAttribute("email").toString());
+			out.write(user.getPassword());
 		}
+		
 	%>
 	<jsp:include page="header.jsp" />
 	<jsp:include page="footer.jsp" />

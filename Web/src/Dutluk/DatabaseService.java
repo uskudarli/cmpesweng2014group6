@@ -1,3 +1,4 @@
+package Dutluk;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -51,7 +52,7 @@ public class DatabaseService {
 		return result;
 	}
 	
-	User findUserByEmail(String mail)
+	public User findUserByEmail(String mail)
 	{
 		User user = new User();
 		try

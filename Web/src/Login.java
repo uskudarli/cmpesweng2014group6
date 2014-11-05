@@ -1,7 +1,6 @@
 
 
 import java.io.IOException;
-import java.util.Calendar;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -9,6 +8,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import Dutluk.DatabaseService;
+import Dutluk.User;
 
 /**
  * Servlet implementation class Login
@@ -29,7 +31,10 @@ public class Login extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		response.setContentType("text/html"); 
+		//String action = request.getParameter("func");
+		//if(action.equals("gotoedit"))
+			goToEdit(request,response);
 	}
 
 	/**
@@ -43,8 +48,7 @@ public class Login extends HttpServlet {
 			logOut(request,response);
 		}else if(action.equals("login"))
 			logIn(request, response);
-		else if(action.equals("gotoedit"))
-			goToEdit(request,response);
+		
 		
 	}
 	void logOut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
@@ -106,8 +110,9 @@ public class Login extends HttpServlet {
 			{
 				DatabaseService db = new DatabaseService();
 				User user = db.findUserByEmail(session.getAttribute("email").toString());
-				request.setAttribute("user", user);
-				request.getRequestDispatcher("profile_edit.jsp").forward(request, response);
+				//request.setAttribute("user", user);
+				//request.getRequestDispatcher("profile_edit.jsp").forward(request, response);
+				response.sendRedirect("profile_edit.jsp");
 			}
 		}
 		

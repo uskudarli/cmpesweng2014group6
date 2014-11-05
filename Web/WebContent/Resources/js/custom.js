@@ -153,7 +153,7 @@ function logOut(){
 function goToEdit()
 {
 	$.ajax({
-		type: "POST",
+		type: "GET",
   	    url: "Login",
   	    data:
 		  {

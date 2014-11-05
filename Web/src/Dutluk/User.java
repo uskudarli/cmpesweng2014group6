@@ -1,3 +1,4 @@
+package Dutluk;
 import java.util.*;
 public class User {
 	private int UserId;
@@ -22,7 +23,7 @@ public class User {
 		
 	}
 
-	Boolean Register()
+	public Boolean Register()
 	{
 		db = new DatabaseService();
 		User temp = db.findUserByEmail(Email);
@@ -42,7 +43,7 @@ public class User {
 		}
 	}
 	
-	Boolean Login()
+	public Boolean Login()
 	{
 		db = new DatabaseService();
 		User temp = db.findUserByEmail(Email);
