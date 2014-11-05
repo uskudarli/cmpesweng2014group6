@@ -4,10 +4,22 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
-<title>Login</title>
+<title>Profile edit</title>
 
 </head>
 <body>
+	<%
+		HttpSession newSession = request.getSession();
+		if(newSession == null)
+		{
+			request.getRequestDispatcher("loginRegister.jsp").forward(request,response);
+		}else if(newSession.getAttribute("user") == null)
+			request.getRequestDispatcher("loginRegister.jsp").forward(request,response);
+		else
+		{
+			
+		}
+	%>
 	<jsp:include page="header.jsp" />
 	<jsp:include page="footer.jsp" />
 

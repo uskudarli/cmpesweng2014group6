@@ -73,7 +73,7 @@ $(document).ready(function() {
     });
     
     	
-    $("#registerButton").onclick(function(){
+    $("#registerButton").click(function(){
     	var $form = $("#registerForm");
         $.ajax({
         	  type: "POST",
@@ -115,19 +115,16 @@ $(document).ready(function() {
         }
     });
     
-    $("#loginButton").onclick(function(){
-    	
-    	e.preventDefault();
+    $("#loginButton").click(function(e){
     	var $form = $("#loginForm");
         $.ajax({
         	  type: "POST",
-        	  url: $form.attr("action"),
-        	  data: $form.serialize(),
- 
+        	  url: "Login",
+        	  data: $form.serialize()
     	});
     });
     
-
+    
 });
 
 function errorCheck()
@@ -138,3 +135,30 @@ function errorCheck()
 	}
 }
 
+function logOut(){
+    $.ajax({
+    	  type: "POST",
+    	  url: "Login",
+    	  data:
+		  {
+    		  func: "logout"
+		  },
+		  success: function(data)
+		  {
+			  window.location = "index.jsp"
+		  }
+    })
+}
+
+function goToEdit()
+{
+	$.ajax({
+		type: "POST",
+  	    url: "Login",
+  	    data:
+		  {
+  	    	func: "gotoedit"
+		  }
+	})
+}
+	

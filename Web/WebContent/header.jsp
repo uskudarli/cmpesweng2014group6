@@ -6,8 +6,15 @@
 <div class="header">
 	<!-- Hide if logged in -->
 	<%
-		if(request.getSession().getAttribute("loggedIn")=="true")
-			out.println("<a href='profile.jsp'>Profile</a>");
+		if(request.getSession() != null)
+		{
+			if(request.getSession().getAttribute("loggedIn")=="true")
+			{
+				out.println("<a href='javascript:void(0);' onclick='goToEdit()'>Profile</a>");
+				out.println("<a href='javascript:void(0);' onclick='logOut()'>LogOut</a>");
+			}else
+				out.println("<a href='loginRegister.jsp'>Login/Register</a>");
+		}
 		else
 			out.println("<a href='loginRegister.jsp'>Login/Register</a>");
 			

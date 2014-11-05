@@ -30,6 +30,7 @@
 							<button id="loginButton" type="submit" class="btn btn-default">Submit</button>
 						</div>
 						<a href="" data-toggle="modal" data-target="#myModal"> Forgot password? </a>
+						<input type="hidden" name="func" value="login" />
 					</form>
 				</div>
 			</div>

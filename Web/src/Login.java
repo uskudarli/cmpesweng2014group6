@@ -37,6 +37,40 @@ public class Login extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html"); 
+		String action = request.getParameter("func");
+		if(action.equals("logout"))
+		{
+			logOut(request,response);
+		}else if(action.equals("login"))
+			logIn(request, response);
+		else if(action.equals("gotoedit"))
+			goToEdit(request,response);
+		
+	}
+	void logOut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	{
+		HttpSession session = request.getSession();
+		if(session != null)
+		{
+			try
+			{
+				response.setHeader("Cache-Control","no-cache"); //Forces caches to obtain a new copy of the page from the origin server
+		        response.setHeader("Cache-Control","no-store"); //Directs caches not to store the page under any circumstance
+		        response.setDateHeader("Expires", 0); //Causes the proxy cache to see the page as "stale"
+		        response.setHeader("Pragma","no-cache");
+		        session.setAttribute("email", null);
+				session.invalidate();
+				request.getRequestDispatcher("index.jsp").forward(request, response);
+				return;
+			}catch(Exception e)
+            {
+                System.out.println(e.getMessage());
+                System.out.println(e);
+            }
+		}
+	}
+	void logIn(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	{
 		User user = new User();
 		user.setPassword(request.getParameter("password"));
 		user.setEmail(request.getParameter("email"));
@@ -47,7 +81,7 @@ public class Login extends HttpServlet {
 			session.setAttribute("loggedIn", "true");
 			session.setAttribute("email", user.getEmail());
 			response.getWriter().write("true");
-			request.getRequestDispatcher("index.jsp").forward(request, response);
+			response.sendRedirect("index.jsp");
 		}else
 		{
 			session.setAttribute("loggedIn", "false");
@@ -56,5 +90,26 @@ public class Login extends HttpServlet {
 			request.getRequestDispatcher("loginRegister.jsp").forward(request, response);
 		}
 	}
-
+	
+	void goToEdit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	{
+		HttpSession session = request.getSession();
+		if(session == null)
+		{
+			response.sendRedirect("loginRegister.jsp");
+		}else
+		{
+			if(session.getAttribute("email") == null)
+			{
+				response.sendRedirect("loginRegister.jsp");
+			}else
+			{
+				DatabaseService db = new DatabaseService();
+				User user = db.findUserByEmail(session.getAttribute("email").toString());
+				request.setAttribute("user", user);
+				request.getRequestDispatcher("profile_edit.jsp").forward(request, response);
+			}
+		}
+		
+	}
 }
