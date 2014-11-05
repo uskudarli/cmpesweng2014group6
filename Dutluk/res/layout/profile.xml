@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dip" >
+        <!-- View Title Label -->
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dip"
+            android:text="@string/title_activity_profile"
+            android:textSize="25sp"
+            android:textStyle="bold" />
+        		
+        <!-- Name Part -->
+		<LinearLayout
+        	android:layout_width="fill_parent"
+        	android:layout_height="wrap_content"
+        	android:orientation="horizontal">
+	        <TextView
+	            android:layout_width="100sp"
+	            android:layout_height="wrap_content"
+	            android:text="@string/name"
+	            android:textStyle="bold" 
+	            android:textSize="20sp"/>
+	        <EditText
+	            android:id="@+id/nameProfile"
+	            android:layout_width="fill_parent"
+	            android:layout_height="wrap_content"
+	            android:hint="@string/changeName"
+	            android:textSize="20sp" />	              
+		</LinearLayout>
+		
+		<!-- Birth Date Part -->
+		<LinearLayout
+        	android:layout_width="fill_parent"
+        	android:layout_height="wrap_content"
+        	android:orientation="horizontal">
+	        <TextView
+	            android:layout_width="100sp"
+	            android:layout_height="wrap_content"
+	            android:text="@string/birthDate"
+	            android:textStyle="bold" 
+	            android:textSize="20sp"/>
+	        <EditText
+	            android:id="@+id/birthDateProfile"
+	            android:layout_width="fill_parent"
+	            android:layout_height="wrap_content"
+	            android:hint="@string/changeBirthDate"
+	            android:textSize="20sp"
+	            android:inputType="date" />	              
+		</LinearLayout>
+		
+		<!-- Gender Part -->
+		<LinearLayout
+        	android:layout_width="fill_parent"
+        	android:layout_height="wrap_content"
+        	android:orientation="horizontal">
+	        <TextView
+	            android:layout_width="100sp"
+	            android:layout_height="wrap_content"
+	            android:text="@string/gender"
+	            android:textStyle="bold" 
+	            android:textSize="20sp"/>
+	        <EditText
+	            android:id="@+id/genderProfile"
+	            android:layout_width="fill_parent"
+	            android:layout_height="wrap_content"
+	            android:hint="@string/changeGender"
+	            android:textSize="20sp" />	          
+		</LinearLayout>
+		
+		<!-- Email Part -->
+  		<LinearLayout
+        	android:layout_width="fill_parent"
+        	android:layout_height="wrap_content"
+        	android:orientation="horizontal">
+	        <TextView
+	            android:layout_width="100sp"
+	            android:layout_height="wrap_content"
+	            android:text="@string/email"
+	            android:textStyle="bold" 
+	            android:textSize="20sp"/>
+	        <TextView
+	            android:id="@+id/emailProfile"
+	            android:layout_width="fill_parent"
+	            android:layout_height="wrap_content"
+	            android:textSize="20sp" />             
+		</LinearLayout>
+		
+  		<!-- Phone Part -->
+		<LinearLayout
+        	android:layout_width="fill_parent"
+        	android:layout_height="wrap_content"
+        	android:orientation="horizontal">
+	        <TextView
+	            android:layout_width="100sp"
+	            android:layout_height="wrap_content"
+	            android:text="@string/phone"
+	            android:textStyle="bold" 
+	            android:textSize="20sp"/>
+	        <EditText
+	            android:id="@+id/phoneProfile"
+	            android:layout_width="fill_parent"
+	            android:layout_height="wrap_content"
+	            android:hint="@string/changePhone"
+	            android:textSize="20sp" 
+	            android:inputType="phone"/>          
+		</LinearLayout>
+		
+		<!-- XP Part -->
+		<LinearLayout
+        	android:layout_width="fill_parent"
+        	android:layout_height="wrap_content"
+        	android:orientation="horizontal">
+	        <TextView
+	            android:layout_width="100sp"
+	            android:layout_height="wrap_content"
+	            android:text="@string/XP"
+	            android:textStyle="bold" 
+	            android:textSize="20sp"/>
+	        <TextView
+	            android:id="@+id/xpProfile"
+	            android:layout_width="fill_parent"
+	            android:layout_height="wrap_content"
+	            android:textSize="20sp" />
+		</LinearLayout>
+		
+		<!-- Level Part -->
+		<LinearLayout
+        	android:layout_width="fill_parent"
+        	android:layout_height="wrap_content"
+        	android:orientation="horizontal">
+	        <TextView
+	            android:layout_width="100sp"
+	            android:layout_height="wrap_content"
+	            android:text="@string/level"
+	            android:textStyle="bold" 
+	            android:textSize="20sp"/>
+	        <TextView
+	            android:id="@+id/levelProfile"
+	            android:layout_width="fill_parent"
+	            android:layout_height="wrap_content"
+	            android:textSize="20sp" />
+		</LinearLayout>
+		
+		<!-- Biography Part -->
+		<LinearLayout
+        	android:layout_width="fill_parent"
+        	android:layout_height="wrap_content"
+        	android:orientation="horizontal">
+	        <TextView
+	            android:layout_width="100sp"
+	            android:layout_height="wrap_content"
+	            android:text="@string/biography"
+	            android:textStyle="bold" 
+	            android:textSize="20sp"/>
+	        <EditText
+	            android:id="@+id/biographyProfile"
+	            android:layout_width="fill_parent"
+	            android:layout_height="wrap_content"
+	            android:hint="@string/changeBiography"
+	            android:textSize="20sp" />      
+		</LinearLayout>
+		
+		<!-- Error message -->
+        <TextView
+            android:id="@+id/errorProfile"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="10dip"
+            android:textColor="#e30000"
+            android:textStyle="bold" />
+        
+		<!-- Save button -->
+        <Button
+            android:id="@+id/btnSave"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dip"
+            android:background="#ff6347"
+            android:onClick="saveUser"
+            android:text="@string/btnSave"
+            android:textColor="#fff" />
+        
+    </LinearLayout>
+
+</ScrollView>

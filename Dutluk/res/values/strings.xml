@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+   	<!-- Unnecessary strings -->
+	<string name="hello_world">Hello world!</string>
+    
+	<!-- App based strings -->
+    <string name="app_name">Dutluk</string>
+    <string name="action_settings">Settings</string>
+    
+    <!-- Title strings -->
+    <string name="title_activity_register">Register</string>
+    <string name="title_activity_login">Login</string>
+	<string name="title_activity_profile">Profile</string> 
+
+	<!-- General strings -->
+    <string name="email">E-mail</string>
+    <string name="password">Password</string>
+    <string name="name">Name</string>
+    <string name="birthDate">Birth Date</string>
+    <string name="gender">Gender</string>
+    <string name="phone">Phone</string>
+    <string name="XP">XP</string>
+    <string name="level">Level</string>
+    <string name="biography">Biography</string>
+    
+    <!-- Button strings -->
+    <string name="btnRegister">Register</string>
+	<string name="btnLogin">Login</string>
+	<string name="btnProfile">Profile</string>
+	<string name="btnSave">Save</string>
+	
+	<!-- Hint strings -->
+	<string name="changeName">Change Name</string>
+	<string name="changeBirthDate">Change Birth Date</string>
+	<string name="changeGender">Change Gender</string>
+	<string name="changePhone">Change Phone</string>
+	<string name="changeBiography">Change Biography</string>
+	<string name="enterName">Enter Name</string>
+	<string name="enterEmail">Enter E-mail</string>
+	<string name="enterPassword">Enter Password</string>
+
+	
+	
+	
+	
+</resources>
