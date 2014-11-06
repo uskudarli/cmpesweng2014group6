@@ -7,3 +7,12 @@
 .formContainer {
 	padding: 10px;
 }
+
+#map-canvas {
+	height: 1000px; width: 100%;
+}
+
+#map-container {
+	
+}
+
