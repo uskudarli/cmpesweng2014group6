@@ -1,9 +1,11 @@
 
 
 import java.io.IOException;
-import java.util.Calendar;
+import java.util.*;
 
 import javax.mail.*;
+import javax.mail.internet.*;
+import javax.activation.*;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -35,6 +37,17 @@ public class ResetPassword extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		doPost(request, response);
 	}
+	
+	public static String generatePassword()
+	{
+		Random rn = new Random();
+	    char[] text = new char[8];
+	    for (int i = 0; i < 8; i++)
+	    {
+	        text[i] = "0123456789abcdefghjklmn".charAt(rn.nextInt("0123456789abcdefghjklmn".length()));
+	    }
+	    return new String(text);
+	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
@@ -44,6 +57,8 @@ public class ResetPassword extends HttpServlet {
 		DatabaseService db = new DatabaseService();
 		String email = request.getParameter("email");
 		User user = db.findUserByEmail(email);
+		String name = user.getName();
+		String newPassword = generatePassword();
 		if(user.getName() == null)
 		{
 			request.setAttribute("error", "true");
@@ -52,8 +67,51 @@ public class ResetPassword extends HttpServlet {
 		}
 		else
 		{
-			//send a new random password with an e-mail to user
-			
+			boolean passwordChanged = user.ChangePassword(email, newPassword);
+			if(passwordChanged)
+			{
+				//send a new random password with an e-mail to user
+				Properties props = new Properties();
+				props.put("mail.smtp.host", "smtp.gmail.com");
+				props.put("mail.smtp.socketFactory.port", "465");
+				props.put("mail.smtp.socketFactory.class",
+						"javax.net.ssl.SSLSocketFactory");
+				props.put("mail.smtp.auth", "true");
+				props.put("mail.smtp.port", "465");
+		 
+				Session session = Session.getDefaultInstance(props,
+					new javax.mail.Authenticator() {
+						protected PasswordAuthentication getPasswordAuthentication() {
+							return new PasswordAuthentication("ugurkalkann@gmail.com","17029715754");
+						}
+					});
+		 
+				try {
+		 
+					Message message = new MimeMessage(session);
+					message.setFrom(new InternetAddress("DUTLUK"));
+					message.setRecipients(Message.RecipientType.TO,
+							InternetAddress.parse(email));
+					message.setSubject("Your new password on Dutluk");
+					message.setText("Dear "+name+", "+
+							"\n\nYour new password is: "+newPassword+"\nDon't forget to change your password after log in.");
+		 
+					Transport.send(message);
+		 
+					request.setAttribute("error", "true");
+					request.setAttribute("message", "The new password is sent to your e-mail address.");
+					request.getRequestDispatcher("loginRegister.jsp").forward(request, response);
+		 
+				} catch (MessagingException e) {
+					throw new RuntimeException(e);
+				}
+			}
+			else
+			{
+				request.setAttribute("error", "true");
+				request.setAttribute("message", "An error occurred. Please try again");
+				request.getRequestDispatcher("loginRegister.jsp").forward(request, response);
+			}
 		}
 		
 		//response.sendRedirect("index.jsp");

@@ -43,6 +43,15 @@ public class User {
 		}
 	}
 	
+	public Boolean ChangePassword(String mail, String pass)
+	{
+		db = new DatabaseService();
+		db.executeSql("UPDATE Users"
+				+ " SET Password = '"+pass
+				+ "' WHERE Mail = '"+mail+"'");
+		return true;
+	}
+	
 	public Boolean Login()
 	{
 		db = new DatabaseService();
