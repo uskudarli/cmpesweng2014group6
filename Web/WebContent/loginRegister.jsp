@@ -72,21 +72,19 @@
 					<h4 class="modal-title" id="myModalLabel">Password Recovery</h4>
 				</div>
 				<div class="modal-body">
-					If you give your username, we will send a new password to your
-					email address.
-					<form method="post" name="passRecovery" id="passRecovery">
+					If you give your e-mail address, we will send a new password. 
+					Don't forget to re-change it after log in!
+					<form method="post" id="reset" action="ResetPassword" name ="reset">
 						<p>
-							<input type="text" class="span3" name="uname" id="uname"
-								placeholder="Username">
+							<input type="text" class="span3" name="email" id="email"
+								placeholder="E-mail">
 						</p>
-						
-
+						<p>
+							<button id="resetButton" type="submit" class="btn btn-default">Submit</button>
+						</p>
 					</form>
 				</div>
-				<div class="modal-footer">
-
-					<input type="button" value="Reset" id="submit" onclick="" />
-				</div>
+				
 			</div>
 		</div>
 	</div>
