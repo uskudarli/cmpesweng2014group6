@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import Dutluk.User;
+import Dutluk.*;
 
 /**
  * Servlet implementation class Profile
@@ -30,8 +30,40 @@ public class Profile extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		doPost(request, response);
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		//doPost(request, response);
+		response.setContentType("text/html"); 
+		String action = request.getParameter("func");
+		
+		HttpSession session = request.getSession();
+		DatabaseService db = new DatabaseService();
+		String email = session.getAttribute("email").toString();
+		User user = db.findUserByEmail(email);
+		request.setAttribute("name", user.getName());
+		System.out.print(user.getName());
+		request.setAttribute("mail", user.getEmail());
+		request.setAttribute("XP", user.getExperiencePoint());
+		request.setAttribute("level", user.getLevel());
+		request.setAttribute("gender", user.getGender());
+		if(user.getBirthdate()==null)
+			request.setAttribute("birthdate", "not specified yet.");
+		else
+			request.setAttribute("birthdate", user.getBirthdate());
+		
+		if(user.getBirthdate()==null)
+			request.setAttribute("phone", "not specified yet.");
+		else
+			request.setAttribute("phone", user.getPhone());
+		
+		if(user.getBirthdate()==null)
+			request.setAttribute("bio", "not specified yet.");
+		else
+			request.setAttribute("bio", user.getBio());
+		
+		
+		
+		request.getRequestDispatcher("profile.jsp").forward(request, response);
+		
 	}
 
 	/**

@@ -6,9 +6,10 @@ public class User {
 	private String Name;
 	private String Email;
 	private Date Birthdate;
+	private Gender gender = Gender.Male;
 	private enum Gender {
-		Male, Female
-	};
+		Male, Female;
+	}
 	private String Phone;
 	private int ExperiencePoint;
 	private int Level;
@@ -81,6 +82,14 @@ public class User {
 	public void setUserId(int userId) {
 		UserId = userId;
 	}
+	
+	public void setGender(Gender g) {
+        this.gender = g;
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
 
 	public String getName() {
 		return Name;
