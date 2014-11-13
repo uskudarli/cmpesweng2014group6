@@ -38,7 +38,7 @@
 						class="editForm form-horizontal">
 						<div class="form-group">
 							Name: <input class="form-control" name="editUname" type="text" value="<%= request.getAttribute("name").toString() %>" placeholder="Name"/>
-							Birthdate: <input class="form-control" name="editBirthdate" type=text value="<%= request.getAttribute("birthdate").toString() %>"
+							Birthdate: <input class="form-control" id="editBirthdate" name="editBirthdate" type=text value="<%= request.getAttribute("birthdate") %>"
 								name="name" placeholder="dd/mm/yyyy"></input>
 							Gender: 
 							<select class= "form-control" name="editGender">

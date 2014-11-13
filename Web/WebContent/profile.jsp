@@ -38,7 +38,7 @@
 						Level: <label name="level"><%= request.getSession().getAttribute("level")%></label></div>
 						<div class="form-group">
 						Bio: <label name="bio"><%= request.getSession().getAttribute("bio")%></label></div>
-						<a href='profile_edit.jsp'>Edit Profile</a>
+						<a href='Login'>Edit Profile</a>
 						</div>	
 					</form>
 				</div>

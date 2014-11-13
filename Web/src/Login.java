@@ -116,7 +116,12 @@ public class Login extends HttpServlet {
 				if(user.getBirthdate() == null)
 					request.setAttribute("birthdate", "");
 				else
-					request.setAttribute("birthdate", user.getBirthdate());
+				{
+					String temp = user.getBirthdate().toString();
+					String[] array = temp.split("-");
+					String birthdate = array[2] + "/" + array[1] + "/" + array[0];
+					request.setAttribute("birthdate", birthdate);
+				}
 				if(user.getPhone()==null)
 					request.setAttribute("phone", "");
 				else

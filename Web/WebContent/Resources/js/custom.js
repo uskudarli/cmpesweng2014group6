@@ -15,7 +15,7 @@ $(document).ready(function() {
                         message: 'The name is required and cannot be empty'
                     },
                     stringLength: {
-                        min: 6,
+                        min: 3,
                         max: 30,
                         message: 'The name must be more than 6 and less than 30 characters long'
                     },
@@ -125,11 +125,44 @@ $(document).ready(function() {
             editPhone: {
             	validators: {
             		regexp:
-            			{
-            				regexp: /^5\d{9}/,
-            				message: 'The phone number is not valid'
-            			}
+        			{
+        				regexp: /^5\d{9}/,
+        				message: 'The phone number is not valid'
+        			},
+                    stringLength: {
+                        max: 10,
+                        message: 'The phone number must have 10 digits'
+                    }
             	}
+            },
+            editBirthdate : {
+            	validators: {
+                    date: {
+                        format: 'DD/MM/YYYY',
+                        message: 'The date of birth is not valid'
+                    }
+                }
+            },
+            editUname: {
+                message: 'The name is not valid',
+                validators: {
+                    notEmpty: {
+                        message: 'The name is required and cannot be empty'
+                    },
+                    stringLength: {
+                        min: 3,
+                        max: 30,
+                        message: 'The name must be more than 6 and less than 30 characters long'
+                    },
+                    regexp: {
+                        regexp: /^[a-z ,.'-]+$/i,
+                        message: 'The name is not valid'
+                    },
+                    different: {
+                        field: 'password',
+                        message: 'The name and password cannot be the same as each other'
+                    }
+                }
             }
         }
     });
@@ -153,6 +186,9 @@ $(document).ready(function() {
     	});
     });
     
+    $("#editBirthdate").datepicker({
+    	format: "dd/mm/yyyy"
+    });
     
 });
 
