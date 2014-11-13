@@ -41,7 +41,7 @@ public class Profile extends HttpServlet {
 		User user = db.findUserByEmail(email);
 		request.getSession().setAttribute("name", user.getName());
 		request.getSession().setAttribute("mail", user.getEmail());
-		request.getSession().setAttribute("XP", user.getExperiencePoint());
+		request.getSession().setAttribute("xp", user.getExperiencePoint());
 		request.getSession().setAttribute("level", user.getLevel());
 		request.getSession().setAttribute("gender", user.getGender());
 		if(user.getBirthdate()==null)
