@@ -82,6 +82,7 @@
 						<p>
 							<button id="resetButton" type="submit" class="btn btn-default">Submit</button>
 						</p>
+						<input type="hidden" name="func" value="forgotPassword" />
 					</form>
 				</div>
 				

@@ -30,6 +30,7 @@
 						Bio: <label name="bio">Biohere</label><br>
 						<a href='profile_edit.jsp'>Edit Profile</a>
 						</div>
+						
 					</form>
 				</div>
 			</div>
