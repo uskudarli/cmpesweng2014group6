@@ -6,8 +6,8 @@ public class User {
 	private String Name;
 	private String Email;
 	private Date Birthdate;
-	private Gender gender = Gender.Male;
-	private enum Gender {
+	public Gender gender = Gender.Male;
+	public enum Gender {
 		Male, Female;
 	}
 	private String Phone;

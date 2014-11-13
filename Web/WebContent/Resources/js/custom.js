@@ -1,6 +1,15 @@
 
 $(document).ready(function() {
 	errorCheck();
+	successCheck();
+	$(function() {
+		if($('input[name=genderHidden]').val()=="Male"){
+			$("#editGenderSelect").val('male');
+		}else
+			$("#editGenderSelect").val('female');
+	});
+	
+	
     $('#registerForm').bootstrapValidator({
     	feedbackIcons: {
             valid: 'glyphicon glyphicon-ok',
@@ -197,6 +206,14 @@ function errorCheck()
 	if($('input[name=error]').val()=="true"){
 		$('#errorPop').modal('show');
 		$('input[name=error]').val("false");
+	}
+}
+
+function successCheck()
+{
+	if($('input[name=success]').val()=="true"){
+		$('#editSuccess').modal('show');
+		$('input[name=success]').val("false");
 	}
 }
 

@@ -8,6 +8,26 @@
 
 </head>
 <body>
+	<%@ page import="Dutluk.*" %>
+	<%
+		HttpSession newSession = request.getSession();
+		if(newSession == null)
+		{
+			request.getRequestDispatcher("loginRegister.jsp").forward(request,response);
+		}else if(newSession.getAttribute("email") == null
+				|| newSession.getAttribute("name") == null
+				|| newSession.getAttribute("birthdate") == null
+				|| newSession.getAttribute("gender") == null
+				|| newSession.getAttribute("mail") == null
+				|| newSession.getAttribute("phone") == null
+				|| newSession.getAttribute("xp") == null
+				|| newSession.getAttribute("level") == null
+				|| newSession.getAttribute("bio") == null
+				)	
+		{
+			request.getRequestDispatcher("loginRegister.jsp").forward(request,response);
+		}	
+	%>
 	<jsp:include page="header.jsp" />
 	<jsp:include page="footer.jsp" />
 

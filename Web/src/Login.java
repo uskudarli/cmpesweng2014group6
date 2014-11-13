@@ -1,6 +1,9 @@
 
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -49,7 +52,12 @@ public class Login extends HttpServlet {
 		}else if(action.equals("login"))
 			logIn(request, response);
 		else if(action.equals("edit"))
-			edit(request,response);
+			try {
+				edit(request,response);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		
 		
 	}
@@ -130,8 +138,10 @@ public class Login extends HttpServlet {
 					request.setAttribute("bio", "");
 				else
 					request.setAttribute("bio", user.getBio());
-				
-				request.setAttribute("gender", "");
+				if(user.getGender()!=null)
+					request.setAttribute("gender", user.getGender().toString());
+				else
+					request.setAttribute("gender", "");
 				request.getRequestDispatcher("profile_edit.jsp").forward(request, response);
 				//response.sendRedirect("profile_edit.jsp");
 			}
@@ -139,7 +149,7 @@ public class Login extends HttpServlet {
 		
 	}
 	
-	void edit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	void edit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, ParseException
 	{
 		HttpSession session = request.getSession();
 		if(session == null)
@@ -154,10 +164,27 @@ public class Login extends HttpServlet {
 			{
 				DatabaseService db = new DatabaseService();
 				User user = db.findUserByEmail(session.getAttribute("email").toString());
-				
+				user.setName(request.getParameter("editUname"));
+				String birthdate = request.getParameter("editBirthdate");
+				DateFormat dateFormat = new SimpleDateFormat("dd/mm/yyyy");
+				user.setBirthdate(dateFormat.parse(birthdate));
+				String gender = request.getParameter("editGender");
+				if(gender.equals("male"))
+					user.setGender(User.Gender.Male);
+				else
+					user.setGender(User.Gender.Female);
+				user.setPhone(request.getParameter("editPhone"));
+				user.setBio(request.getParameter("editBio"));
+				//burda kaldim
 				// edit function will be implemented
+				Boolean result = db.Update(user);
+				if(result)
+					request.setAttribute("success", "true");
+				else
+					request.setAttribute("error", "true");
+				goToEdit(request,response);
 				
-				request.getRequestDispatcher("profile_edit.jsp").forward(request, response);
+				//request.getRequestDispatcher("profile_edit.jsp").forward(request, response);
 				//response.sendRedirect("profile_edit.jsp");
 			}
 		}

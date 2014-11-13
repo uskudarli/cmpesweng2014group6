@@ -13,7 +13,6 @@
 		HttpSession newSession = request.getSession();
 		if(newSession == null)
 		{
-			System.out.println("aa");
 			request.getRequestDispatcher("loginRegister.jsp").forward(request,response);
 		}else if(newSession.getAttribute("email") == null)
 			request.getRequestDispatcher("loginRegister.jsp").forward(request,response);
@@ -41,10 +40,12 @@
 							Birthdate: <input class="form-control" id="editBirthdate" name="editBirthdate" type=text value="<%= request.getAttribute("birthdate") %>"
 								name="name" placeholder="dd/mm/yyyy"></input>
 							Gender: 
-							<select class= "form-control" name="editGender">
+							<select id="editGenderSelect" class= "form-control" name="editGender">
+								
 								<option value="female">Female</option>
 								<option value="male">Male</option>
 							</select>
+							<input type="hidden" name="genderHidden" value="<%=request.getAttribute("gender")%>" />
 							Phone: <input class="form-control" name="editPhone" type="text" value="<%= request.getAttribute("phone").toString() %>"
 								name="name" placeholder="5"></input>
 							Bio: <input class="form-control" name="editBio" type="text" value="<%= request.getAttribute("bio").toString() %>"
@@ -71,18 +72,16 @@
 			<div class="modal-content">
 				
 				<div class="modal-body">
-					Edited successfully!
+					Your information is successfully updated!
 				</div>
 				<div class="modal-footer">
-					<form id="redirectProfile" method="post" class="form-horizontal" action="Profile">
-						<input type="button" name="profileRedirect" value="Ok" id="submit"/>
-					</form>
+					<button type="button" class="btn btn-default" data-dismiss="modal">Ok</button>
 				</div>
 			</div>
 		</div>
 	</div>
 	
-	<div class="modal fade bs-example-modal-sm" id="editError" tabindex="-1"
+	<div class="modal fade bs-example-modal-sm" id="errorPop" tabindex="-1"
 		role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-sm">
 			<div class="modal-content">
@@ -102,6 +101,7 @@
 			</div>
 		</div>
 	</div>
-
+	<input type="hidden" name="success" value="<%=request.getAttribute("success")%>" />
+	<input type="hidden" name="error" value="<%=request.getAttribute("error")%>" />
 </body>
 </html>

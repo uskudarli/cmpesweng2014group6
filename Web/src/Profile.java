@@ -43,7 +43,7 @@ public class Profile extends HttpServlet {
 		request.getSession().setAttribute("mail", user.getEmail());
 		request.getSession().setAttribute("xp", user.getExperiencePoint());
 		request.getSession().setAttribute("level", user.getLevel());
-		request.getSession().setAttribute("gender", user.getGender());
+		request.getSession().setAttribute("gender", user.getGender().toString());
 		if(user.getBirthdate()==null)
 			request.getSession().setAttribute("birthdate", "not specified yet.");
 		else
