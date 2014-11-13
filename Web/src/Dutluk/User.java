@@ -1,5 +1,6 @@
 package Dutluk;
 import java.util.*;
+import java.util.Calendar;
 public class User {
 	private int UserId;
 	private String Name;
@@ -45,10 +46,17 @@ public class User {
 	
 	public Boolean ChangePassword(String mail, String pass)
 	{
+		Calendar cal = Calendar.getInstance();
+		java.sql.Timestamp timestamp = new java.sql.Timestamp(cal.getTimeInMillis());
 		db = new DatabaseService();
 		db.executeSql("UPDATE Users"
-				+ " SET Password = '"+pass
-				+ "' WHERE Mail = '"+mail+"'");
+				+ " SET Password = '"+pass+"',"
+				+ " LastUpdate = '"+timestamp+"'"
+				+ " WHERE Mail = '"+mail+"'"
+				);
+		
+		
+		
 		return true;
 	}
 	
