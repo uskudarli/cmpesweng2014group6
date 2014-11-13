@@ -39,26 +39,25 @@ public class Profile extends HttpServlet {
 		DatabaseService db = new DatabaseService();
 		String email = session.getAttribute("email").toString();
 		User user = db.findUserByEmail(email);
-		request.setAttribute("name", user.getName());
-		System.out.print(user.getName());
-		request.setAttribute("mail", user.getEmail());
-		request.setAttribute("XP", user.getExperiencePoint());
-		request.setAttribute("level", user.getLevel());
-		request.setAttribute("gender", user.getGender());
+		request.getSession().setAttribute("name", user.getName());
+		request.getSession().setAttribute("mail", user.getEmail());
+		request.getSession().setAttribute("XP", user.getExperiencePoint());
+		request.getSession().setAttribute("level", user.getLevel());
+		request.getSession().setAttribute("gender", user.getGender());
 		if(user.getBirthdate()==null)
-			request.setAttribute("birthdate", "not specified yet.");
+			request.getSession().setAttribute("birthdate", "not specified yet.");
 		else
-			request.setAttribute("birthdate", user.getBirthdate());
+			request.getSession().setAttribute("birthdate", user.getBirthdate());
 		
-		if(user.getBirthdate()==null)
-			request.setAttribute("phone", "not specified yet.");
+		if(user.getPhone()==null)
+			request.getSession().setAttribute("phone", "not specified yet.");
 		else
-			request.setAttribute("phone", user.getPhone());
+			request.getSession().setAttribute("phone", user.getPhone());
 		
-		if(user.getBirthdate()==null)
-			request.setAttribute("bio", "not specified yet.");
+		if(user.getBio()==null)
+			request.getSession().setAttribute("bio", "not specified yet.");
 		else
-			request.setAttribute("bio", user.getBio());
+			request.getSession().setAttribute("bio", user.getBio());
 		
 		
 		

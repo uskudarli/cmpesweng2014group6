@@ -13,24 +13,33 @@
 
 	<div class="container">
 		<div class="row">
-		
+		<%@ page import = "Dutluk.*" %>
 			<div class="col-xs-6">
 				<div style="padding: 10px">
 					<h2>Profile</h2>
-					<form id="profileInfo" method="post"
+					<form id="profileInfo" method="get"
 						class="profileInfo form-horizontal">
 						<div class="form-group">
-						Name: <label name="name">Namehere</label><br>
-						Birthdate: <label name="birthdate">Birthdatehere</label><br>
-						Gender: <label name="gender">Genderhere</label><br>
-						Mail: <label name="mail">Mailhere</label><br>
-						Phone: <label name="phone">Phonehere</label><br>
-						XP: <label name="xp">XPhere</label><br>
-						Level: <label name="level">Levelhere</label><br>
-						Bio: <label name="bio">Biohere</label><br>
-						<a href='profile_edit.jsp'>Edit Profile</a>
+						Name: <label><%= request.getSession().getAttribute("name")%></label>
 						</div>
-						
+						<div class="form-group">
+						Birthdate: <label><%= request.getSession().getAttribute("birthdate")%></label>
+						</div>
+						<div class="form-group">
+						Gender: <label name="gender"><%= request.getSession().getAttribute("gender")%></label>
+						</div>
+						<div class="form-group">
+						Mail: <label name="mail"><%= request.getSession().getAttribute("mail")%></label></div>
+						<div class="form-group">
+						Phone: <label name="phone"><%= request.getSession().getAttribute("phone")%></label></div>
+						<div class="form-group">
+						XP: <label name="xp"><%= request.getSession().getAttribute("xp")%></label></div>
+						<div class="form-group">
+						Level: <label name="level"><%= request.getSession().getAttribute("level")%></label></div>
+						<div class="form-group">
+						Bio: <label name="bio"><%= request.getSession().getAttribute("bio")%></label></div>
+						<a href='profile_edit.jsp'>Edit Profile</a>
+						</div>	
 					</form>
 				</div>
 			</div>
