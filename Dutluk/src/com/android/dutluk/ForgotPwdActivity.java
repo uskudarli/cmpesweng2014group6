@@ -16,22 +16,20 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
-public class LoginActivity extends Activity {
+public class ForgotPwdActivity extends Activity {
 
 	ProgressDialog prgDialog;
 	TextView errorMsg;
 
 	EditText emailET;
-	EditText pwdET;
 
-	String mail = "";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.login);
+		setContentView(R.layout.forgotpwd);
 	
-		errorMsg = (TextView)findViewById(R.id.errorLogin);
+		errorMsg = (TextView)findViewById(R.id.errorForgotpwd);
 		// Instantiate Progress Dialog object
 		prgDialog = new ProgressDialog(this);
 		// Set Progress Dialog Text
@@ -39,29 +37,23 @@ public class LoginActivity extends Activity {
         // Set Cancelable as False
         prgDialog.setCancelable(false);
         
-		emailET = (EditText)findViewById(R.id.emailLogin);
-		pwdET = (EditText)findViewById(R.id.passwordLogin);
+		emailET = (EditText)findViewById(R.id.emailForgotpwd);
+	
 
-        Intent registerIntent = getIntent();
-        mail = registerIntent.getStringExtra("mail");
-        emailET.setText(mail);
+    
 	}
 	
-	public void loginUser(View view){
+	public void resetPassword(View view){
 		// Get Email Edit View Value
 		String email = emailET.getText().toString();
-		// Get Password Edit View Value
-		String password = pwdET.getText().toString();
 		// Instantiate Http Request Param Object
 		RequestParams params = new RequestParams();
 		// When Email Edit View and Password Edit View have values other than Null
-		if(Utility.isNotNull(email) && Utility.isNotNull(password)){
+		if(Utility.isNotNull(email)){
 			// When Email entered is Valid
 			if(Utility.validateEmail(email)){
 				// Put Http parameter username with value of Email Edit View control
 				params.put("mail", email);
-				// Put Http parameter password with value of Password Edit Value control
-				params.put("password", password);
 				// Invoke RESTful Web Service with Http parameters
 				invokeWS(params);
 			} 
@@ -76,18 +68,14 @@ public class LoginActivity extends Activity {
 		}
 		
 	}
-	public void forgotPassword(View view){
-		Intent forgotPwdIntent = new Intent(getApplicationContext(),ForgotPwdActivity.class);
-		forgotPwdIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		startActivity(forgotPwdIntent);
-	}
+
 	
 	public void invokeWS(RequestParams params){
 		// Show Progress Dialog
 		 prgDialog.show();
 		 // Make RESTful webservice call using AsyncHttpClient object
 		 AsyncHttpClient client = new AsyncHttpClient();
-         client.get("http://192.168.43.17:9999/useraccount/login/dologin",params ,new AsyncHttpResponseHandler() {
+         client.get("http://192.168.43.17:9999/useraccount/forgotPassword",params ,new AsyncHttpResponseHandler() {
         	 // When the response returned by REST has Http response code '200'
              @Override
              public void onSuccess(String response) {
@@ -98,9 +86,9 @@ public class LoginActivity extends Activity {
                          JSONObject obj = new JSONObject(response);
                          // When the JSON response has status boolean value assigned with true
                          if(obj.getBoolean("status")){
-                        	 Toast.makeText(getApplicationContext(), "You are successfully logged in!", Toast.LENGTH_LONG).show();
+                        	 Toast.makeText(getApplicationContext(), "Check your e-mail for your new password!", Toast.LENGTH_LONG).show();
                         	 // Navigate to Home screen
-                        	 navigatetoProfileActivity(obj.getString("mail"));
+                        	 navigatetoLoginActivity(obj.getString("mail"));
                          } 
                          // Else display error message
                          else{
@@ -136,19 +124,14 @@ public class LoginActivity extends Activity {
          });
 	}
 
-	public void navigatetoProfileActivity(String mail){
-		Intent profileIntent = new Intent(getApplicationContext(),ProfileActivity.class);
+	public void navigatetoLoginActivity(String mail){
+		Intent loginIntent = new Intent(getApplicationContext(),LoginActivity.class);
 		Bundle b = new Bundle();
 		b.putString("mail",mail);
-		profileIntent.putExtras(b);
-		profileIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		startActivity(profileIntent);
-	}
-	
-	public void navigatetoRegisterActivity(View view){
-		Intent loginIntent = new Intent(getApplicationContext(),RegisterActivity.class);
+		loginIntent.putExtras(b);
 		loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(loginIntent);
 	}
+	
 	
 }

@@ -29,6 +29,9 @@
         <activity
             android:name="com.android.dutluk.ProfileActivity" >
         </activity>
+         <activity
+            android:name="com.android.dutluk.ForgotPwdActivity" >
+        </activity>
     </application>
 
 </manifest>

@@ -153,6 +153,9 @@ public class RegisterActivity extends Activity {
 	// GEREKSIZ
 	public void navigatetoLoginActivity(View view){
 		Intent loginIntent = new Intent(getApplicationContext(),LoginActivity.class);
+		Bundle b = new Bundle();
+		b.putString("mail","");
+		loginIntent.putExtras(b);
 		// Clears History of Activity
 		loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(loginIntent);
@@ -160,6 +163,9 @@ public class RegisterActivity extends Activity {
 	// GEREKSIZ
 	public void navigatetoProfileActivity(View view){
 		Intent profileIntent = new Intent(getApplicationContext(),ProfileActivity.class);
+		Bundle b = new Bundle();
+		b.putString("mail","");
+		profileIntent.putExtras(b);
 		profileIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(profileIntent);
 	}

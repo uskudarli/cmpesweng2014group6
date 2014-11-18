@@ -3,10 +3,6 @@ package com.android.dutluk;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
-
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -15,6 +11,11 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
 
 public class ProfileActivity extends Activity {
 
@@ -120,7 +121,7 @@ public class ProfileActivity extends Activity {
          });
 	}
 	/**
-	 * Set degault values for Edit View controls
+	 * Set default values for Edit View controls
 	 * @throws JSONException 
 	 */
 	public void setDefaultValues(JSONObject obj) throws JSONException{
@@ -153,7 +154,7 @@ public class ProfileActivity extends Activity {
 	public void invokeWSforSAVE(RequestParams params){
 		// Show Progress Dialog 
 		prgDialog.show();
-		// Make RESTful webservice call using AsyncHttpClient object
+		// Make RESTful web service call using AsyncHttpClient object
 		AsyncHttpClient client = new AsyncHttpClient();
         client.get("http://192.168.43.17:9999/useraccount/profile/updateProfile",params ,new AsyncHttpResponseHandler() {
         	// When the response returned by REST has Http response code '200'
@@ -183,21 +184,21 @@ public class ProfileActivity extends Activity {
                      
                  }
              }
-             // When the response returned by REST has Http response code other than '200'
+             // When the response returned by REST has HTTP response code other than '200'
              @Override
              public void onFailure(int statusCode, Throwable error,
                  String content) {
                  // Hide Progress Dialog
                  prgDialog.hide();
-                 // When Http response code is '404'
+                 // When HTTP response code is '404'
                  if(statusCode == 404){
                      Toast.makeText(getApplicationContext(), "Requested resource not found", Toast.LENGTH_LONG).show();
                  } 
-                 // When Http response code is '500'
+                 // When HTTP response code is '500'
                  else if(statusCode == 500){
                      Toast.makeText(getApplicationContext(), "Something went wrong at server end", Toast.LENGTH_LONG).show();
                  } 
-                 // When Http response code other than 404, 500
+                 // When HTTP response code other than 404, 500
                  else{
                      Toast.makeText(getApplicationContext(), "Unexpected Error occcured! [Most common Error: Device might not be connected to Internet or remote server is not up and running]", Toast.LENGTH_LONG).show();
                  }

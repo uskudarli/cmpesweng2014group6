@@ -68,9 +68,19 @@
             android:text="@string/btnLogin"
             android:textColor="#fff" />
         
+        <!-- Forgot password button -->
+        <Button
+            android:id="@+id/btnLinkToForgotPwdLogin"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="#fff"
+            android:onClick="forgotPassword"
+            android:text="@string/btnForgotPwdLogin"
+            android:textColor="#ff6347" />
+        
 		<!-- Link to Register Screen -->
         <Button
-            android:id="@+id/btnLinkToRegisterScreen"
+            android:id="@+id/btnLinkToRegisterScreenLogin"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="40dip"

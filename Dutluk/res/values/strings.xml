@@ -12,6 +12,7 @@
     <string name="title_activity_register">Register</string>
     <string name="title_activity_login">Login</string>
 	<string name="title_activity_profile">Profile</string> 
+	<string name="title_activity_forgotpwd">Forgot Password</string>
 
 	<!-- General strings -->
     <string name="email">E-mail</string>
@@ -29,6 +30,8 @@
 	<string name="btnLogin">Login</string>
 	<string name="btnProfile">Profile</string>
 	<string name="btnSave">Save</string>
+	<string name="btnForgotPwdLogin">Forgot Password?</string>
+	<string name="btnResetPwd">Reset Password</string>
 	
 	<!-- Hint strings -->
 	<string name="changeName">Change Name</string>

@@ -180,7 +180,7 @@
         
 		<!-- Save button -->
         <Button
-            android:id="@+id/btnSave"
+            android:id="@+id/btnSaveProfile"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dip"
