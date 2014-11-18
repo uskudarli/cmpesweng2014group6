@@ -13,6 +13,7 @@
 			{
 				//out.println("<a href='javascript:void(0);' onclick='goToEdit()'>Profile</a>");
 				out.println("<a href='Profile'>Profile</a>");
+				out.println("<a href='addStory.jsp'>Add story</a>");
 				out.println("<a href='javascript:void(0);' onclick='logOut()'>LogOut</a>");
 				out.println("<a href='changePassword.jsp'>Change Password</a>");
 			}else
