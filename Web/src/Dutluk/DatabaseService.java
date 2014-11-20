@@ -154,4 +154,52 @@ public class DatabaseService {
 	{
 		
 	}
+	
+	public Boolean register(User user)
+	{
+		User temp = findUserByEmail(user.getEmail());
+		if(temp.getEmail() != null)
+			return false;
+		else
+		{
+			try
+			{
+				Class.forName(JDBC_DRIVER);
+				conn = DriverManager.getConnection(DB_URL, USER, PASS);
+				pstmt = conn.prepareStatement("INSERT INTO Users (Name,Mail,IsDeleted,Gender,Password, CreationDate, LastUpdate) VALUES(?,?,?,?,?,?,?)");
+				pstmt.setString(1, user.getName());
+				pstmt.setString(2, user.getEmail());
+				pstmt.setInt(3, 0);
+				pstmt.setString(4, null);
+				pstmt.setString(5, user.getPassword());
+
+				java.util.Date today = new java.util.Date();
+				pstmt.setTimestamp(6, new java.sql.Timestamp(today.getTime()));
+				pstmt.setTimestamp(7, new java.sql.Timestamp(today.getTime()));
+				pstmt.executeUpdate();
+				return true;
+			}catch(SQLException se){
+		         //Handle errors for JDBC
+		         se.printStackTrace();
+			}catch(Exception e){
+		         //Handle errors for Class.forName
+		         e.printStackTrace();
+		    }finally{
+		         //finally block used to close resources
+		   		try{
+		   			if(stmt!=null)
+		   				stmt.close();
+		   		}catch(SQLException se2){
+		   		}// nothing we can do
+		   		try{
+		   			if(conn!=null)
+		   				conn.close();
+		   		}catch(SQLException se){
+		   			se.printStackTrace();
+		   		}//end finally try
+		    }
+			return null;
+			
+		}
+	}
 }

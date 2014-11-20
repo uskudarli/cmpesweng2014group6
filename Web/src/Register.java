@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import Dutluk.DatabaseService;
 import Dutluk.User;
 
 /**
@@ -39,7 +40,8 @@ public class Register extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		response.setContentType("text/html"); 
+		response.setContentType("text/html");
+		DatabaseService db = new DatabaseService();
 		User user = new User();
 		user.setName(request.getParameter("name"));
 		user.setPassword(request.getParameter("password"));
@@ -49,7 +51,8 @@ public class Register extends HttpServlet {
 		user.setIsDeleted(0);
 		user.setCreatedOn(timestamp);
 		user.setUpdatedOn(timestamp);
-		Boolean result = user.Register();
+		user.setGender(User.Gender.Male);
+		Boolean result = db.register(user);
 		HttpSession session = request.getSession();
 			if(result)
 			{
