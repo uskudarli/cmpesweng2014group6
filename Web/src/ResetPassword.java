@@ -59,6 +59,11 @@ public class ResetPassword extends HttpServlet {
 		{
 			DatabaseService db = new DatabaseService();
 			String email = request.getParameter("email");
+			if(email == ""){
+				request.setAttribute("error", "true");
+				request.setAttribute("message", "Please specify your email address.");
+				request.getRequestDispatcher("loginRegister.jsp").forward(request, response);
+			}else{
 			User user = db.findUserByEmail(email);
 			String name = user.getName();
 			String newPassword = generatePassword();
@@ -116,7 +121,7 @@ public class ResetPassword extends HttpServlet {
 					request.getRequestDispatcher("loginRegister.jsp").forward(request, response);
 				}
 			}
-			
+			}
 			//response.sendRedirect("index.jsp");
 		}
 		else if(action.equals("resetPassword"))
