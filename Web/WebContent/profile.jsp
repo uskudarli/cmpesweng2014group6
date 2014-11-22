@@ -17,7 +17,7 @@
 		}else if(newSession.getAttribute("email") == null
 				|| newSession.getAttribute("name") == null
 				|| newSession.getAttribute("birthdate") == null
-				|| newSession.getAttribute("gender") == null
+				|| newSession.getAttribute("genderChar") == null
 				|| newSession.getAttribute("mail") == null
 				|| newSession.getAttribute("phone") == null
 				|| newSession.getAttribute("xp") == null
@@ -36,29 +36,15 @@
 		<%@ page import = "Dutluk.*" %>
 			<div class="col-xs-6">
 				<div style="padding: 10px">
-					<h2>Profile</h2>
-					<form id="profileInfo" method="get"
-						class="profileInfo form-horizontal">
-						<div class="form-group">
-						Name: <label><%= request.getSession().getAttribute("name")%></label>
-						</div>
-						<div class="form-group">
-						Birthdate: <label><%= request.getSession().getAttribute("birthdate")%></label>
-						</div>
-						<div class="form-group">
-						Gender: <label name="gender"><%= request.getSession().getAttribute("gender")%></label>
-						</div>
-						<div class="form-group">
-						Mail: <label name="mail"><%= request.getSession().getAttribute("mail")%></label></div>
-						<div class="form-group">
-						Phone: <label name="phone"><%= request.getSession().getAttribute("phone")%></label></div>
-						<div class="form-group">
-						XP: <label name="xp"><%= request.getSession().getAttribute("xp")%></label></div>
-						<div class="form-group">
-						Level: <label name="level"><%= request.getSession().getAttribute("level")%></label></div>
-						<div class="form-group">
-						Bio: <label name="bio"><%= request.getSession().getAttribute("bio")%></label></div>
-						<a href='Login'>Edit Profile</a>
+					<h2><%= request.getSession().getAttribute("name")%> <%= request.getSession().getAttribute("genderChar")%></h2>
+					level <%= request.getSession().getAttribute("level")%> writer, <%= request.getSession().getAttribute("xp")%> points<br>
+					<h4>"<%= request.getSession().getAttribute("bio")%>"</h4>
+
+						Born on <%= request.getSession().getAttribute("birthdate")%><br>
+						Mail <%= request.getSession().getAttribute("mail")%><br>
+						Phone <%= request.getSession().getAttribute("phone")%><br>
+						<br>
+						<a href='profile_edit.jsp'>This is you! Click here to edit your info.</a>
 						</div>	
 					</form>
 				</div>
