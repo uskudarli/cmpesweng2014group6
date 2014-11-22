@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
-<title>Login</title>
+<title>Dutluk</title>
 
 </head>
 <body>
@@ -36,11 +36,11 @@
 		<%@ page import = "Dutluk.*" %>
 			<div class="col-xs-6">
 				<div style="padding: 10px">
-					<h2><%= request.getSession().getAttribute("name")%> <%= request.getSession().getAttribute("genderChar")%></h2>
+					<br><br><h2 style="display:inline;"><%= request.getSession().getAttribute("name")%></h2>
 					level <%= request.getSession().getAttribute("level")%> writer, <%= request.getSession().getAttribute("xp")%> points<br>
 					<h4>"<%= request.getSession().getAttribute("bio")%>"</h4>
 
-						Born on <%= request.getSession().getAttribute("birthdate")%><br>
+						Born on <%= request.getSession().getAttribute("birthdate")%>, <%= request.getSession().getAttribute("genderChar")%><br>
 						Mail <%= request.getSession().getAttribute("mail")%><br>
 						Phone <%= request.getSession().getAttribute("phone")%><br>
 						<br>

@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Add Story</title>
+<title>Dutluk</title>
 </head>
 <body>
 	<jsp:include page="header.jsp" />
