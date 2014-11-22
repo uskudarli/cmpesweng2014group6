@@ -124,6 +124,53 @@ $(document).ready(function() {
         }
     });
     
+    $('#changePasswordForm').bootstrapValidator({
+    	feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            oldPassword: {
+                validators: {
+                    notEmpty: {
+                        message: 'The password is required and cannot be empty'
+                    },
+                    stringLength: {
+                        min: 6,
+                        message: 'The password must have at least 6 characters'
+                    }
+                }
+            },
+            newPassword: {
+                validators: {
+                    notEmpty: {
+                        message: 'The password is required and cannot be empty'
+                    },
+                    stringLength: {
+                        min: 6,
+                        message: 'The password must have at least 6 characters'
+                    }
+                }
+            },
+            reNewPassword: {
+                validators: {
+                    notEmpty: {
+                        message: 'The password is required and cannot be empty'
+                    },
+                    stringLength: {
+                        min: 6,
+                        message: 'The password must have at least 6 characters'
+                    },
+                    identical: {
+                        field: 'newPassword',
+                        message: 'New password fields do not match.'
+                    }
+                }
+            }
+        }
+    });
+    
     $('#editForm').bootstrapValidator({
     	feedbackIcons: {
             valid: 'glyphicon glyphicon-ok',

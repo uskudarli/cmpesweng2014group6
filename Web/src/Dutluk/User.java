@@ -65,7 +65,7 @@ public class User {
 	{
 		db = new DatabaseService();
 		User temp = db.findUserByEmail(Email);
-		if(temp.getEmail() != null)
+		if(temp.getEmail() != "")
 		{
 			if(temp.getPassword().equals(Password))
 				return true;

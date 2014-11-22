@@ -72,7 +72,7 @@ public class DatabaseService {
 				user.setPhone(rs.getString("Phone"));
 				user.setExperiencePoint(rs.getInt("ExperiencePoint"));
 				user.setLevel(rs.getInt("Level"));
-				user.setIsDeleted(0);
+				user.setIsDeleted(0); //TODO why?
 				user.setPicId(rs.getInt("PicID"));
 				user.setBio(rs.getString("Bio"));
 				user.setPassword(rs.getString("Password"));
@@ -82,8 +82,10 @@ public class DatabaseService {
 					user.setGender(User.Gender.Male);
 				else
 					user.setGender(User.Gender.Female);
+				//TODO null sets gender to female here.
 			}
 			return user;
+			
 		}catch(SQLException se){
 	         //Handle errors for JDBC
 	         se.printStackTrace();
@@ -104,7 +106,7 @@ public class DatabaseService {
 	   			se.printStackTrace();
 	   		}//end finally try
 	    }
-		return null;
+		return user; //THIS was return null, which give 500 nullpointerexception on each call.
 	}
 	
 	public Boolean Update(User user)
