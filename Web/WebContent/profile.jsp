@@ -17,7 +17,7 @@
 		}else if(newSession.getAttribute("email") == null
 				|| newSession.getAttribute("name") == null
 				|| newSession.getAttribute("birthdate") == null
-				|| newSession.getAttribute("genderChar") == null
+				|| newSession.getAttribute("gender") == null
 				|| newSession.getAttribute("mail") == null
 				|| newSession.getAttribute("phone") == null
 				|| newSession.getAttribute("xp") == null
@@ -36,17 +36,27 @@
 		<%@ page import = "Dutluk.*" %>
 			<div class="col-xs-6">
 				<div style="padding: 10px">
-					<br><br><h2 style="display:inline;"><%= request.getSession().getAttribute("name")%></h2>
-					level <%= request.getSession().getAttribute("level")%> writer, <%= request.getSession().getAttribute("xp")%> points<br>
+					<br><br><h2 style="display:inline;"><%= request.getSession().getAttribute("name")%></h2> <a>subscribe</a>
+					<br><br>level <%= request.getSession().getAttribute("level")%> writer, <%= request.getSession().getAttribute("xp")%> points  
 					<h4>"<%= request.getSession().getAttribute("bio")%>"</h4>
 
-						Born on <%= request.getSession().getAttribute("birthdate")%>, <%= request.getSession().getAttribute("genderChar")%><br>
-						Mail <%= request.getSession().getAttribute("mail")%><br>
-						Phone <%= request.getSession().getAttribute("phone")%><br>
+						Gender: <%= request.getSession().getAttribute("gender")%><br>
+						Birthdate: <%= request.getSession().getAttribute("birthdate")%><br>
+						Mail: <%= request.getSession().getAttribute("mail")%><br>
+						Phone: <%= request.getSession().getAttribute("phone")%><br>
+						<a href='ProfileEdit'>Edit your details</a>
 						<br>
-						<a href='profile_edit.jsp'>This is you! Click here to edit your info.</a>
+
 						</div>	
 					</form>
+					
+					<h3>Stories</h2> 
+					
+					
+					<!-- load users stories here -->
+					
+					
+					
 				</div>
 			</div>
 			

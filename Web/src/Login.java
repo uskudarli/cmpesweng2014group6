@@ -37,7 +37,7 @@ public class Login extends HttpServlet {
 		response.setContentType("text/html"); 
 		//String action = request.getParameter("func");
 		//if(action.equals("gotoedit"))
-			goToEdit(request,response);
+			goToEdit(request,response);//what is this?
 	}
 
 	/**
@@ -55,7 +55,6 @@ public class Login extends HttpServlet {
 			try {
 				edit(request,response);
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		

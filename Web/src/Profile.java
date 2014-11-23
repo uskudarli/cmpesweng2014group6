@@ -43,12 +43,7 @@ public class Profile extends HttpServlet {
 		request.getSession().setAttribute("mail", user.getEmail());
 		request.getSession().setAttribute("xp", user.getExperiencePoint());
 		request.getSession().setAttribute("level", user.getLevel());
-		String currentGender = user.getGender().toString();
-		if(currentGender=="Male"){
-			request.getSession().setAttribute("genderChar", "&#9794;");
-		}else{
-			request.getSession().setAttribute("genderChar", "&#9792;");
-		}
+		request.getSession().setAttribute("gender", user.getGender().toString().toLowerCase());
 		
 		
 		if(user.getBirthdate()==null)

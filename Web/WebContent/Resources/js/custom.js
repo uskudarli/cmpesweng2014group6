@@ -2,12 +2,18 @@
 $(document).ready(function() {
 	errorCheck();
 	successCheck();
-	$(function() {
+	
+	/*
+	 * This was somehow makes us unable to "select" one option on edit profile page,
+	 * ie. even if we put "selected" tag on male, female will come up as selected.
+	 * Hence, commented out for a while.
+	 * 
+	 * $(function() {
 		if($('input[name=genderHidden]').val()=="Male"){
 			$("#editGenderSelect").val('male');
 		}else
 			$("#editGenderSelect").val('female');
-	});
+	});*/
 	
 	
     $('#registerForm').bootstrapValidator({
@@ -171,7 +177,7 @@ $(document).ready(function() {
         }
     });
     
-    $('#editForm').bootstrapValidator({
+    $('#editProfileForm').bootstrapValidator({
     	feedbackIcons: {
             valid: 'glyphicon glyphicon-ok',
             invalid: 'glyphicon glyphicon-remove',
@@ -219,20 +225,28 @@ $(document).ready(function() {
                         message: 'The name and password cannot be the same as each other'
                     }
                 }
+            },
+            editBio: {
+                validators: {
+                    stringLength: {
+                        max: 140,
+                        message: 'Your bio cannot be longer than 140 chars.'
+                    }
+                }
+            },
+            editMail: {
+                validators: {
+                    notEmpty: {
+                        message: 'The email address is required and cannot be empty'
+                    },
+                    emailAddress: {
+                        message: 'The email address is not valid'
+                    }
+                }
             }
         }
     });
-    
-    $("#editProfileButton").click(function(e)
-	{
-    	var $form = $('#editForm');
-    	$.ajax({
-    		type: "POST",
-    		url: "Login",
-    		data: $form.serialize()
-    	});
-	});
-    
+       
     $("#loginButton").click(function(e){
     	var $form = $("#loginForm");
         $.ajax({
@@ -244,6 +258,15 @@ $(document).ready(function() {
     
     $("#editBirthdate").datepicker({
     	format: "dd/mm/yyyy"
+    });
+
+    $("#editProfileButton").click(function(e){
+    	var $form = $("#editProfileForm");
+        $.ajax({
+        	  type: "POST",
+        	  url: "ProfileEdit",
+        	  data: $form.serialize()
+    	});
     });
     
 });

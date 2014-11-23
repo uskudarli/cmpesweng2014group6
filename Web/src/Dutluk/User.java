@@ -1,6 +1,7 @@
 package Dutluk;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.Calendar;
 public class User {
 	private int UserId;
 	private String Name;
@@ -40,6 +41,33 @@ public class User {
 			sql += "'" + Password + "',";
 			sql += "'" + CreatedOn + "',";
 			sql += "'" + UpdatedOn + "')";
+			db.executeSql(sql);
+			return true;
+		}
+	}
+	
+	//Call this method on any update you want to make, so that you don't have to rewrite it.
+	public Boolean Update()
+	{
+		db = new DatabaseService();
+		User temp = db.findUserByEmail(Email);
+		if(temp.getEmail() != null)
+			return false;
+		else
+		{
+			String sql = "UPDATE Users (Name, Birthdate, Gender, Phone, ExperiencePoint, Level, IsDeleted, PicId, Bio, Password, UpdatedOn) VALUES(";
+			sql += "'" + Name + "',";
+			sql += "'" + Birthdate + "',";
+			sql += "'" + getGender().toString() + "',";
+			sql += "'" + Phone + "',";
+			sql += "'" + ExperiencePoint + "',";
+			sql += "'" + Level + "',";
+			sql += "'" + IsDeleted + "',";
+			sql += "'" + PicId + "',";
+			sql += "'" + Bio + "',";
+			sql += "'" + Password + "',";
+			sql += "'" + UpdatedOn + "')";
+			sql += " WHERE Mail = '"+Email+"';";
 			db.executeSql(sql);
 			return true;
 		}
@@ -86,6 +114,14 @@ public class User {
 	public void setGender(Gender g) {
         this.gender = g;
     }
+	
+	public void setGender(String s) {
+        if(s=="male" || s=="Male" || s=="MALE"){
+        	this.gender = Gender.Male;
+        }else{
+        	this.gender = Gender.Female;
+        }
+    }
 
     public Gender getGender() {
         return gender;
@@ -113,6 +149,11 @@ public class User {
 
 	public void setBirthdate(Date birthdate) {
 		Birthdate = birthdate;
+	}
+	
+	public void setBirthdate(String s) throws ParseException{
+		Date date = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH).parse(s);
+		this.setBirthdate(date);
 	}
 
 	public String getPhone() {
