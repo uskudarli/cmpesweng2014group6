@@ -83,6 +83,7 @@
 						</div>
 						<input type="hidden" name="func" value="editProfile" />
 					</form>
+					<a href='changePassword.jsp'>Change Password</a>
 				</div>
 			</div>
 
