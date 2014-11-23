@@ -51,13 +51,16 @@ public class Login extends HttpServlet {
 			logOut(request,response);
 		}else if(action.equals("login"))
 			logIn(request, response);
-		else if(action.equals("edit"))
+		/*
+		 * DEPRECATED. Please use User.update to edit.
+		 * 
+		 * else if(action.equals("edit"))
 			try {
 				edit(request,response);
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
-		
+		*/
 		
 	}
 	void logOut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
@@ -148,7 +151,10 @@ public class Login extends HttpServlet {
 		
 	}
 	
-	void edit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, ParseException
+	/*
+	 * DEPRECATED. Please use User.update to edit.
+	 * 
+	 * void edit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, ParseException
 	{
 		HttpSession session = request.getSession();
 		if(session == null)
@@ -187,5 +193,5 @@ public class Login extends HttpServlet {
 				//response.sendRedirect("profile_edit.jsp");
 			}
 		}
-	}
+	}*/
 }
