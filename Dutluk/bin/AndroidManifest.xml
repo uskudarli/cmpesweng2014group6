@@ -32,6 +32,9 @@
          <activity
             android:name="com.android.dutluk.ForgotPwdActivity" >
         </activity>
+        <activity
+            android:name="com.android.dutluk.AddStoryActivity" >
+        </activity>
     </application>
 
 </manifest>

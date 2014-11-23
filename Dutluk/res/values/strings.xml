@@ -13,6 +13,7 @@
     <string name="title_activity_login">Login</string>
 	<string name="title_activity_profile">Profile</string> 
 	<string name="title_activity_forgotpwd">Forgot Password</string>
+	<string name="title_activity_addStory">Add Story</string>
 
 	<!-- General strings -->
     <string name="email">E-mail</string>
@@ -32,6 +33,7 @@
 	<string name="btnSave">Save</string>
 	<string name="btnForgotPwdLogin">Forgot Password?</string>
 	<string name="btnResetPwd">Reset Password</string>
+	<string name="btnAddStory">Add Story</string>
 	
 	<!-- Hint strings -->
 	<string name="changeName">Change Name</string>
@@ -42,9 +44,11 @@
 	<string name="enterName">Enter Name</string>
 	<string name="enterEmail">Enter E-mail</string>
 	<string name="enterPassword">Enter Password</string>
-
-	
-	
+	<string name="enterTitle">Enter Title</string>
+	<string name="uploadImage">Upload Image</string>
+	<string name="enterStory">Enter Story</string>
+	<string name="pickPlace">Pick a Place</string>
+	<string name="pickTime">Pick Time</string>
 	
 	
 </resources>
