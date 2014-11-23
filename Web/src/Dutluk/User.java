@@ -39,7 +39,7 @@ public class User {
 		else
 		{
 			String sql = "INSERT INTO Users (Name,Mail,IsDeleted,Password, CreationDate, LastUpdate) VALUES(";
-			sql += "" + Name + "',";
+			sql += "'" + Name + "',";
 			sql += "'" + Email + "',";
 			sql += "'" + IsDeleted + "',";
 			sql += "'" + Password + "',";
@@ -114,14 +114,24 @@ public class User {
 	{
 		db = new DatabaseService();
 		User temp = db.findUserByEmail(Email);
-		if(temp.getEmail() != "")
+		
+		String givenmail = this.getEmail();
+		String givenpass = this.getPassword();
+		User dbuser = db.findUserByEmail(givenmail);
+		String dbpass = dbuser.getPassword();
+		
+		if(givenpass.equals(dbpass))
+			return true;
+		else return false;
+		
+		/*if(temp.getEmail() != "")
 		{
 			if(temp.getPassword().equals(Password))
 				return true;
 			else
 				return false;
 		}else
-			return false;
+			return false;*/
 	}
 
 	public int getUserID() {
@@ -237,7 +247,7 @@ public class User {
 	}
 
 	public void setPassword(String password) {
-		Password = password;
+		this.Password = password;
 	}
 
 	public Date getCreatedOn() {

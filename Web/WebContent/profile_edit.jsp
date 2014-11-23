@@ -72,7 +72,7 @@
 
 
 							<div class="form-group">
-								<textarea class="form-control" cols=40 rows=5 name="editBio"
+								<textarea class="form-control" cols=40 rows=2 name="editBio"
 									placeholder="Bio"><%=request.getSession().getAttribute("bio")%></textarea>
 							</div>
 

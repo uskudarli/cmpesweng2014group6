@@ -3,6 +3,7 @@
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import javax.servlet.RequestDispatcher;
@@ -53,7 +54,7 @@ public class ProfileEdit extends HttpServlet {
 		if(user.getBirthdate()==null)
 			request.getSession().setAttribute("birthdate", "");
 		else
-			request.getSession().setAttribute("birthdate", user.getBirthdate());
+			request.getSession().setAttribute("birthdate", new SimpleDateFormat("dd/MM/yyyy").format(user.getBirthdate().getTime()));
 
 		if(user.getPhone()==null)
 			request.getSession().setAttribute("phone", "");
@@ -94,7 +95,7 @@ public class ProfileEdit extends HttpServlet {
 		String newPhone = request.getParameter("editPhone");
 		String newBio = request.getParameter("editBio");
 
-		if(newBirthdate!=""){
+		if(newBirthdate!=null){
 			try {
 				user.setBirthdate(newBirthdate);
 			} catch (ParseException e) {

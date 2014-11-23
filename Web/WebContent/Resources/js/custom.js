@@ -63,21 +63,6 @@ $(document).ready(function() {
                         message: 'The password must have at least 6 characters'
                     }
                 }
-            },
-            birthday: {
-                validators: {
-                    date: {
-                        format: 'DD/MM/YYYY',
-                        message: 'The date of birth is not valid'
-                    }
-                }
-            },
-            gender: {
-                validators: {
-                    notEmpty: {
-                        message: 'The gender is required'
-                    }
-                }
             }
         }
     });

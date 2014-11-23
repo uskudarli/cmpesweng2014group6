@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Date;
 
 
 public class DatabaseService {
@@ -68,7 +69,8 @@ public class DatabaseService {
 				user.setName(rs.getString("Name"));
 				user.setEmail(mail);
 				user.setUserID(rs.getInt("UserID"));
-				user.setBirthdate(rs.getDate("Birthdate"));
+				Date dateIn = rs.getDate("Birthdate");
+				if(dateIn!=null) user.setBirthdate(dateIn);
 				user.setPhone(rs.getString("Phone"));
 				user.setExperiencePoint(rs.getInt("ExperiencePoint"));
 				user.setLevel(rs.getInt("Level"));

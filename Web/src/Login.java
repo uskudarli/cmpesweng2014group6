@@ -154,7 +154,7 @@ public class Login extends HttpServlet {
 	/*
 	 * DEPRECATED. Please use User.update to edit.
 	 * 
-	 * void edit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, ParseException
+	 **/ void edit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, ParseException
 	{
 		HttpSession session = request.getSession();
 		if(session == null)
@@ -182,16 +182,16 @@ public class Login extends HttpServlet {
 				user.setBio(request.getParameter("editBio"));
 				//burda kaldim
 				// edit function will be implemented
-				Boolean result = db.Update(user);
-				if(result)
-					request.setAttribute("success", "true");
-				else
-					request.setAttribute("error", "true");
-				goToEdit(request,response);
+				//Boolean result = db.UpdateProfile(user);
+				//if(result)
+				//	request.setAttribute("success", "true");
+				//else
+				//	request.setAttribute("error", "true");
+				//goToEdit(request,response);
 				
 				//request.getRequestDispatcher("profile_edit.jsp").forward(request, response);
 				//response.sendRedirect("profile_edit.jsp");
 			}
 		}
-	}*/
+	}
 }
