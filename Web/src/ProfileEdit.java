@@ -1,9 +1,11 @@
 
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.Calendar;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -82,53 +84,65 @@ public class ProfileEdit extends HttpServlet {
 		User user = db.findUserByEmail(email);
 
 
-		//This part is written for a quick test and
-		//it revelead update method returns false.
-		//even register method returns false here.
-		user.setName("xx");
-		boolean x = user.Update();
-		if(x==true)	request.setAttribute("success", "true");
-		else if(x==false) request.setAttribute("error","true");
-		request.getRequestDispatcher("profile_edit.jsp").forward(request,response);
-		
-		//This is the proposed method to edit.
-		/*
-			String newGender_in = request.getParameter("editGender");
-			Gender newGender;
-			if(newGender_in == "male") newGender=Gender.Male;
-			else newGender=Gender.Female;
+		String newGender_in = request.getParameter("editGender");
+		Gender newGender;
+		if(newGender_in.contains("fF")) newGender=Gender.Female;
+		else newGender=Gender.Male;
 
-			String newBirthdate = request.getParameter("editBirthdate");
-			String newName = request.getParameter("editName");
-			String newPhone = request.getParameter("editPhone");
+		String newBirthdate = request.getParameter("editBirthdate");
+		String newName = request.getParameter("editName");
+		String newPhone = request.getParameter("editPhone");
+		String newBio = request.getParameter("editBio");
 
-			if(newBirthdate!=""){
-				try {
-					user.setBirthdate(newBirthdate);
-				} catch (ParseException e) {
-					e.printStackTrace();
-				}
+		if(newBirthdate!=""){
+			try {
+				user.setBirthdate(newBirthdate);
+			} catch (ParseException e) {
+				e.printStackTrace();
 			}
+		}
 
-			user.setGender(newGender);
-			user.setName(newName);
-			user.setPhone(newPhone);
+		user.setGender(newGender);
+		user.setName(newName);
+		user.setPhone(newPhone);
+		user.setBio(newBio);
 
-			Calendar cal = Calendar.getInstance();
-			java.sql.Timestamp timestamp = new java.sql.Timestamp(cal.getTimeInMillis());
-			user.setUpdatedOn(timestamp);
+		boolean updated=false;
+		try {
+			updated = user.UpdateProfile();
+		} catch (ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+		}
+		if(updated) request.setAttribute("success", "true");
+		else request.setAttribute("error","true");
+		
+		//Resubmit new details to session, 
+		//otherwise although updated, old info will be shown
+		
+		request.getSession().setAttribute("name", newName);
+		request.getSession().setAttribute("gender", newGender.toString());
 
-			Boolean result = user.Update();
 
-			if(result)
-			{
-				request.setAttribute("success", "true");
-				request.getRequestDispatcher("profile_edit.jsp").forward(request,response);
-			}else
-			{
-				request.setAttribute("error", "true");
-				request.getRequestDispatcher("profile_edit.jsp").forward(request, response);
-			}*/
+		if(newBirthdate==null)
+			request.getSession().setAttribute("birthdate", "");
+		else
+			request.getSession().setAttribute("birthdate", newBirthdate);
+
+		if(newPhone==null)
+			request.getSession().setAttribute("phone", "");
+		else
+			request.getSession().setAttribute("phone", newPhone);
+
+		if(newBio==null)
+			request.getSession().setAttribute("bio", " ");
+		else
+			request.getSession().setAttribute("bio", newBio);
+		
+		
+		
+		
+		request.getRequestDispatcher("profile_edit.jsp").forward(request,response);
+
 
 
 	}

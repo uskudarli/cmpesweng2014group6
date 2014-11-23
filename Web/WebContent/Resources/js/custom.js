@@ -3,17 +3,12 @@ $(document).ready(function() {
 	errorCheck();
 	successCheck();
 	
-	/*
-	 * This was somehow makes us unable to "select" one option on edit profile page,
-	 * ie. even if we put "selected" tag on male, female will come up as selected.
-	 * Hence, commented out for a while.
-	 * 
-	 * $(function() {
+	$(function() {
 		if($('input[name=genderHidden]').val()=="Male"){
 			$("#editGenderSelect").val('male');
 		}else
 			$("#editGenderSelect").val('female');
-	});*/
+	});
 	
 	
     $('#registerForm').bootstrapValidator({
@@ -32,7 +27,7 @@ $(document).ready(function() {
                     stringLength: {
                         min: 3,
                         max: 30,
-                        message: 'The name must be more than 6 and less than 30 characters long'
+                        message: 'The name must be more than 3 and less than 30 characters long'
                     },
                     regexp: {
                         regexp: /^[a-z ,.'-]+$/i,
@@ -205,8 +200,7 @@ $(document).ready(function() {
                     }
                 }
             },
-            editUname: {
-                message: 'The name is not valid',
+            editName: {
                 validators: {
                     notEmpty: {
                         message: 'The name is required and cannot be empty'
@@ -214,15 +208,11 @@ $(document).ready(function() {
                     stringLength: {
                         min: 3,
                         max: 30,
-                        message: 'The name must be more than 6 and less than 30 characters long'
+                        message: 'The name must be more than 3 and less than 30 characters long'
                     },
                     regexp: {
                         regexp: /^[a-z ,.'-]+$/i,
                         message: 'The name is not valid'
-                    },
-                    different: {
-                        field: 'password',
-                        message: 'The name and password cannot be the same as each other'
                     }
                 }
             },
@@ -231,16 +221,6 @@ $(document).ready(function() {
                     stringLength: {
                         max: 140,
                         message: 'Your bio cannot be longer than 140 chars.'
-                    }
-                }
-            },
-            editMail: {
-                validators: {
-                    notEmpty: {
-                        message: 'The email address is required and cannot be empty'
-                    },
-                    emailAddress: {
-                        message: 'The email address is not valid'
                     }
                 }
             }

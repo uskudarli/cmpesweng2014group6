@@ -67,18 +67,18 @@ public class DatabaseService {
 			{
 				user.setName(rs.getString("Name"));
 				user.setEmail(mail);
-				user.setUserId(rs.getInt("UserID"));
+				user.setUserID(rs.getInt("UserID"));
 				user.setBirthdate(rs.getDate("Birthdate"));
 				user.setPhone(rs.getString("Phone"));
 				user.setExperiencePoint(rs.getInt("ExperiencePoint"));
 				user.setLevel(rs.getInt("Level"));
 				user.setIsDeleted(0); //TODO why?
-				user.setPicId(rs.getInt("PicID"));
+				user.setPicID(rs.getInt("PicID"));
 				user.setBio(rs.getString("Bio"));
 				user.setPassword(rs.getString("Password"));
 				user.setCreatedOn(rs.getDate("CreationDate"));
 				user.setUpdatedOn(rs.getDate("LastUpdate"));
-				if(rs.getString("Gender").equals("Male"))
+				if(rs.getString("Gender")!=null&&rs.getString("Gender").equals("Male"))
 					user.setGender(User.Gender.Male);
 				else
 					user.setGender(User.Gender.Female);
@@ -109,7 +109,13 @@ public class DatabaseService {
 		return user; //THIS was return null, which give 500 nullpointerexception on each call.
 	}
 	
-	public Boolean Update(User user)
+	public Connection getConnection() throws ClassNotFoundException, SQLException{
+		Class.forName(JDBC_DRIVER);
+		conn = DriverManager.getConnection(DB_URL, USER, PASS);
+		return conn;
+	}
+	
+	/*public Boolean Update(User user)
 	{
 		try
 		{
@@ -150,7 +156,7 @@ public class DatabaseService {
 	    }
 		return null;
 		
-	}
+	}*/
 	
 	public void executeStmt(PreparedStatement stmt)
 	{

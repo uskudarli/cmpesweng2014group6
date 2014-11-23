@@ -47,7 +47,7 @@ public class AddStory extends HttpServlet {
 		
 		Story story = new Story();
 		
-		story.setUserId(user.getUserId());
+		story.setUserId(user.getUserID());
 		story.setContent(request.getParameter("editStory").toString());
 		//story.setThemeId(0);
 		story.setIsDeleted(0);

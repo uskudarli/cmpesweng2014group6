@@ -42,11 +42,9 @@
 								<select id="editGenderSelect" class="form-control"
 									name="editGender">
 									<option
-										<%if (request.getSession().getAttribute("gender").toString() == "Female") {%>
-										selected <%}%> value="female">Female</option>
+										value="female">Female</option>
 									<option
-										<%if (request.getSession().getAttribute("gender").toString() == "Male") {%>
-										selected <%}%> value="male">Male</option>
+										 value="male">Male</option>
 								</select>
 							</div>
 
@@ -58,7 +56,7 @@
 									placeholder="Birthdate"></input>
 							</div>
 
-							<input type="hidden" name="genderHidden" value="" />
+							<input type="hidden" name="genderHidden" value="<%= request.getSession().getAttribute("gender").toString() %>" />
 
 							<div class="form-group">
 								<input class="form-control" name="editPhone" type="text"

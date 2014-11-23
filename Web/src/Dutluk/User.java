@@ -1,9 +1,13 @@
 package Dutluk;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 public class User {
-	private int UserId;
+	private int UserID;
 	private String Name;
 	private String Email;
 	private Date Birthdate;
@@ -15,7 +19,7 @@ public class User {
 	private int ExperiencePoint;
 	private int Level;
 	private int IsDeleted;
-	private int PicId;
+	private int PicID;
 	private String Bio;
 	private String Password;
 	private Date CreatedOn;
@@ -23,7 +27,7 @@ public class User {
 	private DatabaseService db;
 	public User()
 	{
-		
+
 	}
 
 	public Boolean Register()
@@ -35,7 +39,7 @@ public class User {
 		else
 		{
 			String sql = "INSERT INTO Users (Name,Mail,IsDeleted,Password, CreationDate, LastUpdate) VALUES(";
-			sql += "'" + Name + "',";
+			sql += "" + Name + "',";
 			sql += "'" + Email + "',";
 			sql += "'" + IsDeleted + "',";
 			sql += "'" + Password + "',";
@@ -45,34 +49,51 @@ public class User {
 			return true;
 		}
 	}
-	
-	//Call this method on any update you want to make, so that you don't have to rewrite it.
-	public Boolean Update()
+
+	//This is the update profile, except profile picture
+	public Boolean UpdateProfile() throws SQLException, ClassNotFoundException 
 	{
+
+		
 		db = new DatabaseService();
-		User temp = db.findUserByEmail(Email);
-		if(temp.getEmail() != null)
-			return false;
-		else
-		{
-			String sql = "UPDATE Users (Name, Birthdate, Gender, Phone, ExperiencePoint, Level, IsDeleted, PicId, Bio, Password, UpdatedOn) VALUES(";
-			sql += "'" + Name + "',";
-			sql += "'" + Birthdate + "',";
-			sql += "'" + getGender().toString() + "',";
-			sql += "'" + Phone + "',";
-			sql += "'" + ExperiencePoint + "',";
-			sql += "'" + Level + "',";
-			sql += "'" + IsDeleted + "',";
-			sql += "'" + PicId + "',";
-			sql += "'" + Bio + "',";
-			sql += "'" + Password + "',";
-			sql += "'" + UpdatedOn + "')";
-			sql += " WHERE Mail = '"+Email+"';";
-			db.executeSql(sql);
-			return true;
+		Connection conn = db.getConnection();
+		
+		String sql = "UPDATE Users SET Name = ? , LastUpdate = NOW() WHERE UserID= ? ;";
+		PreparedStatement pstmt = conn.prepareStatement(sql);
+		pstmt.setString(1, this.Name);
+		//pstmt.setInt(2,this.getGenderIndex());
+		pstmt.setInt(2,this.UserID);
+		pstmt.executeUpdate();
+
+		if(this.Birthdate!=null){
+			sql= "UPDATE Users SET Birthdate = ?, LastUpdate = NOW() WHERE UserID= ? ;";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setDate(1, new java.sql.Date(this.Birthdate.getTime()));
+			pstmt.setInt(2,this.UserID);
+			pstmt.executeUpdate();
 		}
-	}
+		
+		if(this.Phone!=null){
+			sql= "UPDATE Users SET Phone = ?, LastUpdate = NOW() WHERE UserID= ? ;";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, this.Phone);
+			pstmt.setInt(2,this.UserID);
+			pstmt.executeUpdate();
+		}
+		
+		if(this.Bio!=null){
+			sql= "UPDATE Users SET Bio = ?, LastUpdate = NOW() WHERE UserID= ? ;";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, this.Bio);
+			pstmt.setInt(2,this.UserID);
+			pstmt.executeUpdate();
+		}
+		
+		return true;
 	
+		
+	}
+
 	public Boolean ChangePassword(String mail, String pass)
 	{
 		Calendar cal = Calendar.getInstance();
@@ -83,12 +104,12 @@ public class User {
 				+ " LastUpdate = '"+timestamp+"'"
 				+ " WHERE Mail = '"+mail+"'"
 				);
-		
-		
-		
+
+
+
 		return true;
 	}
-	
+
 	public Boolean Login()
 	{
 		db = new DatabaseService();
@@ -102,30 +123,37 @@ public class User {
 		}else
 			return false;
 	}
-	
-	public int getUserId() {
-		return UserId;
+
+	public int getUserID() {
+		return UserID;
 	}
 
-	public void setUserId(int userId) {
-		UserId = userId;
+	public void setUserID(int userID) {
+		UserID = userID;
 	}
-	
+
 	public void setGender(Gender g) {
-        this.gender = g;
-    }
-	
-	public void setGender(String s) {
-        if(s=="male" || s=="Male" || s=="MALE"){
-        	this.gender = Gender.Male;
-        }else{
-        	this.gender = Gender.Female;
-        }
-    }
+		this.gender = g;
+	}
 
-    public Gender getGender() {
-        return gender;
-    }
+	public void setGender(String s) {
+		if(s=="male" || s=="Male" || s=="MALE"){
+			this.gender = Gender.Male;
+		}else{
+			this.gender = Gender.Female;
+		}
+	}
+
+	public Gender getGender() {
+		return gender;
+	}
+	
+	public int getGenderIndex(){
+		if(this.getGender().toString().contains("fF"))
+			return 2;
+		else
+			return 1;
+	}
 
 	public String getName() {
 		return Name;
@@ -150,7 +178,7 @@ public class User {
 	public void setBirthdate(Date birthdate) {
 		Birthdate = birthdate;
 	}
-	
+
 	public void setBirthdate(String s) throws ParseException{
 		Date date = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH).parse(s);
 		this.setBirthdate(date);
@@ -188,12 +216,12 @@ public class User {
 		IsDeleted = isDeleted;
 	}
 
-	public int getPicId() {
-		return PicId;
+	public int getPicID() {
+		return PicID;
 	}
 
-	public void setPicId(int picId) {
-		PicId = picId;
+	public void setPicID(int picID) {
+		PicID = picID;
 	}
 
 	public String getBio() {
