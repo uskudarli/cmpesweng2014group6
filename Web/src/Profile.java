@@ -44,12 +44,15 @@ public class Profile extends HttpServlet {
 		request.getSession().setAttribute("xp", user.getExperiencePoint());
 		request.getSession().setAttribute("level", user.getLevel());
 		request.getSession().setAttribute("gender", user.getGender().toString().toLowerCase());
+		request.getSession().setAttribute("picid", user.getPicID());
 		
 		
 		if(user.getBirthdate()==null)
 			request.getSession().setAttribute("birthdate", "some unknown date");
 		else
 			request.getSession().setAttribute("birthdate", user.getBirthdate());
+		
+		
 		
 		if(user.getPhone()==null)
 			request.getSession().setAttribute("phone", "some unknown number");

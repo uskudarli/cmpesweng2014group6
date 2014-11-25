@@ -37,7 +37,10 @@
 			<div class="col-xs-6">
 				<div style="padding: 10px">
 					<br><br><h2 style="display:inline;"><%= request.getSession().getAttribute("name")%></h2> <a>subscribe</a>
-					<br><br>level <%= request.getSession().getAttribute("level")%> writer, <%= request.getSession().getAttribute("xp")%> points  
+					<br>level <%= request.getSession().getAttribute("level")%> writer, <%= request.getSession().getAttribute("xp")%> points  
+					<br><img src="http://titan.cmpe.boun.edu.tr:8085/pictures/<%= request.getSession().getAttribute("picid")%>.jpg" width=215 height=215 />
+					
+					
 					<h4>"<%= request.getSession().getAttribute("bio")%>"</h4>
 
 						Gender: <%= request.getSession().getAttribute("gender")%><br>
