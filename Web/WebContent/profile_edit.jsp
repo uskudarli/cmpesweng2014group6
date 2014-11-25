@@ -42,11 +42,11 @@
 								<select id="editGenderSelect" class="form-control"
 									name="editGender">
 									<option
-										value="female">Female</option>
+										value="Female">Female</option>
 									<option
-										 value="male">Male</option>
+										 value="Male">Male</option>
 									<option
-										 value="unspecified">Unspecified</option>
+										 value="Unspecified">Unspecified</option>
 								</select>
 							</div>
 

@@ -58,11 +58,11 @@ public class User {
 		db = new DatabaseService();
 		Connection conn = db.getConnection();
 		
-		String sql = "UPDATE Users SET Name = ? , LastUpdate = NOW() WHERE UserID= ? ;";
+		String sql = "UPDATE Users SET Name = ? , Gender = ? ,  LastUpdate = NOW() WHERE UserID= ? ;";
 		PreparedStatement pstmt = conn.prepareStatement(sql);
 		pstmt.setString(1, this.Name);
-		//pstmt.setInt(2,this.getGenderIndex());
-		pstmt.setInt(2,this.UserID);
+		pstmt.setString(2,this.getGender().toString());
+		pstmt.setInt(3,this.UserID);
 		pstmt.executeUpdate();
 
 		if(this.Birthdate!=null){

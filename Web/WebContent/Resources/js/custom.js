@@ -5,11 +5,11 @@ $(document).ready(function() {
 
 	$(function() {
 		if($('input[name=genderHidden]').val()=="Male"){
-			$("#editGenderSelect").val('male');
+			$("#editGenderSelect").val('Male');
 		}else if($('input[name=genderHidden]').val()=="Female"){
-			$("#editGenderSelect").val('female');
+			$("#editGenderSelect").val('Female');
 		}else{
-			$("#editGenderSelect").val('unspecified');
+			$("#editGenderSelect").val('Unspecified');
 		}
 	});
 
