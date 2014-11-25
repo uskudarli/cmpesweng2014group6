@@ -58,7 +58,7 @@
 									placeholder="Birthdate"></input>
 							</div>
 
-							<input type="text" name="genderHidden" value="<%= request.getSession().getAttribute("gender").toString() %>" />
+							<input type="hidden" name="genderHidden" value="<%= request.getSession().getAttribute("gender").toString() %>" />
 
 							<div class="form-group">
 								<input class="form-control" name="editPhone" type="text"
