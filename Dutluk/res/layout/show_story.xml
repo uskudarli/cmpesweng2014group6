@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dip" >
+
+        <!-- View Title Label -->
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dip"
+            android:text="@string/title_activity_showStory"
+            android:textSize="25sp"
+            android:textStyle="bold" />
+
+         <!-- Image Part -->
+            <LinearLayout
+                android:id="@+id/imageLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"   
+                android:gravity="center"
+                android:orientation="vertical" >
+
+                <ImageView
+                    android:id="@+id/imageViewShowStory"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@string/hello_world"
+                    android:src="@drawable/ic_launcher" />
+            </LinearLayout>
+        
+
+        <!-- Story Part -->
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/storyShowStory"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+
+       
+       
+        <!-- Error message -->
+
+        <TextView
+            android:id="@+id/errorShowStory"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="10dip"
+            android:textColor="#e30000"
+            android:textStyle="bold" />
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical" 
+            android:gravity="center">
+
+            <!-- I Remember That button -->
+
+            <Button
+                android:id="@+id/btnIRememberThat"
+                android:layout_width="72dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dip"
+                android:background="#ff6347"
+                android:onClick="iRememberThatAction"
+    			android:layout_alignParentLeft="true"
+                android:text="@string/btnIRememberThat"
+                android:textColor="#fff"
+                android:textSize="12sp" />
+			 <!-- Comments button -->
+
+            <Button
+                android:id="@+id/btnComments"
+                android:layout_width="72dp"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/btnIRememberThat"
+                android:layout_alignTop="@+id/btnIRememberThat"
+                android:layout_toRightOf="@+id/btnIRememberThat"
+                android:background="#ff6347"
+                android:onClick="commentsAction"
+                android:text="@string/btnComments"
+                android:textColor="#fff"
+                android:textSize="12sp" />
+             <!-- Subscribe Writer button -->
+
+            <Button
+                android:id="@+id/btnSubscribeWriter"
+                android:layout_width="72dp"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/btnIRememberThat"
+                android:layout_alignTop="@+id/btnIRememberThat"
+                android:layout_toRightOf="@+id/btnComments"
+                android:background="#ff6347"
+                android:onClick="subscribeWriterAction"
+                android:text="@string/btnSubscribeWriter"
+                android:textColor="#fff"
+                android:textSize="12sp" />
+            <!-- Subscribe Place button -->
+
+            <Button
+                android:id="@+id/btnSubscribePlace"
+                android:layout_width="72dp"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/btnIRememberThat"
+                android:layout_toRightOf="@+id/btnSubscribeWriter"
+                android:layout_alignTop="@+id/btnIRememberThat"
+                android:background="#ff6347"
+                android:minWidth="50dp"
+                android:onClick="subscribePlaceAction"
+                android:text="@string/btnSubscribePlace"
+                android:textColor="#fff"
+                android:textSize="12sp" />
+
+           
+
+           
+
+        </RelativeLayout>
+    </LinearLayout>
+
+</ScrollView>

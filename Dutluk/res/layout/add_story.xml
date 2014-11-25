@@ -13,36 +13,24 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dip"
-            android:text="@string/title_activity_profile"
+            android:text="@string/title_activity_addStory"
             android:textSize="25sp"
             android:textStyle="bold" />
         		
         <!-- Title Part -->
 		<LinearLayout
         	android:layout_width="fill_parent"
-        	android:layout_height="wrap_content"
+        	android:layout_height="48dp"
         	android:orientation="horizontal">
 	        <EditText
 	            android:id="@+id/titleAddStory"
 	            android:layout_width="fill_parent"
-	            android:layout_height="wrap_content"
+	            android:layout_height="48dp"
 	            android:hint="@string/enterTitle"
-	            android:textSize="20sp" />	  
+	            android:textSize="18sp" />	  
 	                        
 		</LinearLayout>
 		
-		<!-- Image Part -->
-		<LinearLayout
-        	android:layout_width="fill_parent"
-        	android:layout_height="wrap_content"
-        	android:orientation="horizontal">	 
-	        <EditText
-	            android:id="@+id/imageAddStory"
-	            android:layout_width="fill_parent"
-	            android:layout_height="wrap_content"
-	            android:hint="@string/uploadImage"
-	            android:textSize="20sp"/>	              
-		</LinearLayout>
 		
 		<!-- Story Part -->
 		<LinearLayout
@@ -54,38 +42,91 @@
 	            android:layout_width="fill_parent"
 	            android:layout_height="wrap_content"
 	            android:hint="@string/enterStory"
-	            android:textSize="20sp" />	          
+	            android:textSize="18sp" />	          
 		</LinearLayout>
 		
 		<!-- Place Part -->
-  		<LinearLayout
-        	android:layout_width="fill_parent"
-        	android:layout_height="wrap_content"
-        	android:orientation="horizontal">
-	         <EditText
-	            android:id="@+id/placeAddStory"
-	            android:layout_width="fill_parent"
-	            android:layout_height="wrap_content"
-	            android:hint="@string/pickPlace"
-	            android:textSize="20sp" />	             
-		</LinearLayout>
+		<RelativeLayout 
+			    android:layout_width="fill_parent"
+			    android:layout_height="48dp"
+			    android:orientation="vertical" >
 		
+	  		<LinearLayout
+	  		    android:id="@+id/placeLayout"
+	        	android:layout_width="fill_parent"
+	        	android:layout_height="48dp"
+	        	android:gravity="bottom"
+	        	android:layout_alignParentTop="true"
+         		android:layout_alignParentLeft="true"
+         		android:layout_toLeftOf="@+id/mapButtonAddStory"
+	        	android:orientation="horizontal">
+		         <EditText
+		            android:id="@+id/placeAddStory"
+		            android:layout_width="fill_parent"
+		            android:layout_height="48dp"
+		            android:hint="@string/pickPlace"
+		            android:textSize="18sp" />	             
+			</LinearLayout>
+	     	<ImageButton
+	             android:id="@+id/mapButtonAddStory"
+	             android:layout_width="48dp"
+	             android:layout_height="48dp"
+	             android:onClick="goMapActivity"
+	             android:src="@drawable/world"
+	             android:layout_alignParentTop="true"
+	             android:layout_alignParentRight="true"
+	         	android:contentDescription="@string/hello_world" />
+		</RelativeLayout>
+      
   		<!-- Time Part -->
 		<LinearLayout
         	android:layout_width="fill_parent"
-        	android:layout_height="wrap_content"
+        	android:layout_height="48dp"
         	android:orientation="horizontal">
 	        <EditText
 	            android:id="@+id/timeAddStory"
 	            android:layout_width="fill_parent"
-	            android:layout_height="wrap_content"
+	            android:layout_height="48dp"
 	            android:hint="@string/pickTime"
-	            android:textSize="20sp"/>          
+	            android:textSize="18sp"/>          
 		</LinearLayout>
-		
+		<!-- Image Part -->
+		<RelativeLayout 
+			    android:layout_width="fill_parent"
+			    android:layout_height="wrap_content"
+			    android:orientation="vertical" >
+
+	  		<LinearLayout
+	  		    android:id="@+id/imageLayout"
+	        	android:layout_width="match_parent"
+	        	android:layout_height="wrap_content"
+	        	android:gravity="bottom"
+	        	android:layout_alignParentTop="true"
+         		android:layout_alignParentLeft="true"
+         		android:layout_toLeftOf="@+id/imageButtonAddStory"
+	        	android:orientation="vertical">
+
+		         <ImageView
+		             android:id="@+id/imageViewAddStory"
+		             android:layout_width="match_parent"
+		             android:layout_height="match_parent"
+		             android:contentDescription="@string/hello_world"
+		             android:src="@drawable/ic_launcher" />
+	             
+			</LinearLayout>
+	     	<ImageButton
+	             android:id="@+id/imageButtonAddStory"
+	             android:layout_width="48dp"
+	             android:layout_height="48dp"
+	             android:onClick="goImageSelector"
+	             android:src="@drawable/paperclip"
+	             android:layout_alignParentTop="true"
+	             android:layout_alignParentRight="true"
+	         	android:contentDescription="@string/hello_world" />
+		</RelativeLayout>
 		<!-- Error message -->
         <TextView
-            android:id="@+id/errorProfile"
+            android:id="@+id/errorAddStory"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -100,7 +141,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dip"
             android:background="#ff6347"
-            android:onClick="saveUser"
+            android:onClick="saveStory"
             android:text="@string/btnAddStory"
             android:textColor="#fff" />
         
