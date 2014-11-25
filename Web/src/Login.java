@@ -176,8 +176,10 @@ public class Login extends HttpServlet {
 				String gender = request.getParameter("editGender");
 				if(gender.equals("male"))
 					user.setGender(User.Gender.Male);
-				else
+				else if(gender.equals("female"))
 					user.setGender(User.Gender.Female);
+				else
+					user.setGender(User.Gender.Unspecified);
 				user.setPhone(request.getParameter("editPhone"));
 				user.setBio(request.getParameter("editBio"));
 				//burda kaldim

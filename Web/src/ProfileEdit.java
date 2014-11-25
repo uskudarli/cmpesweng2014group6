@@ -87,8 +87,9 @@ public class ProfileEdit extends HttpServlet {
 
 		String newGender_in = request.getParameter("editGender");
 		Gender newGender;
-		if(newGender_in.contains("fF")) newGender=Gender.Female;
-		else newGender=Gender.Male;
+		if(newGender_in.toLowerCase().startsWith("f")) newGender=Gender.Female;
+		else if(newGender_in.toLowerCase().startsWith("m")) newGender=Gender.Male;
+		else newGender=Gender.Unspecified;
 
 		String newBirthdate = request.getParameter("editBirthdate");
 		String newName = request.getParameter("editName");

@@ -45,6 +45,8 @@
 										value="female">Female</option>
 									<option
 										 value="male">Male</option>
+									<option
+										 value="unspecified">Unspecified</option>
 								</select>
 							</div>
 
@@ -56,7 +58,7 @@
 									placeholder="Birthdate"></input>
 							</div>
 
-							<input type="hidden" name="genderHidden" value="<%= request.getSession().getAttribute("gender").toString() %>" />
+							<input type="text" name="genderHidden" value="<%= request.getSession().getAttribute("gender").toString() %>" />
 
 							<div class="form-group">
 								<input class="form-control" name="editPhone" type="text"

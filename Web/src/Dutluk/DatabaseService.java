@@ -82,9 +82,10 @@ public class DatabaseService {
 				user.setUpdatedOn(rs.getDate("LastUpdate"));
 				if(rs.getString("Gender")!=null&&rs.getString("Gender").equals("Male"))
 					user.setGender(User.Gender.Male);
-				else
+				else if(rs.getString("Gender")!=null&&rs.getString("Gender").equals("Female"))
 					user.setGender(User.Gender.Female);
-				//TODO null sets gender to female here.
+				else
+					user.setGender(User.Gender.Unspecified);
 			}
 			return user;
 			

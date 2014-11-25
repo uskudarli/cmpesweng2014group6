@@ -13,7 +13,7 @@ public class User {
 	private Date Birthdate;
 	public Gender gender = Gender.Male;
 	public enum Gender {
-		Male, Female;
+		Male, Female, Unspecified;
 	}
 	private String Phone;
 	private int ExperiencePoint;
@@ -147,10 +147,12 @@ public class User {
 	}
 
 	public void setGender(String s) {
-		if(s=="male" || s=="Male" || s=="MALE"){
+		if(s.toLowerCase().startsWith("m")){
 			this.gender = Gender.Male;
-		}else{
+		}else if(s.toLowerCase().startsWith("f")){
 			this.gender = Gender.Female;
+		}else{
+			this.gender = Gender.Unspecified;
 		}
 	}
 
