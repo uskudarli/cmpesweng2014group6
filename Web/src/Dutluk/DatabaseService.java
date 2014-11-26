@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Date;
 
 
@@ -112,6 +113,51 @@ public class DatabaseService {
 		return user; //THIS was return null, which give 500 nullpointerexception on each call.
 	}
 	
+	public ArrayList<Place> findAllPlaces()
+	{
+		ArrayList<Place> places = new ArrayList<Place>();
+		try
+		{
+			Class.forName(JDBC_DRIVER);
+			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			pstmt = conn.prepareStatement("SELECT * FROM Places");
+			ResultSet rs = pstmt.executeQuery();
+			
+			while(rs.next())
+			{
+				Place temp = new Place();
+				temp.setCreatedOn(rs.getDate("CreationDate"));
+				temp.setUpdatedOn(rs.getDate("LastUpdate"));
+				temp.setName(rs.getString("Name"));
+				temp.setPlaceID(rs.getInt("PlaceID"));
+				temp.setLongtitude(rs.getDouble("Longtitude"));
+				temp.setLatitude(rs.getDouble("Latitude"));
+				places.add(temp);
+			}
+			return places;
+			
+		}catch(SQLException se){
+	         //Handle errors for JDBC
+	         se.printStackTrace();
+		}catch(Exception e){
+	         //Handle errors for Class.forName
+	         e.printStackTrace();
+	    }finally{
+	         //finally block used to close resources
+	   		try{
+	   			if(stmt!=null)
+	   				stmt.close();
+	   		}catch(SQLException se2){
+	   		}// nothing we can do
+	   		try{
+	   			if(conn!=null)
+	   				conn.close();
+	   		}catch(SQLException se){
+	   			se.printStackTrace();
+	   		}//end finally try
+	    }
+		return places;
+	}
 	public Connection getConnection() throws ClassNotFoundException, SQLException{
 		Class.forName(JDBC_DRIVER);
 		conn = DriverManager.getConnection(DB_URL, USER, PASS);

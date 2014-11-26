@@ -11,14 +11,43 @@
 var map;
 function initialize() {
   var mapOptions = {
-    zoom: 8,
-    center: new google.maps.LatLng(-34.397, 150.644)
+	scrollwheel: false,
+    zoom: 10,
+    center: new google.maps.LatLng(41.0136, 28.9550)
   };
   map = new google.maps.Map(document.getElementById('map-canvas'),
       mapOptions);
+  $.ajax({
+		type: "get",
+		url: "Markers",
+		datatype: "json",
+		success: function(data){
+			for(var i=0; i<data.length; i++)
+			{
+				var marker = new google.maps.Marker({
+		            position: new google.maps.LatLng(data[i].Latitude, data[i].Longtitude),
+		            map: map,
+		            title: data[i].Name
+				});
+				marker.setMap(map);
+				
+				var content = "<a href='profile.jsp' id='infowindow'>" + data[i].Name + "</a>";
+				
+				var infowindow = new google.maps.InfoWindow({
+				      content: content
+				});
+				google.maps.event.addListener(marker, 'click', function() {
+				    infowindow.open(map,marker);
+				});
+			}
+		}
+	});
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);
+
+
+
 </script>
 </head>
 <body>
