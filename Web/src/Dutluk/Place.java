@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class Place {
 	private int PlaceID;
-	private String Name;
+	public String Name;
 	private double Longtitude;
 	private double Latitude;
 	private Date CreatedOn;

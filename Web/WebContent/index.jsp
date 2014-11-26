@@ -31,7 +31,7 @@ function initialize() {
 				});
 				marker.setMap(map);
 				
-				var content = "<a href='profile.jsp' id='infowindow'>" + data[i].Name + "</a>";
+				var content = "<a href='Timeline?ID=" + data[i].PlaceID +"' id='infowindow'>" + data[i].Name + "</a>";
 				
 				attachInfoWindow(marker, content);
 			}

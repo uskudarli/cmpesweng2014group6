@@ -126,13 +126,12 @@ public class DatabaseService {
 			
 			while(rs.next())
 			{
-				Place temp = new Place();
-				temp.setCreatedOn(rs.getDate("CreationDate"));
-				temp.setUpdatedOn(rs.getDate("LastUpdate"));
-				temp.setName(rs.getString("Name"));
-				temp.setPlaceID(rs.getInt("PlaceID"));
-				temp.setLongtitude(rs.getDouble("Longtitude"));
-				temp.setLatitude(rs.getDouble("Latitude"));
+				place.setCreatedOn(rs.getDate("CreationDate"));
+				place.setUpdatedOn(rs.getDate("LastUpdate"));
+				place.setName(rs.getString("Name"));
+				place.setPlaceID(rs.getInt("PlaceID"));
+				place.setLongtitude(rs.getDouble("Longtitude"));
+				place.setLatitude(rs.getDouble("Latitude"));
 			}
 			return place;
 			
