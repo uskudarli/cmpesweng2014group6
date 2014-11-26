@@ -25,6 +25,7 @@
 	ResultSet rs =null;
 	String lat = request.getParameter("Lat");
 	String lon = request.getParameter("Lon");
+	String name = request.getParameter("Name");
 	request.getSession().setAttribute("lati", lat);
 	request.getSession().setAttribute("long", lon);
 	
@@ -39,7 +40,7 @@
 						class="editForm form-horizontal">
 						<div class="form-group">
 							
-							Place Name:<input class="form-control" name="placeName" type="text";"/>
+							Place Name:<input class="form-control" name="placeName" type="text" value="<%out.print(name);%>"/>
 							Story: <input class="form-control" name="editStory" type="text" style="height: 200px;"/>
 							When did it happen?: <input class="form-control" id="editBirthdate" name="editStime" type=text 
 							 placeholder="dd/mm/yyyy"></input>

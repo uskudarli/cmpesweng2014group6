@@ -55,35 +55,14 @@ public class AddStory extends HttpServlet {
 		String lon = request.getParameter("lng");
 		lat = request.getSession().getAttribute("lati").toString();
 		lon = request.getSession().getAttribute("long").toString();
-		String placeName = request.getParameter("placeName");
 		int placeId = 0;
-		PreparedStatement statement = null;
-		String Sql = "INSERT INTO Places (Name, Longtitude, Latitude, CreationDate, LastUpdate) VALUES (?,?,?,NOW(),NOW())";
-		try {
-			Connection con = db.getConnection();
-			statement = con.prepareStatement(Sql);
-			statement.setString(1, placeName);
-			statement.setString(2, lon);
-			statement.setString(3, lat);
-			
-			statement.execute();
-		} catch (ClassNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (SQLException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		
 		ResultSet rs = null;
+		PreparedStatement statement = null;
+		String sql = "SELECT * FROM Places WHERE Latitude ='"+lat+"'";
 		try {
 			Connection con = db.getConnection();
-			Statement statement2 = con.createStatement() ;
-			rs =statement2.executeQuery("SELECT * FROM Places ORDER BY PlaceID DESC Limit 1") ;
-			while(rs.next())
-	        {
-	            placeId = rs.getInt(1);
-	        }
+			Statement statement3 = con.createStatement() ;
+			rs =statement3.executeQuery(sql);
 		} catch (ClassNotFoundException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -91,7 +70,57 @@ public class AddStory extends HttpServlet {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		
+		if(rs != null)  //adding stories to an existing place
+		{
+			
+            try {
+            	while(rs.next())
+            		placeId = rs.getInt(1);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		    
+		}
+		else
+		{
+			String placeName = request.getParameter("placeName");
+			
+			statement = null;
+			String Sql = "INSERT INTO Places (Name, Longtitude, Latitude, CreationDate, LastUpdate) VALUES (?,?,?,NOW(),NOW())";
+			try {
+				Connection con = db.getConnection();
+				statement = con.prepareStatement(Sql);
+				statement.setString(1, placeName);
+				statement.setString(2, lon);
+				statement.setString(3, lat);
+				
+				statement.execute();
+			} catch (ClassNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
+			
+			try {
+				Connection con = db.getConnection();
+				Statement statement2 = con.createStatement() ;
+				rs =statement2.executeQuery("SELECT * FROM Places ORDER BY PlaceID DESC Limit 1") ;
+				while(rs.next())
+		        {
+		            placeId = rs.getInt(1);
+		        }
+			} catch (ClassNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
 		
 		Calendar cal = Calendar.getInstance();
 		java.sql.Timestamp timestamp = new java.sql.Timestamp(cal.getTimeInMillis());

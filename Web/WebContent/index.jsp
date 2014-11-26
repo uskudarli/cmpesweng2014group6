@@ -56,7 +56,7 @@ function initialize() {
 				});
 				marker.setMap(map);
 				
-				var content = "<a href='Timeline?ID=" + data[i].PlaceID +"' id='infowindow'>" + data[i].Name + "</a>";
+				var content = "<a href='Timeline?ID=" + data[i].PlaceID +"' id='infowindow'>" + data[i].Name + "</a> <a href='addStory.jsp?Lat=" + data[i].Latitude +"&Lon="+data[i].Longtitude+"&Name="+data[i].Name+"' id='infowindow'>(Add new Story?)</a>";
 				
 				attachInfoWindow(marker, content);
 			}
