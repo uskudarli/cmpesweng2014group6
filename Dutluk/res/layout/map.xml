@@ -1,22 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:padding="10dip" >
 
-
-    <LinearLayout
+    <fragment
+        android:id="@+id/gmap"
+        android:name="com.google.android.gms.maps.MapFragment"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="10dip" >
-   
-<fragment 
-          android:id="@+id/gmap"
-          android:layout_width="fill_parent"
-    	  android:layout_height="fill_parent"
-          android:name="com.google.android.gms.maps.MapFragment"/>
-
+        android:layout_height="fill_parent" />
 
 </LinearLayout>
-</ScrollView>

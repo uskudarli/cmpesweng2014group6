@@ -1,5 +1,9 @@
 package com.android.dutluk;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 /**
@@ -9,6 +13,8 @@ import java.util.regex.Pattern;
 public class Utility {
 	private static Pattern pattern;
 	private static Matcher matcher;
+	//public static Map<Integer,ArrayList<Double>> multiMap = new HashMap<Integer,ArrayList<Double>>();
+	
 	//Email Pattern
 	private static final String EMAIL_PATTERN = 
 			"^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"

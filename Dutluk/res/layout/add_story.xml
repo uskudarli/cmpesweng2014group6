@@ -17,19 +17,6 @@
             android:textSize="25sp"
             android:textStyle="bold" />
         		
-        <!-- Title Part -->
-		<LinearLayout
-        	android:layout_width="fill_parent"
-        	android:layout_height="48dp"
-        	android:orientation="horizontal">
-	        <EditText
-	            android:id="@+id/titleAddStory"
-	            android:layout_width="fill_parent"
-	            android:layout_height="48dp"
-	            android:hint="@string/enterTitle"
-	            android:textSize="18sp" />	  
-	                        
-		</LinearLayout>
 		
 		
 		<!-- Story Part -->
@@ -45,7 +32,7 @@
 	            android:textSize="18sp" />	          
 		</LinearLayout>
 		
-		<!-- Place Part -->
+		<!-- Place Part 
 		<RelativeLayout 
 			    android:layout_width="fill_parent"
 			    android:layout_height="48dp"
@@ -60,24 +47,24 @@
          		android:layout_alignParentLeft="true"
          		android:layout_toLeftOf="@+id/mapButtonAddStory"
 	        	android:orientation="horizontal">
-		         <EditText
+		         <TextView
 		            android:id="@+id/placeAddStory"
 		            android:layout_width="fill_parent"
 		            android:layout_height="48dp"
-		            android:hint="@string/pickPlace"
 		            android:textSize="18sp" />	             
 			</LinearLayout>
 	     	<ImageButton
 	             android:id="@+id/mapButtonAddStory"
 	             android:layout_width="48dp"
 	             android:layout_height="48dp"
-	             android:onClick="goMapActivity"
+	             android:onClick="navigatetoMapActivity"
 	             android:src="@drawable/world"
 	             android:layout_alignParentTop="true"
 	             android:layout_alignParentRight="true"
 	         	android:contentDescription="@string/hello_world" />
+	     	
 		</RelativeLayout>
-      
+      -->
   		<!-- Time Part -->
 		<LinearLayout
         	android:layout_width="fill_parent"
@@ -141,7 +128,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dip"
             android:background="#ff6347"
-            android:onClick="saveStory"
+            android:onClick="navigatetoMapActivity"
             android:text="@string/btnAddStory"
             android:textColor="#fff" />
         

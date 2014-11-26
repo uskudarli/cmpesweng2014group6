@@ -8,7 +8,7 @@
 	android:padding="10dp"
 >
 	<TextView 
-	   android:text="Enter Title: "
+	   android:text="@string/enterTitle"
 	   android:layout_width="wrap_content"
 	   android:layout_height="wrap_content"    
 	    />
@@ -16,10 +16,11 @@
 	    android:id="@+id/ettitle"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
+	    android:inputType="text"
 	    />
 	  
 	    
-	<TextView 
+	<!--  <TextView 
 	   android:text="Enter Snippet: "
 	   android:layout_width="wrap_content"
 	   android:layout_height="wrap_content"    
@@ -29,5 +30,5 @@
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    />
-	
+	-->
 </LinearLayout>

@@ -6,8 +6,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -22,16 +20,13 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Log;
+
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
+
 
 
 public class AddStoryActivity extends Activity {
@@ -39,19 +34,19 @@ public class AddStoryActivity extends Activity {
 	ProgressDialog prgDialog;
 	TextView errorMsg;
 	
-	EditText titleET;
 	ImageView imageV;
 	EditText storyET;
-	EditText placeET;
+	TextView placeET;
 	EditText timeET;
 
 
 	String mail = "";
-	
+	String story ="";
+	String time="";
+	String image = "";
 	private final int SELECT_FILE = 1;
 	private final int REQUEST_CAMERA = 0;
-//	private ImageButton mapButton;
-//	private ImageButton imageButton;
+
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,121 +61,35 @@ public class AddStoryActivity extends Activity {
 	    // Set Cancelable as False
 	    prgDialog.setCancelable(false);
          
-     	titleET = (EditText)findViewById(R.id.titleAddStory);
+     	
      	imageV = (ImageView)findViewById(R.id.imageViewAddStory);
      	storyET =  (EditText)findViewById(R.id.storyAddStory);
-     	placeET =  (EditText)findViewById(R.id.placeAddStory);
+     	
      	timeET = (EditText)findViewById(R.id.timeAddStory);
-//     	mapButton = (ImageButton)findViewById(R.id.mapButtonAddStory);
-//     	imageButton = (ImageButton)findViewById(R.id.imageButtonAddStory);
+
         
         Intent loginIntent = getIntent();
         mail = loginIntent.getStringExtra("mail");
+        story = storyET.getText().toString();
+		time = timeET.getText().toString();
+		// düzelt:)
+		image = "";
+        
     }
-    // düzelt:)
-	public void saveStory(View view){
 
-		String title = titleET.getText().toString();
-		//String image ; //BURASI??
-		String story = storyET.getText().toString();
-		String place = placeET.getText().toString();
-		String time = timeET.getText().toString();
-
-		RequestParams params = new RequestParams();
-		params.put("mail",mail);
-		params.put("title", title);
-		//params.put("image", image);
-		params.put("story", story);
-		params.put("place", place);
-		params.put("time", time);				
-		
-	
-		invokeWSforSAVE(params);
-		
-		//GEREKSIZ
-		String id = "";
-		 startShowStoryActivity(mail,id);
-	}    
-
-	public void invokeWSforSAVE(RequestParams params){
-		// Show Progress Dialog 
-		prgDialog.show();
-		// Make RESTful web service call using AsyncHttpClient object
-		AsyncHttpClient client = new AsyncHttpClient();
-        client.get("http://192.168.43.17:9999/addStory",params ,new AsyncHttpResponseHandler() {
-        	// When the response returned by REST has Http response code '200'
-             @Override
-             public void onSuccess(String response) {
-            	// Hide Progress Dialog
-            	 prgDialog.hide();
-                 try {
-                	 	 // JSON Object
-                         JSONObject obj = new JSONObject(response);
-                         // When the JSON response has status boolean value assigned with true
-                         if(obj.getBoolean("status")){
-                        	 // Set Default Values for Edit View controls
-                        	 
-                        	 //düzelt:)
-                        	 String id = "";
-                        	 startShowStoryActivity(mail,id);
-                        	 
-                        	 
-                        	 
-                        	 
-                        	 // Display successfully registered message using Toast
-                        	 Toast.makeText(getApplicationContext(), "You are successfully add new story!", Toast.LENGTH_LONG).show();
-                         } 
-                         // Else display error message
-                         else{
-                        	 errorMsg.setText(obj.getString("error_msg"));
-                        	 Toast.makeText(getApplicationContext(), obj.getString("error_msg"), Toast.LENGTH_LONG).show();
-                         }
-                 } catch (JSONException e) {
-                    
-                     Toast.makeText(getApplicationContext(), "Error Occured [Server's JSON response might be invalid]!", Toast.LENGTH_LONG).show();
-                     e.printStackTrace();
-                     
-                 }
-             }
-             // When the response returned by REST has HTTP response code other than '200'
-             @Override
-             public void onFailure(int statusCode, Throwable error,
-                 String content) {
-                 // Hide Progress Dialog
-                 prgDialog.hide();
-                 // When HTTP response code is '404'
-                 if(statusCode == 404){
-                     Toast.makeText(getApplicationContext(), "Requested resource not found", Toast.LENGTH_LONG).show();
-                 } 
-                 // When HTTP response code is '500'
-                 else if(statusCode == 500){
-                     Toast.makeText(getApplicationContext(), "Something went wrong at server end", Toast.LENGTH_LONG).show();
-                 } 
-                 // When HTTP response code other than 404, 500
-                 else{
-                     Toast.makeText(getApplicationContext(), "Unexpected Error occcured! [Most common Error: Device might not be connected to Internet or remote server is not up and running]", Toast.LENGTH_LONG).show();
-                 }
-             }
-         });
-	}
-	
 	// düzelt:) 
-	public void goMapActivity(View view){
-//		Intent mapIntent = new Intent(getApplicationContext(),MapActivity.class);
-//		mapIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//		startActivity(mapIntent);
-	}
-	public void  startShowStoryActivity(String mail, String story_id) {
-		Log.e("geldin", "show");
-		Intent showStoryIntent = new Intent(getApplicationContext(),ShowStoryActivity.class);
-		Bundle b = new Bundle();
-		b.putString("mail",mail);
-		b.putString("mail",story_id);
-		showStoryIntent.putExtras(b);
-		// Clears History of Activity
-		showStoryIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		startActivity(showStoryIntent);
-	}
+
+//	public void  startShowStoryActivity(String mail, String story_id) {
+//		Log.e("geldin", "show");
+//		Intent showStoryIntent = new Intent(getApplicationContext(),ShowStoryActivity.class);
+//		Bundle b = new Bundle();
+//		b.putString("mail",mail);
+//		b.putString("mail",story_id);
+//		showStoryIntent.putExtras(b);
+//		// Clears History of Activity
+//		showStoryIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//		startActivity(showStoryIntent);
+//	}
 	public void goImageSelector(View view) {
         final CharSequence[] items = { "Take Photo", "Choose from Library",
                 "Cancel" };
@@ -277,6 +186,18 @@ public class AddStoryActivity extends Activity {
         cursor.moveToFirst();
         return cursor.getString(column_index);
     }
+	public void navigatetoMapActivity(View view){
+		
+		Intent MapIntent = new Intent(getApplicationContext(),MapActivity.class);
+		Bundle b = new Bundle();
+		b.putString("mail",mail);
+		b.putString("story",story);
+		b.putString("time",time);
+		b.putString("image",image);
+		MapIntent.putExtras(b);
+		MapIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		startActivity(MapIntent);
+	}
 	
 }
 
