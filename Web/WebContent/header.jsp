@@ -5,26 +5,26 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/Resources/datepicker/css/datepicker.css">
 
 <div class="header">
-	<!-- Hide if logged in -->
+
+	<div id="textbox">
+	<p class="alignleft"><a href="index.jsp">Dutluk</a> <!-- previously "home" -->
+	
+
+	<!-- Hide rest if logged in,show only login-register -->
 	<%
-		if(request.getSession() != null)
+		if(request.getSession() != null && request.getSession().getAttribute("loggedIn")=="true")
 		{
-			if(request.getSession().getAttribute("loggedIn")=="true")
-			{
-				//out.println("<a href='javascript:void(0);' onclick='goToEdit()'>Profile</a>");
-				out.println("<a href='Profile'>Profile</a>");
-				out.println("<a href='addStory.jsp'>Add story</a>");
-				out.println("<a href='javascript:void(0);' onclick='logOut()'>LogOut</a>");
-				out.println("<a href='changePassword.jsp'>Change Password</a>");
-			}else
-				out.println("<a href='loginRegister.jsp'>Login/Register</a>");
+			//out.println("<a href='javascript:void(0);' onclick='goToEdit()'>Profile</a>"); ->moved to profile
+			out.println("- <a href='Profile'>Me</a>");
+			out.println("- <a href='addStory.jsp'>Write</a>");
+			out.println("</p><p class='alignright'><a href='javascript:void(0);' onclick='logOut()'>Log Out</a></p>");
+			//out.println("<a href='changePassword.jsp'>Change Password</a>"); ->moved to edit profile
+		}else{
+			out.println("<p class='alignright'><a href='loginRegister.jsp'>Login/Register</a></p>");
 		}
-		else
-			out.println("<a href='loginRegister.jsp'>Login/Register</a>");
 			
 	%>
-	<a href="index.jsp">Home</a>
-	<!-- TODO session check, show only if logged in -->
+</div>
 </div>
 
 

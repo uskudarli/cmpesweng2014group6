@@ -8,79 +8,108 @@
 
 </head>
 <body>
-	<%@ page import="Dutluk.*" %>
+	<%@ page import="Dutluk.*"%>
 	<%
 		HttpSession newSession = request.getSession();
-		if(newSession == null)
-		{
-			request.getRequestDispatcher("loginRegister.jsp").forward(request,response);
-		}else if(newSession.getAttribute("email") == null)
-			request.getRequestDispatcher("loginRegister.jsp").forward(request,response);
-		else if(request.getAttribute("name") == null 
+		if (newSession == null) {
+			request.getRequestDispatcher("loginRegister.jsp").forward(
+					request, response);
+		} else if (newSession.getAttribute("email") == null)
+			request.getRequestDispatcher("loginRegister.jsp").forward(
+					request, response);
+		else if (request.getAttribute("name") == null
 				|| request.getAttribute("birthdate") == null
 				|| request.getAttribute("phone") == null
-				|| request.getAttribute("bio") == null)
-		{
-			request.getRequestDispatcher("loginRegister.jsp").forward(request,response);	
-		}	
+				|| request.getAttribute("bio") == null) {
+			//This is inappropriate, and forwards at random time.
+			//request.getRequestDispatcher("loginRegister.jsp").forward(request,response);	
+		}
 	%>
 	<jsp:include page="header.jsp" />
 	<jsp:include page="footer.jsp" />
 
 	<div class="container">
 		<div class="row">
-		
+
 			<div class="col-xs-6">
 				<div style="padding: 10px">
-					<h2>Profile</h2>
-					<form id="editForm" method="post"
-						class="editForm form-horizontal">
+					<h2><%=request.getSession().getAttribute("name")%></h2>
+
+					<form id="editProfileForm" method="post" class="loginForm form-horizontal">
 						<div class="form-group">
-							Name: <input class="form-control" name="editUname" type="text" value="<%= request.getAttribute("name").toString() %>" placeholder="Name"/>
-							Birthdate: <input class="form-control" id="editBirthdate" name="editBirthdate" type=text value="<%= request.getAttribute("birthdate") %>"
-								name="name" placeholder="dd/mm/yyyy"></input>
-							Gender: 
-							<select id="editGenderSelect" class= "form-control" name="editGender">
+
+							<div class="form-group">
+								<select id="editGenderSelect" class="form-control"
+									name="editGender">
+									<option
+										value="Female">Female</option>
+									<option
+										 value="Male">Male</option>
+									<option
+										 value="Unspecified">Unspecified</option>
+								</select>
+							</div>
+
+							<div class="form-group">
 								
-								<option value="female">Female</option>
-								<option value="male">Male</option>
-							</select>
-							<input type="hidden" name="genderHidden" value="<%=request.getAttribute("gender")%>" />
-							Phone: <input class="form-control" name="editPhone" type="text" value="<%= request.getAttribute("phone").toString() %>"
-								name="name" placeholder="5"></input>
-							Bio: <input class="form-control" name="editBio" type="text" value="<%= request.getAttribute("bio").toString() %>"
-								name="name" placeholder="Bio"></input>	
-								
+								<input class="form-control" id="editBirthdate"
+									name="editBirthdate" type=text
+									value="<%=request.getSession().getAttribute("birthdate")%>"
+									placeholder="Birthdate"></input>
+							</div>
+
+							<input type="hidden" name="genderHidden" value="<%= request.getSession().getAttribute("gender").toString() %>" />
+
+							<div class="form-group">
+								<input class="form-control" name="editPhone" type="text"
+									value="<%=request.getSession().getAttribute("phone")%>"
+									placeholder="Phone Number"></input>
+							</div>
+
+							<div class="form-group">
+								<input class="form-control" name="editName" type="text"
+									value="<%=request.getSession().getAttribute("name")%>"
+									placeholder="Name"></input>
+							</div>
+
+
+							<div class="form-group">
+								<textarea class="form-control" cols=40 rows=2 name="editBio"
+									placeholder="Bio"><%=request.getSession().getAttribute("bio")%></textarea>
+							</div>
+
 						</div>
 						<div class="form-group">
-							<button id="editProfileButton" type="submit" class="btn btn-default">Save</button>
+							<button id="editProfileButton" type="submit"
+								class="btn btn-default">Save</button>
 						</div>
-						<input type="hidden" name="func" value="edit" />
+						<input type="hidden" name="func" value="editProfile" />
 					</form>
+					<a href='changePassword.jsp'>Change Password</a>
 				</div>
 			</div>
-			
-			
+
+
 		</div>
 	</div>
 
 
-	
-	<div class="modal fade bs-example-modal-sm" id="editSuccess" tabindex="-1"
-		role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+	<div class="modal fade bs-example-modal-sm" id="editSuccess"
+		tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+		aria-hidden="true">
 		<div class="modal-dialog modal-sm">
 			<div class="modal-content">
-				
-				<div class="modal-body">
-					Your information is successfully updated!
-				</div>
+
+				<div class="modal-body">Your information is successfully
+					updated!</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">Ok</button>
 				</div>
 			</div>
 		</div>
 	</div>
-	
+
 	<div class="modal fade bs-example-modal-sm" id="errorPop" tabindex="-1"
 		role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-sm">
@@ -91,9 +120,7 @@
 					</button>
 					<h4 class="modal-title" id="myModalLabel">Error</h4>
 				</div>
-				<div class="modal-body">
-					Some error occurred.
-				</div>
+				<div class="modal-body">Some error occurred.</div>
 				<div class="modal-footer">
 
 					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -101,7 +128,9 @@
 			</div>
 		</div>
 	</div>
-	<input type="hidden" name="success" value="<%=request.getAttribute("success")%>" />
-	<input type="hidden" name="error" value="<%=request.getAttribute("error")%>" />
+	<input type="hidden" name="success"
+		value="<%=request.getAttribute("success")%>" />
+	<input type="hidden" name="error"
+		value="<%=request.getAttribute("error")%>" />
 </body>
 </html>

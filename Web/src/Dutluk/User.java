@@ -1,20 +1,25 @@
 package Dutluk;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.Calendar;
 public class User {
-	private int UserId;
+	private int UserID;
 	private String Name;
 	private String Email;
 	private Date Birthdate;
 	public Gender gender = Gender.Male;
 	public enum Gender {
-		Male, Female;
+		Male, Female, Unspecified;
 	}
 	private String Phone;
 	private int ExperiencePoint;
 	private int Level;
 	private int IsDeleted;
-	private int PicId;
+	private int PicID;
 	private String Bio;
 	private String Password;
 	private Date CreatedOn;
@@ -22,7 +27,7 @@ public class User {
 	private DatabaseService db;
 	public User()
 	{
-		
+
 	}
 
 	public Boolean Register()
@@ -44,7 +49,51 @@ public class User {
 			return true;
 		}
 	}
+
+	//This is the update profile, except profile picture
+	public Boolean UpdateProfile() throws SQLException, ClassNotFoundException 
+	{
+
+		
+		db = new DatabaseService();
+		Connection conn = db.getConnection();
+		
+		String sql = "UPDATE Users SET Name = ? , Gender = ? ,  LastUpdate = NOW() WHERE UserID= ? ;";
+		PreparedStatement pstmt = conn.prepareStatement(sql);
+		pstmt.setString(1, this.Name);
+		pstmt.setString(2,this.getGender().toString());
+		pstmt.setInt(3,this.UserID);
+		pstmt.executeUpdate();
+
+		if(this.Birthdate!=null){
+			sql= "UPDATE Users SET Birthdate = ?, LastUpdate = NOW() WHERE UserID= ? ;";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setDate(1, new java.sql.Date(this.Birthdate.getTime()));
+			pstmt.setInt(2,this.UserID);
+			pstmt.executeUpdate();
+		}
+		
+		if(this.Phone!=null){
+			sql= "UPDATE Users SET Phone = ?, LastUpdate = NOW() WHERE UserID= ? ;";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, this.Phone);
+			pstmt.setInt(2,this.UserID);
+			pstmt.executeUpdate();
+		}
+		
+		if(this.Bio!=null){
+			sql= "UPDATE Users SET Bio = ?, LastUpdate = NOW() WHERE UserID= ? ;";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, this.Bio);
+			pstmt.setInt(2,this.UserID);
+			pstmt.executeUpdate();
+		}
+		
+		return true;
 	
+		
+	}
+
 	public Boolean ChangePassword(String mail, String pass)
 	{
 		Calendar cal = Calendar.getInstance();
@@ -55,41 +104,68 @@ public class User {
 				+ " LastUpdate = '"+timestamp+"'"
 				+ " WHERE Mail = '"+mail+"'"
 				);
-		
-		
-		
+
+
+
 		return true;
 	}
-	
+
 	public Boolean Login()
 	{
 		db = new DatabaseService();
 		User temp = db.findUserByEmail(Email);
-		if(temp.getEmail() != null)
+		
+		String givenmail = this.getEmail();
+		String givenpass = this.getPassword();
+		User dbuser = db.findUserByEmail(givenmail);
+		String dbpass = dbuser.getPassword();
+		
+		if(givenpass.equals(dbpass))
+			return true;
+		else return false;
+		
+		/*if(temp.getEmail() != "")
 		{
 			if(temp.getPassword().equals(Password))
 				return true;
 			else
 				return false;
 		}else
-			return false;
-	}
-	
-	public int getUserId() {
-		return UserId;
+			return false;*/
 	}
 
-	public void setUserId(int userId) {
-		UserId = userId;
+	public int getUserID() {
+		return UserID;
 	}
-	
+
+	public void setUserID(int userID) {
+		UserID = userID;
+	}
+
 	public void setGender(Gender g) {
-        this.gender = g;
-    }
+		this.gender = g;
+	}
 
-    public Gender getGender() {
-        return gender;
-    }
+	public void setGender(String s) {
+		if(s.toLowerCase().startsWith("m")){
+			this.gender = Gender.Male;
+		}else if(s.toLowerCase().startsWith("f")){
+			this.gender = Gender.Female;
+		}else{
+			this.gender = Gender.Unspecified;
+		}
+	}
+
+	public Gender getGender() {
+		return gender;
+	}
+	
+	public int getGenderIndex(){
+		if(this.getGender().toString().contains("fF"))
+			return 2;
+		else
+			return 1;
+	}
 
 	public String getName() {
 		return Name;
@@ -113,6 +189,11 @@ public class User {
 
 	public void setBirthdate(Date birthdate) {
 		Birthdate = birthdate;
+	}
+
+	public void setBirthdate(String s) throws ParseException{
+		Date date = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH).parse(s);
+		this.setBirthdate(date);
 	}
 
 	public String getPhone() {
@@ -147,12 +228,12 @@ public class User {
 		IsDeleted = isDeleted;
 	}
 
-	public int getPicId() {
-		return PicId;
+	public int getPicID() {
+		return PicID;
 	}
 
-	public void setPicId(int picId) {
-		PicId = picId;
+	public void setPicID(int picID) {
+		PicID = picID;
 	}
 
 	public String getBio() {
@@ -168,7 +249,7 @@ public class User {
 	}
 
 	public void setPassword(String password) {
-		Password = password;
+		this.Password = password;
 	}
 
 	public Date getCreatedOn() {

@@ -15,15 +15,20 @@
 			<div class="col-xs-6">
 				<div style="padding: 10px">
 					<h2>Change Password</h2>
-					<form id="loginForm" method="post" class="loginForm form-horizontal" action="ResetPassword" name="changePass">
+					<form id="changePasswordForm" method="post" class="changePasswordForm form-horizontal" action="ResetPassword" name="changePass">
 						<div class="form-group">
-							<input class="form-control" type="password" name="oldPassword"
-								placeholder="Old Password"></input><br>
-							<input class="form-control" type="password" name="newPassword"
-								placeholder="New Password"></input><br>
-							<input class="form-control" type="password" name="reNewPassword"
-								placeholder="New Password Again"></input><br>
-							<button id="loginButton" type="submit" class="btn btn-default">Reset</button>
+							<input class="form-control" id="oldPassword" type="password" value="" name="oldPassword"
+								placeholder="Old Password"></input>
+								</div>
+								<div class="form-group">
+							<input class="form-control" id="newPassword" type="password" value="" name="newPassword"
+								placeholder="New Password"></input>
+								</div>
+								<div class="form-group">
+							<input class="form-control" id="reNewPassword" type="password" value="" name="reNewPassword"
+								placeholder="New Password Again"></input>
+								</div>
+							<button id="changePasswordButton" type="submit" class="btn btn-default">Reset</button>
 						</div>
 						<input type="hidden" name="func" value="resetPassword" />
 					</form>

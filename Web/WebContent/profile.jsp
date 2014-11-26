@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
-<title>Login</title>
+<title>Dutluk</title>
 
 </head>
 <body>
@@ -36,31 +36,30 @@
 		<%@ page import = "Dutluk.*" %>
 			<div class="col-xs-6">
 				<div style="padding: 10px">
-					<h2>Profile</h2>
-					<form id="profileInfo" method="get"
-						class="profileInfo form-horizontal">
-						<div class="form-group">
-						Name: <label><%= request.getSession().getAttribute("name")%></label>
-						</div>
-						<div class="form-group">
-						Birthdate: <label><%= request.getSession().getAttribute("birthdate")%></label>
-						</div>
-						<div class="form-group">
-						Gender: <label name="gender"><%= request.getSession().getAttribute("gender")%></label>
-						</div>
-						<div class="form-group">
-						Mail: <label name="mail"><%= request.getSession().getAttribute("mail")%></label></div>
-						<div class="form-group">
-						Phone: <label name="phone"><%= request.getSession().getAttribute("phone")%></label></div>
-						<div class="form-group">
-						XP: <label name="xp"><%= request.getSession().getAttribute("xp")%></label></div>
-						<div class="form-group">
-						Level: <label name="level"><%= request.getSession().getAttribute("level")%></label></div>
-						<div class="form-group">
-						Bio: <label name="bio"><%= request.getSession().getAttribute("bio")%></label></div>
-						<a href='Login'>Edit Profile</a>
+					<br><br><h2 style="display:inline;"><%= request.getSession().getAttribute("name")%></h2> <a>subscribe</a>
+					<br>level <%= request.getSession().getAttribute("level")%> writer, <%= request.getSession().getAttribute("xp")%> points  
+					<br><img src="http://titan.cmpe.boun.edu.tr:8085/pictures/<%= request.getSession().getAttribute("picid")%>.jpg" width=215 height=215 />
+					
+					
+					<h4>"<%= request.getSession().getAttribute("bio")%>"</h4>
+
+						Gender: <%= request.getSession().getAttribute("gender")%><br>
+						Birthdate: <%= request.getSession().getAttribute("birthdate")%><br>
+						Mail: <%= request.getSession().getAttribute("mail")%><br>
+						Phone: <%= request.getSession().getAttribute("phone")%><br>
+						<a href='ProfileEdit'>Edit your details</a>
+						<br>
+
 						</div>	
 					</form>
+					
+					<h3>Stories</h2> 
+					
+					
+					<!-- load users stories here -->
+					
+					
+					
 				</div>
 			</div>
 			

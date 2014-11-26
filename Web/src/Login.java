@@ -37,7 +37,7 @@ public class Login extends HttpServlet {
 		response.setContentType("text/html"); 
 		//String action = request.getParameter("func");
 		//if(action.equals("gotoedit"))
-			goToEdit(request,response);
+			goToEdit(request,response);//what is this?
 	}
 
 	/**
@@ -51,14 +51,16 @@ public class Login extends HttpServlet {
 			logOut(request,response);
 		}else if(action.equals("login"))
 			logIn(request, response);
-		else if(action.equals("edit"))
+		/*
+		 * DEPRECATED. Please use User.update to edit.
+		 * 
+		 * else if(action.equals("edit"))
 			try {
 				edit(request,response);
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		
+		*/
 		
 	}
 	void logOut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
@@ -149,7 +151,10 @@ public class Login extends HttpServlet {
 		
 	}
 	
-	void edit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, ParseException
+	/*
+	 * DEPRECATED. Please use User.update to edit.
+	 * 
+	 **/ void edit(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, ParseException
 	{
 		HttpSession session = request.getSession();
 		if(session == null)
@@ -171,18 +176,20 @@ public class Login extends HttpServlet {
 				String gender = request.getParameter("editGender");
 				if(gender.equals("male"))
 					user.setGender(User.Gender.Male);
-				else
+				else if(gender.equals("female"))
 					user.setGender(User.Gender.Female);
+				else
+					user.setGender(User.Gender.Unspecified);
 				user.setPhone(request.getParameter("editPhone"));
 				user.setBio(request.getParameter("editBio"));
 				//burda kaldim
 				// edit function will be implemented
-				Boolean result = db.Update(user);
-				if(result)
-					request.setAttribute("success", "true");
-				else
-					request.setAttribute("error", "true");
-				goToEdit(request,response);
+				//Boolean result = db.UpdateProfile(user);
+				//if(result)
+				//	request.setAttribute("success", "true");
+				//else
+				//	request.setAttribute("error", "true");
+				//goToEdit(request,response);
 				
 				//request.getRequestDispatcher("profile_edit.jsp").forward(request, response);
 				//response.sendRedirect("profile_edit.jsp");

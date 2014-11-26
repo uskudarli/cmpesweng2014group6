@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Date;
 
 
 public class DatabaseService {
@@ -67,23 +68,27 @@ public class DatabaseService {
 			{
 				user.setName(rs.getString("Name"));
 				user.setEmail(mail);
-				user.setUserId(rs.getInt("UserID"));
-				user.setBirthdate(rs.getDate("Birthdate"));
+				user.setUserID(rs.getInt("UserID"));
+				Date dateIn = rs.getDate("Birthdate");
+				if(dateIn!=null) user.setBirthdate(dateIn);
 				user.setPhone(rs.getString("Phone"));
 				user.setExperiencePoint(rs.getInt("ExperiencePoint"));
 				user.setLevel(rs.getInt("Level"));
-				user.setIsDeleted(0);
-				user.setPicId(rs.getInt("PicID"));
+				user.setIsDeleted(0); //TODO why?
+				user.setPicID(rs.getInt("PicID"));
 				user.setBio(rs.getString("Bio"));
 				user.setPassword(rs.getString("Password"));
 				user.setCreatedOn(rs.getDate("CreationDate"));
 				user.setUpdatedOn(rs.getDate("LastUpdate"));
-				if(rs.getString("Gender").equals("Male"))
+				if(rs.getString("Gender")!=null&&rs.getString("Gender").equals("Male"))
 					user.setGender(User.Gender.Male);
-				else
+				else if(rs.getString("Gender")!=null&&rs.getString("Gender").equals("Female"))
 					user.setGender(User.Gender.Female);
+				else
+					user.setGender(User.Gender.Unspecified);
 			}
 			return user;
+			
 		}catch(SQLException se){
 	         //Handle errors for JDBC
 	         se.printStackTrace();
@@ -104,10 +109,16 @@ public class DatabaseService {
 	   			se.printStackTrace();
 	   		}//end finally try
 	    }
-		return null;
+		return user; //THIS was return null, which give 500 nullpointerexception on each call.
 	}
 	
-	public Boolean Update(User user)
+	public Connection getConnection() throws ClassNotFoundException, SQLException{
+		Class.forName(JDBC_DRIVER);
+		conn = DriverManager.getConnection(DB_URL, USER, PASS);
+		return conn;
+	}
+	
+	/*public Boolean Update(User user)
 	{
 		try
 		{
@@ -148,7 +159,7 @@ public class DatabaseService {
 	    }
 		return null;
 		
-	}
+	}*/
 	
 	public void executeStmt(PreparedStatement stmt)
 	{

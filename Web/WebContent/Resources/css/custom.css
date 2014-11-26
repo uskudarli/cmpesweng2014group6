@@ -1,7 +1,11 @@
 @CHARSET "US-ASCII";
+
 .header {
+	padding: 5px 20px 0 20px;
+	height: 40px;
 	background-color: #e7dab7;
-	height: 50px;
+	font-size:18px;	
+	font-family: Helvetica; font-weight: bold;
 }
 
 .formContainer {
@@ -16,3 +20,9 @@
 	
 }
 
+.alignleft {
+	float: left;
+}
+.alignright {
+	float: right;
+}

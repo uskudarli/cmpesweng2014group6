@@ -43,19 +43,24 @@ public class Profile extends HttpServlet {
 		request.getSession().setAttribute("mail", user.getEmail());
 		request.getSession().setAttribute("xp", user.getExperiencePoint());
 		request.getSession().setAttribute("level", user.getLevel());
-		request.getSession().setAttribute("gender", user.getGender().toString());
+		request.getSession().setAttribute("gender", user.getGender().toString().toLowerCase());
+		request.getSession().setAttribute("picid", user.getPicID());
+		
+		
 		if(user.getBirthdate()==null)
-			request.getSession().setAttribute("birthdate", "not specified yet.");
+			request.getSession().setAttribute("birthdate", "some unknown date");
 		else
 			request.getSession().setAttribute("birthdate", user.getBirthdate());
 		
+		
+		
 		if(user.getPhone()==null)
-			request.getSession().setAttribute("phone", "not specified yet.");
+			request.getSession().setAttribute("phone", "some unknown number");
 		else
 			request.getSession().setAttribute("phone", user.getPhone());
 		
 		if(user.getBio()==null)
-			request.getSession().setAttribute("bio", "not specified yet.");
+			request.getSession().setAttribute("bio", " ");
 		else
 			request.getSession().setAttribute("bio", user.getBio());
 		

@@ -19,7 +19,7 @@
 					<h2>Login</h2>
 					<form id="loginForm" method="post" class="loginForm form-horizontal" action="Login" name="login">
 						<div class="form-group">
-							<input class="form-control" type="text" value="" name="email"
+							<input class="form-control" type="text" name="email"
 								placeholder="E-mail"></input>
 						</div>
 						<div class="form-group">

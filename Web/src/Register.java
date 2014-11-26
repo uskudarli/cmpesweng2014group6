@@ -56,7 +56,6 @@ public class Register extends HttpServlet {
 		HttpSession session = request.getSession();
 			if(result)
 			{
-				
 				session.setAttribute("loggedIn", "true");
 				session.setAttribute("email", request.getParameter("email"));
 				response.getWriter().write("true");
