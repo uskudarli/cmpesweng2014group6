@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -61,7 +62,7 @@ public class ProfileActivity extends Activity {
         mail = loginIntent.getStringExtra("mail");
         
      	RequestParams params = new RequestParams();
-		params.put("mail", mail);
+		params.put("email", mail);
 		invokeWSforGET(params);
 
     }
@@ -71,26 +72,31 @@ public class ProfileActivity extends Activity {
 		prgDialog.show();
 		// Make RESTful webservice call using AsyncHttpClient object
 		AsyncHttpClient client = new AsyncHttpClient();
-        client.get("http://192.168.43.17:9999/useraccount/profile/getProfile",params ,new AsyncHttpResponseHandler() {
+        client.post("http://titan.cmpe.boun.edu.tr:8085/dutluk_android_api/GetProfile",params ,new AsyncHttpResponseHandler() {
         	// When the response returned by REST has Http response code '200'
              @Override
              public void onSuccess(String response) {
             	// Hide Progress Dialog
             	 prgDialog.hide();
+            	 
                  try {
                 	 	 // JSON Object
+                     
                          JSONObject obj = new JSONObject(response);
+                        
                          // When the JSON response has status boolean value assigned with true
-                         if(obj.getBoolean("status")){
+                         if (!obj.getString("Name").equals("")){
+                         //if(obj.getBoolean("result")){
                         	 // Set Default Values for Edit View controls
+                        	
                         	 setDefaultValues(obj);
                         	 // Display successfully registered message using Toast
                         	 Toast.makeText(getApplicationContext(), "You can update your profile!", Toast.LENGTH_LONG).show();
                          } 
                          // Else display error message
                          else{
-                        	 errorMsg.setText(obj.getString("error_msg"));
-                        	 Toast.makeText(getApplicationContext(), obj.getString("error_msg"), Toast.LENGTH_LONG).show();
+//                        	 errorMsg.setText(obj.getString("message"));
+//                        	 Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
                          }
                  } catch (JSONException e) {
                      // TODO Auto-generated catch block
@@ -126,15 +132,11 @@ public class ProfileActivity extends Activity {
 	 */
 	public void setDefaultValues(JSONObject obj) throws JSONException{
 		
-		nameET.setText(obj.getString("name"));
-		birthDateET.setText(obj.getString("birthDate"));
-		genderET.setText(obj.getString("gender"));
-		mailTV.setText(obj.getString("mail"));
-		phoneET.setText(obj.getString("phone"));
-		xpTV.setText(obj.getString("experiencePoint"));
-		levelTV.setText(obj.getString("level"));
-		bioET.setText(obj.getString("bio"));
-
+		nameET.setText(obj.getString("Name"));
+		mailTV.setText(obj.getString("Email"));
+		xpTV.setText(obj.getString("ExperiencePoint"));
+		levelTV.setText(obj.getString("Level"));
+		
 	}
 	
 
@@ -147,13 +149,14 @@ public class ProfileActivity extends Activity {
 		String bio = bioET.getText().toString();
 
 		RequestParams params = new RequestParams();
+		params.put("email", mail);
 		params.put("name", name);
-		params.put("birthDate", birthDate);
-		params.put("gender", gender);
+		//params.put("birthDate", birthDate);
+		//params.put("gender", gender);
 		params.put("phone", phone);
 		params.put("bio", bio);				
 		invokeWSforSAVE(params);
-
+		navigateToTimelineActivity();
 	}    
 
 	public void invokeWSforSAVE(RequestParams params){
@@ -161,7 +164,7 @@ public class ProfileActivity extends Activity {
 		prgDialog.show();
 		// Make RESTful web service call using AsyncHttpClient object
 		AsyncHttpClient client = new AsyncHttpClient();
-        client.get("http://192.168.43.17:9999/useraccount/profile/updateProfile",params ,new AsyncHttpResponseHandler() {
+        client.post("http://titan.cmpe.boun.edu.tr:8085/dutluk_android_api/updateProfile",params ,new AsyncHttpResponseHandler() {
         	// When the response returned by REST has Http response code '200'
              @Override
              public void onSuccess(String response) {
@@ -169,9 +172,11 @@ public class ProfileActivity extends Activity {
             	 prgDialog.hide();
                  try {
                 	 	 // JSON Object
+            
                          JSONObject obj = new JSONObject(response);
                          // When the JSON response has status boolean value assigned with true
-                         if(obj.getBoolean("status")){
+                         if(obj.getBoolean("result")){
+                        	
                         	 // Set Default Values for Edit View controls
                         	 //setDefaultValues(obj);
                         	 // Display successfully registered message using Toast
@@ -179,8 +184,8 @@ public class ProfileActivity extends Activity {
                          } 
                          // Else display error message
                          else{
-                        	 errorMsg.setText(obj.getString("error_msg"));
-                        	 Toast.makeText(getApplicationContext(), obj.getString("error_msg"), Toast.LENGTH_LONG).show();
+                        	 errorMsg.setText(obj.getString("message"));
+                        	 Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
                          }
                  } catch (JSONException e) {
                      // TODO Auto-generated catch block
@@ -209,6 +214,14 @@ public class ProfileActivity extends Activity {
                  }
              }
          });
+	}
+	public void navigateToTimelineActivity(){
+		Intent timelineIntent = new Intent(getApplicationContext(),TimelineActivity.class);
+		Bundle b = new Bundle();
+		b.putString("mail",mail);
+		timelineIntent.putExtras(b);
+		timelineIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		startActivity(timelineIntent);
 	}
 
 }

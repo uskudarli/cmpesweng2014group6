@@ -25,6 +25,7 @@ public class LoginActivity extends Activity {
 	EditText pwdET;
 
 	String mail = "";
+	String password = "";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -49,17 +50,17 @@ public class LoginActivity extends Activity {
 	
 	public void loginUser(View view){
 		// Get Email Edit View Value
-		String email = emailET.getText().toString();
+		mail = emailET.getText().toString();
 		// Get Password Edit View Value
-		String password = pwdET.getText().toString();
+		password = pwdET.getText().toString();
 		// Instantiate Http Request Param Object
 		RequestParams params = new RequestParams();
 		// When Email Edit View and Password Edit View have values other than Null
-		if(Utility.isNotNull(email) && Utility.isNotNull(password)){
+		if(Utility.isNotNull(mail) && Utility.isNotNull(password)){
 			// When Email entered is Valid
-			if(Utility.validateEmail(email)){
+			if(Utility.validateEmail(mail)){
 				// Put Http parameter username with value of Email Edit View control
-				params.put("mail", email);
+				params.put("mail", mail);
 				// Put Http parameter password with value of Password Edit Value control
 				params.put("password", password);
 				// Invoke RESTful Web Service with Http parameters
@@ -86,8 +87,8 @@ public class LoginActivity extends Activity {
 		// Show Progress Dialog
 		 prgDialog.show();
 		 // Make RESTful webservice call using AsyncHttpClient object
-		 AsyncHttpClient client = new AsyncHttpClient();
-         client.get("http://192.168.43.17:9999/useraccount/login/dologin",params ,new AsyncHttpResponseHandler() {
+		 AsyncHttpClient client = new AsyncHttpClient();		 
+         client.post("http://titan.cmpe.boun.edu.tr:8085/dutluk_android_api/Login",params ,new AsyncHttpResponseHandler() {
         	 // When the response returned by REST has Http response code '200'
              @Override
              public void onSuccess(String response) {
@@ -97,15 +98,15 @@ public class LoginActivity extends Activity {
                 	 	 // JSON Object
                          JSONObject obj = new JSONObject(response);
                          // When the JSON response has status boolean value assigned with true
-                         if(obj.getBoolean("status")){
+                         if(obj.getBoolean("result")){
                         	 Toast.makeText(getApplicationContext(), "You are successfully logged in!", Toast.LENGTH_LONG).show();
                         	 // Navigate to Home screen
-                        	 navigatetoProfileActivity(obj.getString("mail"));
+                        	 navigatetoProfileActivity();
                          } 
                          // Else display error message
                          else{
-                        	 errorMsg.setText(obj.getString("error_msg"));
-                        	 Toast.makeText(getApplicationContext(), obj.getString("error_msg"), Toast.LENGTH_LONG).show();
+                        	 errorMsg.setText(obj.getString("message"));
+                        	 Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
                          }
                  } catch (JSONException e) {
                      // TODO Auto-generated catch block
@@ -136,7 +137,7 @@ public class LoginActivity extends Activity {
          });
 	}
 
-	public void navigatetoProfileActivity(String mail){
+	public void navigatetoProfileActivity(){
 		Intent profileIntent = new Intent(getApplicationContext(),ProfileActivity.class);
 		Bundle b = new Bundle();
 		b.putString("mail",mail);
