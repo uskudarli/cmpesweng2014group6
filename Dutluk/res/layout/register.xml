@@ -80,18 +80,7 @@
             android:text="@string/btnRegister"
             android:textColor="#fff" />
 
-        <!-- GEREKSIZ -->
-		<!-- Link to Login Screen -->
-        <Button
-            android:id="@+id/btnLinkToLoginScreenRegister"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dip"
-            android:background="@null"
-            android:onClick="navigatetoLoginActivity"
-            android:text="@string/btnLogin"
-            android:textColor="#228b22"
-            android:textStyle="bold" /> 
+      
         
         <!-- GEREKSIZ -->
 		<!-- Link to Profile Screen -->

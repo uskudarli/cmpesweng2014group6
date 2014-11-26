@@ -25,6 +25,10 @@ public class RegisterActivity extends Activity {
 	EditText emailET;
 	EditText pwdET;
 	
+	
+	String name= "";
+	String email= "";
+	String password = "";
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -46,11 +50,11 @@ public class RegisterActivity extends Activity {
 
 	public void registerUser(View view){
 		// Get NAme ET control value
-		String name = nameET.getText().toString();
+		name = nameET.getText().toString();
 		// Get Email ET control value
-		String email = emailET.getText().toString();
+		email = emailET.getText().toString();
 		// Get Password ET control value
-		String password = pwdET.getText().toString();
+		password = pwdET.getText().toString();
 		// Instantiate Http Request Param Object
 		RequestParams params = new RequestParams();
 		// When Name Edit View, Email Edit View and Password Edit View have values other than Null
@@ -60,7 +64,7 @@ public class RegisterActivity extends Activity {
 				// Put Http parameter name with value of Name Edit View control
 				params.put("name", name);
 				// Put Http parameter username with value of Email Edit View control
-				params.put("mail", email);
+				params.put("email", email);
 				// Put Http parameter password with value of Password Edit View control
 				params.put("password", password);
 				// Invoke RESTful Web Service with Http parameters
@@ -83,7 +87,7 @@ public class RegisterActivity extends Activity {
 		prgDialog.show();
 		// Make RESTful webservice call using AsyncHttpClient object
 		AsyncHttpClient client = new AsyncHttpClient();
-        client.get("http://192.168.43.17:9999/useraccount/register/doregister",params ,new AsyncHttpResponseHandler() {
+        client.get("http://titan.cmpe.boun.edu.tr:8085/dutluk_android_api/Register",params ,new AsyncHttpResponseHandler() {
         	// When the response returned by REST has Http response code '200'
              @Override
              public void onSuccess(String response) {
@@ -93,17 +97,17 @@ public class RegisterActivity extends Activity {
                 	 	 // JSON Object
                          JSONObject obj = new JSONObject(response);
                          // When the JSON response has status boolean value assigned with true
-                         if(obj.getBoolean("status")){
+                         if(obj.getBoolean("result")){
                         	 // Set Default Values for Edit View controls
                         	 setDefaultValues();
                         	 // Display successfully registered message using Toast
                         	 Toast.makeText(getApplicationContext(), "You are successfully registered!", Toast.LENGTH_LONG).show();
-                        	 navigatetoLoginActivity(obj.getString("mail"));
+                        	 navigatetoLoginActivity();
                          } 
                          // Else display error message
                          else{
-                        	 errorMsg.setText(obj.getString("error_msg"));
-                        	 Toast.makeText(getApplicationContext(), obj.getString("error_msg"), Toast.LENGTH_LONG).show();
+                        	 errorMsg.setText(obj.getString("message"));
+                        	 Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
                          }
                  } catch (JSONException e) {
                      // TODO Auto-generated catch block
@@ -140,26 +144,17 @@ public class RegisterActivity extends Activity {
 		pwdET.setText("");
 	}
 	
-	public void navigatetoLoginActivity(String mail){
+	public void navigatetoLoginActivity(){
 		Intent loginIntent = new Intent(getApplicationContext(),LoginActivity.class);
 		Bundle b = new Bundle();
-		b.putString("mail",mail);
+		b.putString("mail",email);
 		loginIntent.putExtras(b);
 		// Clears History of Activity
 		loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(loginIntent);
 	}
 	
-	// GEREKSIZ
-	public void navigatetoLoginActivity(View view){
-		Intent loginIntent = new Intent(getApplicationContext(),LoginActivity.class);
-		Bundle b = new Bundle();
-		b.putString("mail","");
-		loginIntent.putExtras(b);
-		// Clears History of Activity
-		loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		startActivity(loginIntent);
-	}
+	
 	// GEREKSIZ
 	public void navigatetoProfileActivity(View view){
 		Intent profileIntent = new Intent(getApplicationContext(),ProfileActivity.class);
