@@ -33,15 +33,20 @@ function initialize() {
 				
 				var content = "<a href='profile.jsp' id='infowindow'>" + data[i].Name + "</a>";
 				
-				var infowindow = new google.maps.InfoWindow({
-				      content: content
-				});
-				google.maps.event.addListener(marker, 'click', function() {
-				    infowindow.open(map,marker);
-				});
+				attachInfoWindow(marker, content);
 			}
 		}
 	});
+}
+
+function attachInfoWindow(marker, content)
+{
+	var infowindow = new google.maps.InfoWindow({
+	    content: content
+	  });
+	google.maps.event.addListener(marker, 'click', function() {
+	    infowindow.open(marker.get('map'), marker);
+	  });
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);

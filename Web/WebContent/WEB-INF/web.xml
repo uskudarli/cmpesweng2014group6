@@ -4,17 +4,14 @@
     <servlet-name>Register</servlet-name>
     <servlet-class>Register</servlet-class>
   </servlet>
-
   <servlet>
     <servlet-name>Home</servlet-name>
     <servlet-class>Home</servlet-class>
   </servlet>
-  
   <servlet-mapping>
     <servlet-name>Register</servlet-name>
     <url-pattern>/Register</url-pattern>
   </servlet-mapping>
-
   <servlet-mapping>
     <servlet-name>Home</servlet-name>
     <url-pattern>/Home</url-pattern>
