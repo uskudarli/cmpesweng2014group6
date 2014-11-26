@@ -7,6 +7,17 @@
 <title>Dutluk</title>
 </head>
 <body>
+	<%
+		HttpSession newSession = request.getSession();
+		if(newSession == null)
+		{
+			request.getRequestDispatcher("loginRegister.jsp").forward(request,response);
+		}else if(newSession.getAttribute("email") == null
+				)	
+		{
+			request.getRequestDispatcher("loginRegister.jsp").forward(request,response);
+		}	
+	%>
 	<jsp:include page="header.jsp" />
 	<jsp:include page="footer.jsp" />
 	<%@ page import="java.sql.*, Dutluk.DatabaseService" %>

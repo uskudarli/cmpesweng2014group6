@@ -51,9 +51,11 @@ public class Register extends HttpServlet {
 		user.setIsDeleted(0);
 		user.setCreatedOn(timestamp);
 		user.setUpdatedOn(timestamp);
-		user.setGender(User.Gender.Male);
+		user.setGender(User.Gender.Unspecified);
 		Boolean result = db.register(user);
 		HttpSession session = request.getSession();
+		if(result != null)
+		{
 			if(result)
 			{
 				session.setAttribute("loggedIn", "true");
@@ -67,6 +69,11 @@ public class Register extends HttpServlet {
 				request.setAttribute("message", "This email address is already registered!");
 				request.getRequestDispatcher("loginRegister.jsp").forward(request, response);
 			}
-
+		}else{
+			session.setAttribute("loggedIn", "false");
+			request.setAttribute("error", "true");
+			request.setAttribute("message", "There is been an error on register!");
+			request.getRequestDispatcher("loginRegister.jsp").forward(request, response);
+		}
 	}
 }

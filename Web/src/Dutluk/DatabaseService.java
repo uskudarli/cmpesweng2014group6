@@ -181,7 +181,7 @@ public class DatabaseService {
 				pstmt.setString(1, user.getName());
 				pstmt.setString(2, user.getEmail());
 				pstmt.setInt(3, 0);
-				pstmt.setString(4, null);
+				pstmt.setString(4, user.getGender().toString());
 				pstmt.setString(5, user.getPassword());
 
 				java.util.Date today = new java.util.Date();
