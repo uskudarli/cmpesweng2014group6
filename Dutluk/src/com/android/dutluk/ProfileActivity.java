@@ -57,8 +57,8 @@ public class ProfileActivity extends Activity {
      	
  
         
-        Intent profileIntent = getIntent();
-        mail = profileIntent.getStringExtra("mail");
+        Intent loginIntent = getIntent();
+        mail = loginIntent.getStringExtra("mail");
         
      	RequestParams params = new RequestParams();
 		params.put("mail", mail);
@@ -127,9 +127,14 @@ public class ProfileActivity extends Activity {
 	public void setDefaultValues(JSONObject obj) throws JSONException{
 		
 		nameET.setText(obj.getString("name"));
+		birthDateET.setText(obj.getString("birthDate"));
+		genderET.setText(obj.getString("gender"));
 		mailTV.setText(obj.getString("mail"));
+		phoneET.setText(obj.getString("phone"));
 		xpTV.setText(obj.getString("experiencePoint"));
 		levelTV.setText(obj.getString("level"));
+		bioET.setText(obj.getString("bio"));
+
 	}
 	
 

@@ -405,68 +405,83 @@ containing a value of this type.
         public static final int ic_plusone_small_off_client=0x7f02001c;
         public static final int ic_plusone_standard_off_client=0x7f02001d;
         public static final int ic_plusone_tall_off_client=0x7f02001e;
-        public static final int powered_by_google_dark=0x7f02001f;
-        public static final int powered_by_google_light=0x7f020020;
+        public static final int paperclip=0x7f02001f;
+        public static final int powered_by_google_dark=0x7f020020;
+        public static final int powered_by_google_light=0x7f020021;
+        public static final int world=0x7f020022;
     }
     public static final class id {
-        public static final int action_settings=0x7f0a0039;
-        public static final int biographyProfile=0x7f0a0030;
-        public static final int birthDateProfile=0x7f0a002a;
+        public static final int action_settings=0x7f0a0046;
+        public static final int biographyProfile=0x7f0a0034;
+        public static final int birthDateProfile=0x7f0a002e;
         public static final int book_now=0x7f0a000e;
-        public static final int btnAddStory=0x7f0a001a;
-        public static final int btnLinkToForgotPwdLogin=0x7f0a0022;
-        public static final int btnLinkToLoginScreenRegister=0x7f0a0037;
-        public static final int btnLinkToMapScreen=0x7f0a0024;
-        public static final int btnLinkToProfileScreenRegister=0x7f0a0038;
-        public static final int btnLinkToRegisterScreenLogin=0x7f0a0023;
-        public static final int btnLogin=0x7f0a0021;
-        public static final int btnRegister=0x7f0a0036;
-        public static final int btnResetPwdForgotpwd=0x7f0a001d;
-        public static final int btnSaveProfile=0x7f0a0031;
+        public static final int btnAddStory=0x7f0a001e;
+        public static final int btnComments=0x7f0a0043;
+        public static final int btnIRememberThat=0x7f0a0042;
+        public static final int btnLinkToAddStoryScreenRegister=0x7f0a003e;
+        public static final int btnLinkToForgotPwdLogin=0x7f0a0026;
+        public static final int btnLinkToLoginScreenRegister=0x7f0a003c;
+        public static final int btnLinkToMapScreen=0x7f0a0028;
+        public static final int btnLinkToProfileScreenRegister=0x7f0a003d;
+        public static final int btnLinkToRegisterScreenLogin=0x7f0a0027;
+        public static final int btnLogin=0x7f0a0025;
+        public static final int btnRegister=0x7f0a003b;
+        public static final int btnResetPwdForgotpwd=0x7f0a0021;
+        public static final int btnSaveProfile=0x7f0a0036;
+        public static final int btnSubscribePlace=0x7f0a0045;
+        public static final int btnSubscribeWriter=0x7f0a0044;
         public static final int buyButton=0x7f0a000a;
         public static final int buy_now=0x7f0a000f;
         public static final int buy_with_google=0x7f0a0010;
         public static final int classic=0x7f0a0011;
-        public static final int emailForgotpwd=0x7f0a001b;
-        public static final int emailLogin=0x7f0a001e;
-        public static final int emailProfile=0x7f0a002c;
-        public static final int emailRegister=0x7f0a0033;
-        public static final int errorForgotpwd=0x7f0a001c;
-        public static final int errorLogin=0x7f0a0020;
-        public static final int errorProfile=0x7f0a0019;
-        public static final int errorRegister=0x7f0a0035;
-        public static final int etsnippet=0x7f0a0028;
-        public static final int ettitle=0x7f0a0027;
-        public static final int genderProfile=0x7f0a002b;
-        public static final int gmap=0x7f0a0025;
+        public static final int emailForgotpwd=0x7f0a001f;
+        public static final int emailLogin=0x7f0a0022;
+        public static final int emailProfile=0x7f0a0030;
+        public static final int emailRegister=0x7f0a0038;
+        public static final int errorAddStory=0x7f0a001d;
+        public static final int errorForgotpwd=0x7f0a0020;
+        public static final int errorLogin=0x7f0a0024;
+        public static final int errorProfile=0x7f0a0035;
+        public static final int errorRegister=0x7f0a003a;
+        public static final int errorShowStory=0x7f0a0041;
+        public static final int etsnippet=0x7f0a002c;
+        public static final int ettitle=0x7f0a002b;
+        public static final int genderProfile=0x7f0a002f;
+        public static final int gmap=0x7f0a0029;
         public static final int grayscale=0x7f0a0012;
         public static final int holo_dark=0x7f0a0005;
         public static final int holo_light=0x7f0a0006;
         public static final int hybrid=0x7f0a0000;
-        public static final int imageAddStory=0x7f0a0015;
-        public static final int levelProfile=0x7f0a002f;
-        public static final int mainlo=0x7f0a0026;
+        public static final int imageButtonAddStory=0x7f0a001b;
+        public static final int imageLayout=0x7f0a001a;
+        public static final int imageViewAddStory=0x7f0a001c;
+        public static final int imageViewShowStory=0x7f0a003f;
+        public static final int levelProfile=0x7f0a0033;
+        public static final int mainlo=0x7f0a002a;
+        public static final int mapButtonAddStory=0x7f0a0017;
         public static final int match_parent=0x7f0a000c;
         public static final int monochrome=0x7f0a0013;
-        public static final int nameProfile=0x7f0a0029;
-        public static final int nameRegister=0x7f0a0032;
+        public static final int nameProfile=0x7f0a002d;
+        public static final int nameRegister=0x7f0a0037;
         public static final int none=0x7f0a0001;
         public static final int normal=0x7f0a0002;
-        public static final int passwordLogin=0x7f0a001f;
-        public static final int passwordRegister=0x7f0a0034;
-        public static final int phoneProfile=0x7f0a002d;
-        public static final int placeAddStory=0x7f0a0017;
+        public static final int passwordLogin=0x7f0a0023;
+        public static final int passwordRegister=0x7f0a0039;
+        public static final int phoneProfile=0x7f0a0031;
+        public static final int placeAddStory=0x7f0a0018;
+        public static final int placeLayout=0x7f0a0016;
         public static final int production=0x7f0a0007;
         public static final int sandbox=0x7f0a0008;
         public static final int satellite=0x7f0a0003;
         public static final int selectionDetails=0x7f0a000b;
-        public static final int storyAddStory=0x7f0a0016;
+        public static final int storyAddStory=0x7f0a0015;
+        public static final int storyShowStory=0x7f0a0040;
         public static final int strict_sandbox=0x7f0a0009;
         public static final int terrain=0x7f0a0004;
-        public static final int timeAddStory=0x7f0a0018;
+        public static final int timeAddStory=0x7f0a0019;
         public static final int titleAddStory=0x7f0a0014;
         public static final int wrap_content=0x7f0a000d;
-        public static final int xpProfile=0x7f0a002e;
+        public static final int xpProfile=0x7f0a0032;
     }
     public static final class integer {
         public static final int google_play_services_version=0x7f070000;
@@ -479,36 +494,41 @@ containing a value of this type.
         public static final int map2=0x7f030004;
         public static final int profile=0x7f030005;
         public static final int register=0x7f030006;
+        public static final int show_story=0x7f030007;
     }
     public static final class menu {
         public static final int login=0x7f090000;
     }
     public static final class string {
-        public static final int XP=0x7f050031;
+        public static final int XP=0x7f050032;
         public static final int accept=0x7f050002;
         public static final int action_settings=0x7f050025;
         /**  App based strings 
          */
         public static final int app_name=0x7f050024;
-        public static final int biography=0x7f050033;
-        public static final int birthDate=0x7f05002e;
-        public static final int btnAddStory=0x7f05003b;
-        public static final int btnForgotPwdLogin=0x7f050039;
-        public static final int btnLogin=0x7f050036;
-        public static final int btnMap=0x7f050035;
-        public static final int btnProfile=0x7f050037;
+        public static final int biography=0x7f050034;
+        public static final int birthDate=0x7f05002f;
+        public static final int btnAddStory=0x7f05003c;
+        public static final int btnComments=0x7f05003e;
+        public static final int btnForgotPwdLogin=0x7f05003a;
+        public static final int btnIRememberThat=0x7f05003d;
+        public static final int btnLogin=0x7f050037;
+        public static final int btnMap=0x7f050036;
+        public static final int btnProfile=0x7f050038;
         /**  Button strings 
          */
-        public static final int btnRegister=0x7f050034;
-        public static final int btnResetPwd=0x7f05003a;
-        public static final int btnSave=0x7f050038;
-        public static final int changeBiography=0x7f050040;
-        public static final int changeBirthDate=0x7f05003d;
-        public static final int changeGender=0x7f05003e;
+        public static final int btnRegister=0x7f050035;
+        public static final int btnResetPwd=0x7f05003b;
+        public static final int btnSave=0x7f050039;
+        public static final int btnSubscribePlace=0x7f050040;
+        public static final int btnSubscribeWriter=0x7f05003f;
+        public static final int changeBiography=0x7f050045;
+        public static final int changeBirthDate=0x7f050042;
+        public static final int changeGender=0x7f050043;
         /**  Hint strings 
          */
-        public static final int changeName=0x7f05003c;
-        public static final int changePhone=0x7f05003f;
+        public static final int changeName=0x7f050041;
+        public static final int changePhone=0x7f050044;
         /**   Text for notification shown when the Android Wear apps needs to be updated. Only shown on the wearable. [CHAR LIMIT=NONE] 
          */
         public static final int common_android_wear_notification_needs_update_text=0x7f050009;
@@ -613,22 +633,22 @@ containing a value of this type.
         public static final int decline=0x7f050003;
         /**  General strings 
          */
-        public static final int email=0x7f05002b;
-        public static final int enterEmail=0x7f050042;
-        public static final int enterName=0x7f050041;
-        public static final int enterPassword=0x7f050043;
-        public static final int enterStory=0x7f050046;
-        public static final int enterTitle=0x7f050044;
-        public static final int gender=0x7f05002f;
+        public static final int email=0x7f05002c;
+        public static final int enterEmail=0x7f050047;
+        public static final int enterName=0x7f050046;
+        public static final int enterPassword=0x7f050048;
+        public static final int enterStory=0x7f05004b;
+        public static final int enterTitle=0x7f050049;
+        public static final int gender=0x7f050030;
         /**  Unnecessary strings 
          */
         public static final int hello_world=0x7f050023;
-        public static final int level=0x7f050032;
-        public static final int name=0x7f05002d;
-        public static final int password=0x7f05002c;
-        public static final int phone=0x7f050030;
-        public static final int pickPlace=0x7f050047;
-        public static final int pickTime=0x7f050048;
+        public static final int level=0x7f050033;
+        public static final int name=0x7f05002e;
+        public static final int password=0x7f05002d;
+        public static final int phone=0x7f050031;
+        public static final int pickPlace=0x7f05004c;
+        public static final int pickTime=0x7f05004d;
         public static final int store_picture_message=0x7f050001;
         public static final int store_picture_title=0x7f050000;
         public static final int title_activity_addStory=0x7f05002a;
@@ -638,7 +658,8 @@ containing a value of this type.
         /**  Title strings 
          */
         public static final int title_activity_register=0x7f050026;
-        public static final int uploadImage=0x7f050045;
+        public static final int title_activity_showStory=0x7f05002b;
+        public static final int uploadImage=0x7f05004a;
         /**  Text on a placeholder buy button when Google Play services is not
          available or up-to-date 
          */

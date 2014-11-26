@@ -169,5 +169,14 @@ public class RegisterActivity extends Activity {
 		profileIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(profileIntent);
 	}
+	// GEREKSIZ
+	public void navigatetoAddStoryActivity(View view){
+		Intent addStoryIntent = new Intent(getApplicationContext(),AddStoryActivity.class);
+		Bundle b = new Bundle();
+		b.putString("mail","");
+		addStoryIntent.putExtras(b);
+		addStoryIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		startActivity(addStoryIntent);
+	}
 	
 }

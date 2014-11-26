@@ -14,6 +14,7 @@
 	<string name="title_activity_profile">Profile</string> 
 	<string name="title_activity_forgotpwd">Forgot Password</string>
 	<string name="title_activity_addStory">Add Story</string>
+	<string name="title_activity_showStory">Show Story</string>
 
 	<!-- General strings -->
     <string name="email">E-mail</string>
@@ -35,6 +36,10 @@
 	<string name="btnForgotPwdLogin">Forgot Password?</string>
 	<string name="btnResetPwd">Reset Password</string>
 	<string name="btnAddStory">Add Story</string>
+	<string name="btnIRememberThat">I Remember That</string>
+	<string name="btnComments">Comments</string>
+	<string name="btnSubscribeWriter">Subscribe Writer</string>
+	<string name="btnSubscribePlace">Subscribe Place</string>
 	
 	<!-- Hint strings -->
 	<string name="changeName">Change Name</string>
