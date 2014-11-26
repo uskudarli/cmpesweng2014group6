@@ -28,6 +28,7 @@
     
     <!-- Button strings -->
     <string name="btnRegister">Register</string>
+    <string name="btnMap">Map</string>
 	<string name="btnLogin">Login</string>
 	<string name="btnProfile">Profile</string>
 	<string name="btnSave">Save</string>
