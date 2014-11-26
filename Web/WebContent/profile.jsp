@@ -8,7 +8,7 @@
 
 </head>
 <body>
-	<%@ page import="Dutluk.*" %>
+	<%@ page import="Dutluk.*"%>
 	<%
 		HttpSession newSession = request.getSession();
 		if(newSession == null)
@@ -33,40 +33,82 @@
 
 	<div class="container">
 		<div class="row">
-		<%@ page import = "Dutluk.*" %>
+			<%@ page import="java.sql.*, Dutluk.DatabaseService" %>
 			<div class="col-xs-6">
 				<div style="padding: 10px">
-					<br><br><h2 style="display:inline;"><%= request.getSession().getAttribute("name")%></h2> <a>subscribe</a>
-					<br>level <%= request.getSession().getAttribute("level")%> writer, <%= request.getSession().getAttribute("xp")%> points  
-					<br><img src="http://titan.cmpe.boun.edu.tr:8085/pictures/<%= request.getSession().getAttribute("picid")%>.jpg" width=215 height=215 />
-					
-					
-					<h4>"<%= request.getSession().getAttribute("bio")%>"</h4>
+					<br>
+					<br>
+					<h2 style="display: inline;"><%= request.getSession().getAttribute("name")%></h2>
+					<a>subscribe</a> <br>level
+					<%= request.getSession().getAttribute("level")%>
+					writer,
+					<%= request.getSession().getAttribute("xp")%>
+					points <br>
+					<img
+						src="http://titan.cmpe.boun.edu.tr:8085/pictures/<%= request.getSession().getAttribute("picid")%>.jpg"
+						width=215 height=215 />
 
-						Gender: <%= request.getSession().getAttribute("gender")%><br>
-						Birthdate: <%= request.getSession().getAttribute("birthdate")%><br>
-						Mail: <%= request.getSession().getAttribute("mail")%><br>
-						Phone: <%= request.getSession().getAttribute("phone")%><br>
-						<a href='ProfileEdit'>Edit your details</a>
-						<br>
 
-						</div>	
-					</form>
-					
-					<h3>Stories</h2> 
-					
-					
-					<!-- load users stories here -->
-					
-					
-					
+					<h4>
+						"<%= request.getSession().getAttribute("bio")%>"
+					</h4>
+
+					Gender:
+					<%= request.getSession().getAttribute("gender")%><br>
+					Birthdate:
+					<%= request.getSession().getAttribute("birthdate")%><br> Mail:
+					<%= request.getSession().getAttribute("mail")%><br> Phone:
+					<%= request.getSession().getAttribute("phone")%><br> <a
+						href='ProfileEdit'>Edit your details</a> <br>
+
 				</div>
-			</div>
+				</div>
+				</div>
+				<br><br><br>
+				<center>
+					<h2>Stories of <%= request.getSession().getAttribute("name")%></h2>
+				</center>
+				<br><br>
+					<% 
+					DatabaseService db = new DatabaseService();
+					ResultSet rs = null;
+					try{
+						Connection connection = db.getConnection();
+				        Statement statement = connection.createStatement() ;
+				        rs =statement.executeQuery("SELECT * FROM Stories WHERE UserID = '"+(int)request.getSession().getAttribute("userid")+"' ORDER BY  Stories.StoryDateAbsolute DESC") ;
+					}catch(Exception e)
+			        {
+			             out.println(e);
+			        }
+					%>
+					<table style="width:100%">
+					<tr>
+						<th>When did it happen?</th>
+						<th>Story</th>
+						<th>Creation Date</th>
+					</tr>
+					
+					<%
+					while(rs.next())
+					{
+					%>
+						<tr>
+							<td><% out.print(rs.getString(10)); %></td>
+							<td><% out.print(rs.getString(3)); %></td>
+							<td><% out.print(rs.getString(8)); %></td>
+						</tr>
+					<%	
+					}
+					%>
+					
+					</table><br><br><br>
+					
 			
-			
-		</div>
+		
+
+
 	</div>
-	
+
 
 </body>
 </html>

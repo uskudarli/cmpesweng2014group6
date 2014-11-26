@@ -45,6 +45,7 @@ public class Profile extends HttpServlet {
 		request.getSession().setAttribute("level", user.getLevel());
 		request.getSession().setAttribute("gender", user.getGender().toString().toLowerCase());
 		request.getSession().setAttribute("picid", user.getPicID());
+		request.getSession().setAttribute("userid", user.getUserID());
 		
 		
 		if(user.getBirthdate()==null)
