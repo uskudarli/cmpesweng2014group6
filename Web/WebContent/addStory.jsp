@@ -70,7 +70,7 @@
 							%>		
 						</div>
 						<div class="form-group">
-							<button id="editProfileButton" type="submit" class="btn btn-default">Add Story</button>
+							<button type="submit" class="btn btn-default">Add Story</button>
 						</div>
 						<input type="hidden" name="func" value="edit" />
 					</form>
