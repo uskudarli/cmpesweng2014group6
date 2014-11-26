@@ -81,7 +81,10 @@
 			             out.println(e);
 			        }
 					%>
-					<table style="width:100%">
+					<table style="width:100%" border = "1">
+					<col style = "width:1%">
+					<col style = "width:5%">
+					<col style = "width:1%">
 					<tr>
 						<th>When did it happen?</th>
 						<th>Story</th>
