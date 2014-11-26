@@ -16,7 +16,7 @@
 		{
 			//out.println("<a href='javascript:void(0);' onclick='goToEdit()'>Profile</a>"); ->moved to profile
 			out.println("- <a href='Profile'>Me</a>");
-			out.println("- <a href='addStory.jsp'>Write</a>");
+			//out.println("- <a href='addStory.jsp'>Write</a>");
 			out.println("</p><p class='alignright'><a href='javascript:void(0);' onclick='logOut()'>Log Out</a></p>");
 			//out.println("<a href='changePassword.jsp'>Change Password</a>"); ->moved to edit profile
 		}else{
