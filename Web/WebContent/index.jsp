@@ -9,6 +9,7 @@
 	src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCWz0T_U1zwxdI3CKepXVdlSS5iHFJste4"></script>
 <script>
 var map;
+
 function initialize() {
   var mapOptions = {
 	scrollwheel: false,
@@ -17,6 +18,30 @@ function initialize() {
   };
   map = new google.maps.Map(document.getElementById('map-canvas'),
       mapOptions);
+  //click map to get coordinates
+  google.maps.event.addListener(map, 'click', function(event) {
+	  getCoordinates(event.latLng);
+	  });
+
+	function getCoordinates(location) {
+		var marker = new google.maps.Marker({
+		    position: location,
+		    map: map,
+		  });
+		var lat = location.lat();
+		var lon = location.lng();
+		fillLatLon(lat, lon);
+		var content= "<a href='addStory.jsp?Lat="+lat+"&Lon="+lon+"' id='infowindow'>" + "Add Story Here" + "</a>";
+		attachInfoWindow(marker, content);
+		infowindow.open(map,marker);
+		
+	}
+	function fillLatLon(lat, lon)
+	{ 
+	     $('#latbox').val(lat);
+	     $('#lngbox').val(lon);
+	}
+	
   $.ajax({
 		type: "get",
 		url: "Markers",
@@ -31,7 +56,7 @@ function initialize() {
 				});
 				marker.setMap(map);
 				
-				var content = "<a href='profile.jsp' id='infowindow'>" + data[i].Name + "</a>";
+				var content = "<a href='Timeline?ID=" + data[i].PlaceID +"' id='infowindow'>" + data[i].Name + "</a>";
 				
 				attachInfoWindow(marker, content);
 			}
@@ -52,8 +77,9 @@ function attachInfoWindow(marker, content)
 google.maps.event.addDomListener(window, 'load', initialize);
 
 
-
 </script>
+
+		
 </head>
 <body>
 <jsp:include page="header.jsp"/>
