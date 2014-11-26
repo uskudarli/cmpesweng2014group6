@@ -1,4 +1,6 @@
 package Dutluk;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class Story {
@@ -24,16 +26,16 @@ public class Story {
 	{
 		db = new DatabaseService();
 
-		String sql = "INSERT INTO Stories (UserID, Content," /*ThemeID,*/+" IsDeleted, ReportCount, AvgRate, CreationDate, LastUpdate, StoryDateAbsolute, StoryDateApproximate) VALUES(";
+		String sql = "INSERT INTO Stories (UserID, Content, ThemeID, IsDeleted, ReportCount, AvgRate, CreationDate, LastUpdate, StoryDateAbsolute, StoryDateApproximate) VALUES(";
 		sql += "'" + userId + "',";
 		sql += "'" + content + "',";
-		//sql += "'" + themeId + "',";  // it is on foreign key, so do it later.
+		sql += "'" + themeId + "',";  
 		sql += "'" + isDeleted + "',";
 		sql += "'" + reportCount + "',";
 		sql += "'" + avgRate + "',";
 		sql += "'" + createdOn + "',";
 		sql += "'" + updatedOn + "',";
-		sql += "'" + absoluteDate + "',";
+		sql += "'" + new java.sql.Date(this.absoluteDate.getTime()) + "',";
 		sql += "'" + approximateDate + "')";
 		boolean a = db.executeSql(sql);
 		if(a)
@@ -116,6 +118,13 @@ public class Story {
 	public void setAbsoluteDate(Date AbsoluteDate) {
 		absoluteDate = AbsoluteDate;
 	}
+	
+	public void setAbsoluteDate(String s) throws ParseException{
+		Date date = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH).parse(s);
+		//System.out.print(date);
+		this.setAbsoluteDate(date);
+	}
+
 	
 	public String getApproximateDate() {
 		return approximateDate;

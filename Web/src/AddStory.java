@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.Calendar;
 
 import javax.servlet.ServletException;
@@ -26,7 +27,7 @@ public class AddStory extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		doPost(request, response);
+		
 	}
 
 	/**
@@ -45,18 +46,30 @@ public class AddStory extends HttpServlet {
 		Calendar cal = Calendar.getInstance();
 		java.sql.Timestamp timestamp = new java.sql.Timestamp(cal.getTimeInMillis());
 		
+		
 		Story story = new Story();
 		
 		story.setUserId(user.getUserID());
 		story.setContent(request.getParameter("editStory").toString());
-		//story.setThemeId(0);
+		story.setThemeId(Integer.parseInt(request.getParameter("theme")));
 		story.setIsDeleted(0);
 		story.setReportCount(0);
 		story.setAvgRate(0);
 		story.setCreatedOn(timestamp);
 		story.setUpdatedOn(timestamp);
-		story.setAbsoluteDate(timestamp);
-		story.setApproximateDate(request.getParameter("editStimeApp").toString());
+		String storyTime = request.getParameter("editStime");
+		System.out.print(storyTime);
+		if(storyTime!=null){
+			try {
+				story.setAbsoluteDate(storyTime);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		story.setApproximateDate(request.getParameter("editStime").toString());
+		
+		
 		
 		
 		if(story.addStory())
