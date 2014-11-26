@@ -42,7 +42,7 @@ public class Story {
 		sql += "'" + avgRate + "',";
 		sql += "'" + createdOn + "',";
 		sql += "'" + updatedOn + "',";
-		sql += "'" + new java.sql.Date(this.absoluteDate.getTime()) + "',";
+		sql += "'" + absoluteDate + "',";
 		sql += "'" + approximateDate + "') ";
 		boolean a = db.executeSql(sql);
         
@@ -148,9 +148,11 @@ public class Story {
 
 	public void setAbsoluteDate(Date AbsoluteDate) {
 		absoluteDate = AbsoluteDate;
+		if(absoluteDate != null)
+			absoluteDate = new java.sql.Date(this.absoluteDate.getTime());
 	}
 	
-	public void setAbsoluteDate(String s) throws ParseException{
+	public void setAbsoluteDateString(String s) throws ParseException{
 		Date date = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH).parse(s);
 		//System.out.print(date);
 		this.setAbsoluteDate(date);

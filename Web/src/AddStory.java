@@ -1,5 +1,6 @@
 import java.io.IOException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -41,6 +42,16 @@ public class AddStory extends HttpServlet {
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
+	public boolean isValidDate(String dateString) {
+	    SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+	    try {
+	        df.parse(dateString);
+	        return true;
+	    } catch (ParseException e) {
+	        return false;
+	    }
+	}
+	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
 	{
 		response.setContentType("text/html");
@@ -70,19 +81,15 @@ public class AddStory extends HttpServlet {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		if(rs != null)  //adding stories to an existing place
-		{
-			
-            try {
-            	while(rs.next())
-            		placeId = rs.getInt(1);
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		    
+		
+		try {
+			while(rs.next())
+				placeId = rs.getInt(1);
+		} catch (SQLException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
 		}
-		else
+		if(!(placeId > 0))
 		{
 			String placeName = request.getParameter("placeName");
 			
@@ -108,10 +115,10 @@ public class AddStory extends HttpServlet {
 			try {
 				Connection con = db.getConnection();
 				Statement statement2 = con.createStatement() ;
-				rs =statement2.executeQuery("SELECT * FROM Places ORDER BY PlaceID DESC Limit 1") ;
-				while(rs.next())
+				ResultSet rs3 =statement2.executeQuery("SELECT * FROM Places ORDER BY PlaceID DESC Limit 1") ;
+				while(rs3.next())
 		        {
-		            placeId = rs.getInt(1);
+		            placeId = rs3.getInt(1);
 		        }
 			} catch (ClassNotFoundException e1) {
 				// TODO Auto-generated catch block
@@ -139,15 +146,23 @@ public class AddStory extends HttpServlet {
 		story.setUpdatedOn(timestamp);
 		String storyTime = request.getParameter("editStime");
 		
-		if(storyTime!=null){
+		
+		
+		if((storyTime!=null) && isValidDate(storyTime)){
 			try {
-				story.setAbsoluteDate(storyTime);
+				story.setAbsoluteDateString(storyTime);
+				story.setApproximateDate(null);
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
 		}
+		else
+		{
+			story.setAbsoluteDate(null);
+			story.setApproximateDate(storyTime);
+		}
 		
-		story.setApproximateDate(request.getParameter("editStime").toString());
+		
 		
 		int storyId = story.addStory();
 		
