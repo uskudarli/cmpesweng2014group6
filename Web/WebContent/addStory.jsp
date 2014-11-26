@@ -21,7 +21,14 @@
 	<jsp:include page="header.jsp" />
 	<jsp:include page="footer.jsp" />
 	<%@ page import="java.sql.*, Dutluk.DatabaseService" %>
-	<%ResultSet rs =null;%>
+	<%
+	ResultSet rs =null;
+	String lat = request.getParameter("Lat");
+	String lon = request.getParameter("Lon");
+	request.getSession().setAttribute("lati", lat);
+	request.getSession().setAttribute("long", lon);
+	
+	%>
 	<div class="container">
 		<div class="row">
 		
@@ -31,6 +38,8 @@
 					<form id="editForm" method="post" action="AddStory"
 						class="editForm form-horizontal">
 						<div class="form-group">
+							
+							Place Name:<input class="form-control" name="placeName" type="text";"/>
 							Story: <input class="form-control" name="editStory" type="text" style="height: 200px;"/>
 							When did it happen?: <input class="form-control" id="editBirthdate" name="editStime" type=text 
 							 placeholder="dd/mm/yyyy"></input>

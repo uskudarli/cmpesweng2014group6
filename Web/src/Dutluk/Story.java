@@ -1,4 +1,10 @@
 package Dutluk;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Types;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -22,8 +28,9 @@ public class Story {
 		
 	}
 	
-	public Boolean addStory()
+	public int addStory()
 	{
+		int id = 0;
 		db = new DatabaseService();
 
 		String sql = "INSERT INTO Stories (UserID, Content, ThemeID, IsDeleted, ReportCount, AvgRate, CreationDate, LastUpdate, StoryDateAbsolute, StoryDateApproximate) VALUES(";
@@ -36,13 +43,37 @@ public class Story {
 		sql += "'" + createdOn + "',";
 		sql += "'" + updatedOn + "',";
 		sql += "'" + new java.sql.Date(this.absoluteDate.getTime()) + "',";
-		sql += "'" + approximateDate + "')";
+		sql += "'" + approximateDate + "') ";
 		boolean a = db.executeSql(sql);
-		if(a)
+        
+		ResultSet rs = null;
+		try {
+			Connection con = db.getConnection();
+			Statement statement = con.createStatement() ;
+			rs =statement.executeQuery("SELECT * FROM Stories ORDER BY StoryID DESC Limit 1") ;
+			while(rs.next())
+	        {
+	            id = rs.getInt(1);
+	        }
+		} catch (ClassNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		return id;
+		
+	}
+	
+	public boolean addStoryAndPlace(int storyId, int placeId)
+	{
+		db = new DatabaseService();
+		String sql = "INSERT INTO StoriesInPlaces (StoryID, PlaceID) VALUES ('"+storyId+"', '"+placeId+"')";
+		if(db.executeSql(sql))
 			return true;
 		else
 			return false;
-		
 	}
 	
 	//setters and getters:
