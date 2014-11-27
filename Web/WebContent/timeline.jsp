@@ -40,9 +40,11 @@
 		<col style = "width:2%">
 		<col style = "width:5%">
 		<col style = "width:1%">
+		<col style = "width:1%">
 		<tr>
 			<th>When did it happen?</th>
 			<th>Story</th>
+			<th>Written by</th>
 			<th>Creation Date</th>
 		</tr>
 		
@@ -64,6 +66,7 @@
 	        		<tr>
 	        			<td><% out.print(rs2.getString(10)); %></td>
 	        			<td><% out.print(rs2.getString(3)); %></td>
+	        			<td>User #<% out.print(rs2.getString(2)); %></td>
 	        			<td><% out.print(rs2.getString(8)); %></td>
 	        		</tr>
 	        	<%
