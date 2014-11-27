@@ -64,7 +64,9 @@
         	{
         		%>
 	        		<tr>
-	        			<td><% out.print(rs2.getString(10)); %></td>
+	        			<td><% 
+	        			if(rs2.getString(10)==null) out.print(rs2.getString(11));
+	        			else out.print(rs2.getString(10)); %></td>
 	        			<td><% out.print(rs2.getString(3)); %></td>
 	        			<td>User #<% out.print(rs2.getString(2)); %></td>
 	        			<td><% out.print(rs2.getString(8)); %></td>

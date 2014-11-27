@@ -96,7 +96,9 @@
 					{
 					%>
 						<tr>
-							<td><% out.print(rs.getString(10)); %></td>
+							<td><% if(rs.getString(10)==null)
+								out.print(rs.getString(11)); 
+							else out.print(rs.getString(10)); %></td>
 							<td><% out.print(rs.getString(3)); %></td>
 							<td><% out.print(rs.getString(8)); %></td>
 						</tr>

@@ -21,19 +21,23 @@ public class Story {
 	private Date updatedOn;
 	private Date absoluteDate;
 	private String approximateDate;
+	private boolean dateisAbsolute;
 	private DatabaseService db;
 
 	public Story()
 	{
-		
+
 	}
-	
+
 	public int addStory()
 	{
 		int id = 0;
 		db = new DatabaseService();
 
-		String sql = "INSERT INTO Stories (UserID, Content, ThemeID, IsDeleted, ReportCount, AvgRate, CreationDate, LastUpdate, StoryDateAbsolute, StoryDateApproximate) VALUES(";
+		String sql = "INSERT INTO Stories (UserID, Content, ThemeID, IsDeleted, ReportCount, AvgRate, CreationDate, LastUpdate,";
+		if(dateisAbsolute) sql+= " StoryDateAbsolute";
+		else sql+= " StoryDateApproximate";
+		sql+= ") VALUES(";
 		sql += "'" + userId + "',";
 		sql += "'" + content + "',";
 		sql += "'" + themeId + "',";  
@@ -42,19 +46,20 @@ public class Story {
 		sql += "'" + avgRate + "',";
 		sql += "'" + createdOn + "',";
 		sql += "'" + updatedOn + "',";
-		sql += "'" + absoluteDate + "',";
-		sql += "'" + approximateDate + "') ";
+		if(dateisAbsolute) sql += "'" + absoluteDate + "'";
+		else sql += "'" + approximateDate + "'";
+		sql += " ) ";
 		boolean a = db.executeSql(sql);
-        
+
 		ResultSet rs = null;
 		try {
 			Connection con = db.getConnection();
 			Statement statement = con.createStatement() ;
 			rs =statement.executeQuery("SELECT * FROM Stories ORDER BY StoryID DESC Limit 1") ;
 			while(rs.next())
-	        {
-	            id = rs.getInt(1);
-	        }
+			{
+				id = rs.getInt(1);
+			}
 		} catch (ClassNotFoundException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -63,9 +68,9 @@ public class Story {
 			e1.printStackTrace();
 		}
 		return id;
-		
+
 	}
-	
+
 	public boolean addStoryAndPlace(int storyId, int placeId)
 	{
 		db = new DatabaseService();
@@ -75,9 +80,9 @@ public class Story {
 		else
 			return false;
 	}
-	
+
 	//setters and getters:
-	
+
 	public int getUserId() {
 		return userId;
 	}
@@ -85,7 +90,7 @@ public class Story {
 	public void setUserId(int userID) {
 		userId = userID;
 	}
-	
+
 	public String getContent() {
 		return content;
 	}
@@ -93,7 +98,7 @@ public class Story {
 	public void setContent(String Content) {
 		content = Content;
 	}
-	
+
 	public int getThemeId() {
 		return themeId;
 	}
@@ -101,7 +106,7 @@ public class Story {
 	public void setThemeId(int themeID) {
 		themeId = themeID;
 	}
-	
+
 	public int getIsDeleted() {
 		return isDeleted;
 	}
@@ -109,7 +114,7 @@ public class Story {
 	public void setIsDeleted(int IsDeleted) {
 		isDeleted = IsDeleted;
 	}
-	
+
 	public int getReportCount() {
 		return reportCount;
 	}
@@ -117,7 +122,7 @@ public class Story {
 	public void setReportCount(int ReportCount) {
 		reportCount = ReportCount;
 	}
-	
+
 	public int getAvgRate() {
 		return avgRate;
 	}
@@ -125,7 +130,7 @@ public class Story {
 	public void setAvgRate(int AvgRate) {
 		avgRate = AvgRate;
 	}
-	
+
 	public Date getCreatedOn() {
 		return createdOn;
 	}
@@ -133,7 +138,7 @@ public class Story {
 	public void setCreatedOn(Date CreatedOn) {
 		createdOn = CreatedOn;
 	}
-	
+
 	public Date getUpdatedOn() {
 		return updatedOn;
 	}
@@ -141,7 +146,7 @@ public class Story {
 	public void setUpdatedOn(Date UpdatedOn) {
 		updatedOn = UpdatedOn;
 	}
-	
+
 	public Date getAbsoluteDate() {
 		return absoluteDate;
 	}
@@ -151,20 +156,28 @@ public class Story {
 		if(!(absoluteDate.equals("")))
 			absoluteDate = new java.sql.Date(this.absoluteDate.getTime());
 	}
-	
+
 	public void setAbsoluteDateString(String s) throws ParseException{
 		Date date = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH).parse(s);
 		//System.out.print(date);
 		this.setAbsoluteDate(date);
 	}
 
-	
+
 	public String getApproximateDate() {
 		return approximateDate;
 	}
 
 	public void setApproximateDate(String ApproximateDate) {
 		approximateDate = ApproximateDate;
+	}
+
+	public void setdateisAbsolute(boolean b){
+		dateisAbsolute = b;
+	}
+
+	public boolean getdateisAbsolute(){
+		return dateisAbsolute;
 	}
 
 }

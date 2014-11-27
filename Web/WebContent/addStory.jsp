@@ -43,7 +43,7 @@
 							Place Name:<input class="form-control" name="placeName" type="text" value="<%out.print(name);%>"/>
 							Story: <input class="form-control" name="editStory" type="text" style="height: 200px;"/>
 							When did it happen?: <input class="form-control" id="editBirthdate" name="editStime" type=text 
-							 placeholder="dd/mm/yyyy"></input>
+							 placeholder="dd/mm/yyyy or any format"></input>
 							
 							<%
 							DatabaseService db = new DatabaseService();
