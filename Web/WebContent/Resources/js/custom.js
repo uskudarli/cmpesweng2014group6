@@ -236,6 +236,18 @@ $(document).ready(function() {
 			data: $form.serialize()
 		});
 	});
+	
+	$("#addStoryButton").click(function(){
+		$.ajax({
+			type: "POST",
+			url: "AddStory",
+			data: $("#addStoryForm, #uploadForm").serialize(),
+			success: function(data){
+				alert(data);
+			}
+			
+		})
+	});
 
 });
 
@@ -281,3 +293,7 @@ function goToEdit()
 		}
 	})
 }
+
+
+
+	

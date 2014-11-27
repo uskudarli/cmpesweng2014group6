@@ -1,12 +1,16 @@
 package Dutluk;
+import java.awt.List;
+import java.sql.Array;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
+
 
 
 public class DatabaseService {
@@ -303,5 +307,129 @@ public class DatabaseService {
 			return null;
 			
 		}
+	}
+	
+	public int insertPhoto(String filePath)
+	{
+		try
+		{
+			Class.forName(JDBC_DRIVER);
+			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			pstmt = conn.prepareStatement("INSERT INTO Pictures (Path, CreationDate, LastUpdate) VALUES(?,?,?)", Statement.RETURN_GENERATED_KEYS);
+			pstmt.setString(1, filePath);
+			java.util.Date today = new java.util.Date();
+			pstmt.setTimestamp(2, new java.sql.Timestamp(today.getTime()));
+			pstmt.setTimestamp(3, new java.sql.Timestamp(today.getTime()));
+			pstmt.executeUpdate();
+			ResultSet rs = pstmt.getGeneratedKeys();
+			while(rs.next())
+			{
+				ResultSetMetaData rsMetaData = rs.getMetaData();
+		        int columnCount = rsMetaData.getColumnCount();
+		        for (int i = 1; i <= columnCount; i++) {
+		            String key = rs.getString(i);
+		            return Integer.parseInt(key);
+		          }
+			}
+		}catch(SQLException se){
+	         //Handle errors for JDBC
+	         se.printStackTrace();
+		}catch(Exception e){
+	         //Handle errors for Class.forName
+	         e.printStackTrace();
+	    }finally{
+	         //finally block used to close resources
+	   		try{
+	   			if(stmt!=null)
+	   				stmt.close();
+	   		}catch(SQLException se2){
+	   		}// nothing we can do
+	   		try{
+	   			if(conn!=null)
+	   				conn.close();
+	   		}catch(SQLException se){
+	   			se.printStackTrace();
+	   		}//end finally try
+	    }
+		return 0;
+	}
+	
+	public void insertPhotoStoryConnection(int storyID, int pictureID)
+	{
+		try
+		{
+			Class.forName(JDBC_DRIVER);
+			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			pstmt = conn.prepareStatement("INSERT INTO PicturesInStories (PicID, StoryID) VALUES(?,?)");
+			pstmt.setInt(1, pictureID);
+			pstmt.setInt(2, storyID);
+			pstmt.executeUpdate();
+			
+		}catch(SQLException se){
+	         //Handle errors for JDBC
+	         se.printStackTrace();
+		}catch(Exception e){
+	         //Handle errors for Class.forName
+	         e.printStackTrace();
+	    }finally{
+	         //finally block used to close resources
+	   		try{
+	   			if(stmt!=null)
+	   				stmt.close();
+	   		}catch(SQLException se2){
+	   		}// nothing we can do
+	   		try{
+	   			if(conn!=null)
+	   				conn.close();
+	   		}catch(SQLException se){
+	   			se.printStackTrace();
+	   		}//end finally try
+	    }
+	}
+	
+	public ArrayList<String> getPicturePathsOfaPlace(int placeID){
+		ArrayList<String> paths = new ArrayList<String>();
+		try
+		{
+			Class.forName(JDBC_DRIVER);
+			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			/*pstmt = conn.prepareStatement("SELECT StoryID FROM StoriesInPlaces WHERE PlaceID = ?");
+			pstmt.setInt(1, placeID);
+			ArrayList<Integer> storyIDs = new ArrayList<Integer>();
+			ResultSet rs = pstmt.executeQuery();
+			while(rs.next())
+				storyIDs.add(new Integer(rs.getInt("StoryID")));
+			Array[] array = new Array[storyIDs.size()];
+			int i = 0;
+			for(Integer n : storyIDs)
+				array[i++] = n;*/
+			pstmt = conn.prepareStatement("SELECT DISTINCT(Path) from Pictures WHERE PicID IN (SELECT PicID FROM PicturesInStories WHERE StoryID IN (SELECT StoryID FROM StoriesInPlaces WHERE PlaceID = ?))");
+			pstmt.setInt(1, placeID);
+			ResultSet rs = pstmt.executeQuery();
+			while(rs.next())
+				paths.add(rs.getString("Path"));
+			return paths;
+			
+		}catch(SQLException se){
+	         //Handle errors for JDBC
+	         se.printStackTrace();
+		}catch(Exception e){
+	         //Handle errors for Class.forName
+	         e.printStackTrace();
+	    }finally{
+	         //finally block used to close resources
+	   		try{
+	   			if(stmt!=null)
+	   				stmt.close();
+	   		}catch(SQLException se2){
+	   		}// nothing we can do
+	   		try{
+	   			if(conn!=null)
+	   				conn.close();
+	   		}catch(SQLException se){
+	   			se.printStackTrace();
+	   		}//end finally try
+	    }
+		return null;
 	}
 }
