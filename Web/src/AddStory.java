@@ -148,10 +148,10 @@ public class AddStory extends HttpServlet {
 		
 		
 		
-		if((storyTime!=null) && isValidDate(storyTime)){
+		if((storyTime!=null) && isValidDate(storyTime)){  //not working properly yet
 			try {
 				story.setAbsoluteDateString(storyTime);
-				story.setApproximateDate(null);
+				story.setApproximateDate("");
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
@@ -161,11 +161,8 @@ public class AddStory extends HttpServlet {
 			story.setAbsoluteDate(null);
 			story.setApproximateDate(storyTime);
 		}
-		
-		
-		
+
 		int storyId = story.addStory();
-		
 		if((storyId != 0) && (placeId != 0))
 		{
 			if(story.addStoryAndPlace(storyId, placeId))

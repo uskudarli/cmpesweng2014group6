@@ -78,7 +78,7 @@
 				        rs =statement.executeQuery("SELECT * FROM Stories WHERE UserID = '"+(int)request.getSession().getAttribute("userid")+"' ORDER BY  Stories.StoryDateAbsolute DESC") ;
 					}catch(Exception e)
 			        {
-			             out.println(e);
+			            out.println(e);
 			        }
 					%>
 					<table style="width:100%" border = "1">

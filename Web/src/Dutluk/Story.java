@@ -148,7 +148,7 @@ public class Story {
 
 	public void setAbsoluteDate(Date AbsoluteDate) {
 		absoluteDate = AbsoluteDate;
-		if(absoluteDate != null)
+		if(!(absoluteDate.equals("")))
 			absoluteDate = new java.sql.Date(this.absoluteDate.getTime());
 	}
 	
