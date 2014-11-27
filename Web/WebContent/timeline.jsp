@@ -6,8 +6,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>${Name}</title>
-<%@ page import="Dutluk.*"%>
-	<%@ page import="java.sql.*, Dutluk.DatabaseService" %>
+
 </head>
 <body>
 	
@@ -15,6 +14,8 @@
 	<jsp:include page="footer.jsp" />
 	<center><h2>Timeline of <% out.print(request.getParameter("Name")); %></h2></center>
 	<br><br>
+	<%@ page import="Dutluk.*"%>
+	<%@ page import="java.sql.*, Dutluk.DatabaseService" %>
 	<% 
 	DatabaseService db = new DatabaseService();
 	ResultSet rs = null;
