@@ -69,7 +69,7 @@
 	        			if(rs2.getString(10)==null) out.print(rs2.getString(11));
 	        			else out.print(rs2.getString(10)); %></td>
 	        			<td><% out.print(rs2.getString(3)); %></td>
-	        			<td>
+	        			<td><a href = 'profile.jsp?id=<%out.print(rs2.getString(2)); %>'>
 	        			<%
 	        			userId = rs2.getString(2);
 	        			Statement statement3 = connection.createStatement();
@@ -79,7 +79,7 @@
 	        				out.print(rs3.getString(2)); 
 	        			}
 	        			
-	        			%></td>
+	        			%></a></td>
 	        			<td><% out.print(rs2.getString(8)); %></td>
 	        		</tr>
 	        	<%
@@ -87,10 +87,10 @@
         	
         }
 	}catch(Exception e)
-       {
-           out.println(e);
-           
-       }
+    {
+        out.println(e);
+        
+    }
       
 	
 	%>
