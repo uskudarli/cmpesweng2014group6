@@ -1,11 +1,7 @@
-import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -22,266 +18,174 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
-
 import Dutluk.*;
 
 @WebServlet("/AddStory")
 public class AddStory extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-	private static final String UPLOAD_DIRECTORY = "upload";
-	 
-    // upload settings
-    private static final int MEMORY_THRESHOLD   = 1024 * 1024 * 3;  // 3MB
-    private static final int MAX_FILE_SIZE      = 1024 * 1024 * 40; // 40MB
-    private static final int MAX_REQUEST_SIZE   = 1024 * 1024 * 50; // 50MB  
-	/**
-	 * @see HttpServlet#HttpServlet()
-	 */
-	public AddStory() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
+        private static final long serialVersionUID = 1L;
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        /**
+         * @see HttpServlet#HttpServlet()
+         */
+        public AddStory() {
+                super();
+                // TODO Auto-generated constructor stub
+        }
 
-	}
+        /**
+         * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+         */
+        protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	public boolean isValidDate(String dateString) {
-		SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-		try {
-			df.parse(dateString);
-			return true;
-		} catch (ParseException e) {
-			return false;
-		}
-	}
+        }
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
-	{
-		response.setContentType("text/html");
+        /**
+         * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+         */
+        public boolean isValidDate(String dateString) {
+                SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+                try {
+                        df.parse(dateString);
+                        return true;
+                } catch (ParseException e) {
+                        return false;
+                }
+        }
+
+        protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException 
+        {
+                response.setContentType("text/html");
 
 
-		HttpSession session = request.getSession();
-		String email = session.getAttribute("email").toString();
-		DatabaseService db = new DatabaseService();
-		User user = db.findUserByEmail(email);
+                HttpSession session = request.getSession();
+                String email = session.getAttribute("email").toString();
+                DatabaseService db = new DatabaseService();
+                User user = db.findUserByEmail(email);
 
-		String lat = request.getParameter("lat");
-		String lon = request.getParameter("lng");
-		lat = request.getSession().getAttribute("lati").toString();
-		lon = request.getSession().getAttribute("long").toString();
-		int placeId = 0;
-		ResultSet rs = null;
-		PreparedStatement statement = null;
-		String sql = "SELECT * FROM Places WHERE Latitude ='"+lat+"'";
-		try {
-			Connection con = db.getConnection();
-			Statement statement3 = con.createStatement() ;
-			rs =statement3.executeQuery(sql);
-		} catch (ClassNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (SQLException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+                String lat = request.getParameter("lat");
+                String lon = request.getParameter("lng");
+                lat = request.getSession().getAttribute("lati").toString();
+                lon = request.getSession().getAttribute("long").toString();
+                int placeId = 0;
+                ResultSet rs = null;
+                PreparedStatement statement = null;
+                String sql = "SELECT * FROM Places WHERE Latitude ='"+lat+"'";
+                try {
+                        Connection con = db.getConnection();
+                        Statement statement3 = con.createStatement() ;
+                        rs =statement3.executeQuery(sql);
+                } catch (ClassNotFoundException e1) {
+                        // TODO Auto-generated catch block
+                        e1.printStackTrace();
+                } catch (SQLException e1) {
+                        // TODO Auto-generated catch block
+                        e1.printStackTrace();
+                }
 
-		try {
-			while(rs.next())
-				placeId = rs.getInt(1);
-		} catch (SQLException e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
-		}
-		if(!(placeId > 0))
-		{
-			String placeName = request.getParameter("placeName");
+                try {
+                        while(rs.next())
+                                placeId = rs.getInt(1);
+                } catch (SQLException e2) {
+                        // TODO Auto-generated catch block
+                        e2.printStackTrace();
+                }
+                if(!(placeId > 0))
+                {
+                        String placeName = request.getParameter("placeName");
 
-			statement = null;
-			String Sql = "INSERT INTO Places (Name, Longtitude, Latitude, CreationDate, LastUpdate) VALUES (?,?,?,NOW(),NOW())";
-			try {
-				Connection con = db.getConnection();
-				statement = con.prepareStatement(Sql);
-				statement.setString(1, placeName);
-				statement.setString(2, lon);
-				statement.setString(3, lat);
+                        statement = null;
+                        String Sql = "INSERT INTO Places (Name, Longtitude, Latitude, CreationDate, LastUpdate) VALUES (?,?,?,NOW(),NOW())";
+                        try {
+                                Connection con = db.getConnection();
+                                statement = con.prepareStatement(Sql);
+                                statement.setString(1, placeName);
+                                statement.setString(2, lon);
+                                statement.setString(3, lat);
 
-				statement.execute();
-			} catch (ClassNotFoundException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-
-
-			try {
-				Connection con = db.getConnection();
-				Statement statement2 = con.createStatement() ;
-				ResultSet rs3 =statement2.executeQuery("SELECT * FROM Places ORDER BY PlaceID DESC Limit 1") ;
-				while(rs3.next())
-				{
-					placeId = rs3.getInt(1);
-				}
-			} catch (ClassNotFoundException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-		}
-
-		Calendar cal = Calendar.getInstance();
-		java.sql.Timestamp timestamp = new java.sql.Timestamp(cal.getTimeInMillis());
-
-		String fileName = null;
-		String storyTime = null;
-		Story story = new Story();
-		boolean isMultipart = ServletFileUpload.isMultipartContent(request);
-		if(isMultipart)
-		{
-			
-			DiskFileItemFactory factory = new DiskFileItemFactory();
-	        // sets memory threshold - beyond which files are stored in disk
-	        factory.setSizeThreshold(MEMORY_THRESHOLD);
-	        // sets temporary location to store files
-	        factory.setRepository(new File(System.getProperty("java.io.tmpdir")));
-	 
-	        ServletFileUpload upload = new ServletFileUpload(factory);
-	         
-	        // sets maximum size of upload file
-	        upload.setFileSizeMax(MAX_FILE_SIZE);
-	         
-	        // sets maximum size of request (include file + form data)
-	        upload.setSizeMax(MAX_REQUEST_SIZE);
-	 
-	        // constructs the directory path to store upload file
-	        // this path is relative to application's directory
-	        String uploadPath = getServletContext().getRealPath("")
-	                + File.separator + UPLOAD_DIRECTORY;
-	         
-	        // creates the directory if it does not exist
-	        File uploadDir = new File(uploadPath);
-	        if (!uploadDir.exists()) {
-	            uploadDir.mkdir();
-	        }
-	 
-	        try {
-	            // parses the request's content to extract file data
-	            List<FileItem> formItems = upload.parseRequest(request);
-	 
-	            if (formItems != null && formItems.size() > 0) {
-	                // iterates over form's fields
-	                for (FileItem item : formItems) {
-	                    // processes only fields that are not form fields
-	                    if (!item.isFormField()) {
-	                        fileName = new File(item.getName()).getName();
-	                        String filePath = uploadPath + File.separator + fileName;
-	                        File storeFile = new File(filePath);
-	 
-	                        // saves the file on disk
-	                        item.write(storeFile);
-	                        request.setAttribute("message",
-	                            "Upload has been done successfully!");
-	                    }else
-	                    {
-	                    	String fieldname = item.getFieldName();
-	                    	String fieldvalue = item.getString();
-	                    	if(fieldname.equals("editStory"))
-	                    		story.setContent(fieldvalue);
-	                    	else if(fieldname.equals("theme"))
-	                    		story.setThemeId(Integer.parseInt(fieldvalue));
-	                    	else if(fieldname.equals("editStime"))
-	                    		storyTime = fieldvalue;
-	            			
-	                    }
-	                   
-	                }
-	            }
-	        } catch (Exception ex) {
-	            request.setAttribute("message",
-	                    "There was an error: " + ex.getMessage());
-	        }
-	        
-	        
-	        
-		}
-		else {
-			
-			story.setContent(request.getParameter("editStory").toString());
-			story.setThemeId(Integer.parseInt(request.getParameter("theme")));
-			
-			storyTime = request.getParameter("editStime");
-		}
-		story.setUserId(user.getUserID());
-		story.setIsDeleted(0);
-		story.setReportCount(0);
-		story.setAvgRate(0);
-		story.setCreatedOn(timestamp);
-		story.setUpdatedOn(timestamp);
-		
-		if((storyTime!=null) && isValidDate(storyTime)){ 
-			story.setdateisAbsolute(true);
-			try {
-				story.setAbsoluteDateString(storyTime);
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			story.setApproximateDate("");
-		}else{
-			story.setdateisAbsolute(false);
-			story.setApproximateDate(storyTime);
-		}
+                                statement.execute();
+                        } catch (ClassNotFoundException e1) {
+                                // TODO Auto-generated catch block
+                                e1.printStackTrace();
+                        } catch (SQLException e1) {
+                                // TODO Auto-generated catch block
+                                e1.printStackTrace();
+                        }
 
 
-		int storyId = story.addStory();
-		if((storyId != 0) && (placeId != 0))
-		{
-			if(story.addStoryAndPlace(storyId, placeId))
-			{
-				request.setAttribute("error", "true");
-				request.setAttribute("message", "Story is added.");
-				request.getRequestDispatcher("index.jsp").forward(request, response);
-				if(fileName != null)
-				{
-					int pictureId = db.insertPhoto(fileName);
-					db.insertPhotoStoryConnection(storyId, pictureId);
-				}
-				
-		        // configures upload settings
-		        
-				
-			
-				
-			}
-			
-			else
-			{
-				request.setAttribute("error", "true");
-				request.setAttribute("message", "StoriesInPlaces error.");
-				request.getRequestDispatcher("index.jsp").forward(request, response);
-			}
-		}
-		else
-		{
+                        try {
+                                Connection con = db.getConnection();
+                                Statement statement2 = con.createStatement() ;
+                                ResultSet rs3 =statement2.executeQuery("SELECT * FROM Places ORDER BY PlaceID DESC Limit 1") ;
+                                while(rs3.next())
+                                {
+                                        placeId = rs3.getInt(1);
+                                }
+                        } catch (ClassNotFoundException e1) {
+                                // TODO Auto-generated catch block
+                                e1.printStackTrace();
+                        } catch (SQLException e1) {
+                                // TODO Auto-generated catch block
+                                e1.printStackTrace();
+                        }
+                }
 
-			request.setAttribute("error", "true");
-			request.setAttribute("message", "Sorry, Something went wrong.");
-			request.getRequestDispatcher("index.jsp").forward(request, response);
-		}
+                Calendar cal = Calendar.getInstance();
+                java.sql.Timestamp timestamp = new java.sql.Timestamp(cal.getTimeInMillis());
 
 
-	}
+
+                Story story = new Story();
+
+                story.setUserId(user.getUserID());
+                story.setContent(request.getParameter("editStory").toString());
+                story.setThemeId(Integer.parseInt(request.getParameter("theme")));
+                story.setIsDeleted(0);
+                story.setReportCount(0);
+                story.setAvgRate(0);
+                story.setCreatedOn(timestamp);
+                story.setUpdatedOn(timestamp);
+                String storyTime = request.getParameter("editStime");
+
+                
+                if((storyTime!=null) && isValidDate(storyTime)){ 
+                        story.setdateisAbsolute(true);
+                        try {
+                                story.setAbsoluteDateString(storyTime);
+                        } catch (ParseException e) {
+                                // TODO Auto-generated catch block
+                                e.printStackTrace();
+                        }
+                        story.setApproximateDate("");
+                }else{
+                        story.setdateisAbsolute(false);
+                        story.setApproximateDate(storyTime);
+                }
+
+
+                int storyId = story.addStory();
+                if((storyId != 0) && (placeId != 0))
+                {
+                        if(story.addStoryAndPlace(storyId, placeId))
+                        {
+                                request.setAttribute("error", "true");
+                                request.setAttribute("message", "Story is added.");
+                                request.getRequestDispatcher("index.jsp").forward(request, response);
+                        }
+                        else
+                        {
+                                request.setAttribute("error", "true");
+                                request.setAttribute("message", "StoriesInPlaces error.");
+                                request.getRequestDispatcher("index.jsp").forward(request, response);
+                        }
+                }
+                else
+                {
+
+                        request.setAttribute("error", "true");
+                        request.setAttribute("message", "Sorry, Something went wrong.");
+                        request.getRequestDispatcher("index.jsp").forward(request, response);
+                }
+
+
+        }
 }

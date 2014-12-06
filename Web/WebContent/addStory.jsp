@@ -36,8 +36,8 @@
 			<div class="col-xs-6">
 				<div style="padding: 10px">
 					<h2>New Story</h2>
-					<form id="addStoryForm" enctype="multipart/form-data" method="post" action="AddStory"
-						class="editForm form-horizontal" >
+					<form id="editForm" method="post" action="AddStory"
+						class="editForm form-horizontal">
 						<div class="form-group">
 							
 							Place Name:<input class="form-control" name="placeName" type="text" value="<%out.print(name);%>"/>
@@ -71,16 +71,10 @@
 							%>		
 						</div>
 						<div class="form-group">
-						
- 								File to upload: <input type="file" name="upfile"><br/>
-						
-						</div>
-						<div class="form-group">
-							<button id="addStoryButton" type="submit" class="btn btn-default">Add Story</button>
+							<button type="submit" class="btn btn-default">Add Story</button>
 						</div>
 						<input type="hidden" name="func" value="edit" />
 					</form>
-		
 				</div>
 			</div>
 			

@@ -23,6 +23,7 @@
 	String lat = request.getParameter("Lat");
 	int placeId = 0;
 	int storyId = 0;
+	String userId = "";
 	try{
 		Connection connection = db.getConnection();
         Statement statement = connection.createStatement() ;
@@ -68,7 +69,17 @@
 	        			if(rs2.getString(10)==null) out.print(rs2.getString(11));
 	        			else out.print(rs2.getString(10)); %></td>
 	        			<td><% out.print(rs2.getString(3)); %></td>
-	        			<td>User #<% out.print(rs2.getString(2)); %></td>
+	        			<td>
+	        			<%
+	        			userId = rs2.getString(2);
+	        			Statement statement3 = connection.createStatement();
+	        			ResultSet rs3 = statement3.executeQuery("SELECT * FROM Users WHERE UserId = '"+userId+"'");
+	        			while(rs3.next())
+	        			{
+	        				out.print(rs3.getString(2)); 
+	        			}
+	        			
+	        			%></td>
 	        			<td><% out.print(rs2.getString(8)); %></td>
 	        		</tr>
 	        	<%
