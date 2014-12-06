@@ -68,7 +68,7 @@
 	        			<td><% 
 	        			if(rs2.getString(10)==null) out.print(rs2.getString(11));
 	        			else out.print(rs2.getString(10)); %></td>
-	        			<td><% out.print(rs2.getString(3)); %></td>
+	        			<td><a href='story.jsp?storyId=<%=storyId %>'><%= rs2.getString(3) %></a></td>
 	        			<td><a href = 'profile.jsp?id=<%out.print(rs2.getString(2)); %>'>
 	        			<%
 	        			userId = rs2.getString(2);

@@ -38,18 +38,16 @@
 
 	<div class="container">
 		<div class="row">
-			<%@ page import="java.sql.*, Dutluk.DatabaseService" %>
+			<%@ page import="java.sql.*, Dutluk.DatabaseService"%>
 			<div class="col-xs-6">
 				<div style="padding: 10px">
-					<br>
-					<br>
+					<br> <br>
 					<h2 style="display: inline;"><%= request.getSession().getAttribute("name")%></h2>
 					<a>subscribe</a> <br>level
 					<%= request.getSession().getAttribute("level")%>
 					writer,
 					<%= request.getSession().getAttribute("xp")%>
-					points <br>
-					<img
+					points <br> <img
 						src="http://titan.cmpe.boun.edu.tr:8085/pictures/<%= request.getSession().getAttribute("picid")%>.jpg"
 						width=215 height=215 />
 
@@ -67,14 +65,19 @@
 						href='ProfileEdit'>Edit your details</a> <br>
 
 				</div>
-				</div>
-				</div>
-				<br><br><br>
-				<center>
-					<h2>Stories of <%= request.getSession().getAttribute("name")%></h2>
-				</center>
-				<br><br>
-					<% 
+			</div>
+		</div>
+		<br>
+		<br>
+		<br>
+		<center>
+			<h2>
+				Stories of
+				<%= request.getSession().getAttribute("name")%></h2>
+		</center>
+		<br>
+		<br>
+		<% 
 					DatabaseService db = new DatabaseService();
 					ResultSet rs = null;
 					try{
@@ -86,37 +89,41 @@
 			            out.println(e);
 			        }
 					%>
-					<table style="width:100%" border = "1">
-					<col style = "width:1%">
-					<col style = "width:5%">
-					<col style = "width:1%">
-					<tr>
-						<th>When did it happen?</th>
-						<th>Story</th>
-						<th>Creation Date</th>
-					</tr>
-					
-					<%
+		<table style="width: 100%" border="1">
+			<col style="width: 1%">
+			<col style="width: 5%">
+			<col style="width: 1%">
+			<tr>
+				<th>When did it happen?</th>
+				<th>Story</th>
+				<th>Creation Date</th>
+			</tr>
+
+			<%
 					while(rs.next())
 					{
 					%>
-						<tr>
-							<td><% if(rs.getString(10)==null)
+			<tr>
+				<td>
+					<% if(rs.getString(10)==null)
 								out.print(rs.getString(11)); 
-							else out.print(rs.getString(10)); %></td>
-							<td><% out.print(rs.getString(3)); %></td>
-							<td><% out.print(rs.getString(8)); %></td>
-						</tr>
-					<%	
+							else out.print(rs.getString(10)); %>
+				</td>
+				<td>
+					<% out.print(rs.getString(3)); %>
+				</td>
+				<td>
+					<% out.print(rs.getString(8)); %>
+				</td>
+			</tr>
+			<%	
 					}
 					%>
-					
-					</table><br><br><br>
-					
-			
-		
 
-
+		</table>
+		<br>
+		<br>
+		<br>
 	</div>
 
 	<%} 
@@ -124,7 +131,7 @@
 	{
 	%>
 	<%@ page import="Dutluk.*"%>
-	<%@ page import="java.sql.*, Dutluk.DatabaseService" %>
+	<%@ page import="java.sql.*, Dutluk.DatabaseService"%>
 	<%
 	try{
 		DatabaseService db = new DatabaseService();
@@ -139,47 +146,49 @@
 		}
 		
 		%>
-		<jsp:include page="header.jsp" />
-		<jsp:include page="footer.jsp" />
+	<jsp:include page="header.jsp" />
+	<jsp:include page="footer.jsp" />
 
-		<div class="container">
-			<div class="row">
-				<%@ page import="java.sql.*, Dutluk.DatabaseService" %>
-				<div class="col-xs-6">
-					<div style="padding: 10px">
-						<br>
-						<br>
-						<h2 style="display: inline;"><%= user.getName()%></h2>
-						<a>subscribe</a> <br>level
-						<%= user.getLevel()%>
-						writer,
-						<%= user.getExperiencePoint()%>
-						points <br>
-						<img
-							src="http://titan.cmpe.boun.edu.tr:8085/pictures/<%= user.getPicID()%>.jpg"
-							width=215 height=215 />
+	<div class="container">
+		<div class="row">
+			<%@ page import="java.sql.*, Dutluk.DatabaseService"%>
+			<div class="col-xs-6">
+				<div style="padding: 10px">
+					<br> <br>
+					<h2 style="display: inline;"><%= user.getName()%></h2>
+					<a>subscribe</a> <br>level
+					<%= user.getLevel()%>
+					writer,
+					<%= user.getExperiencePoint()%>
+					points <br> <img
+						src="http://titan.cmpe.boun.edu.tr:8085/pictures/<%= user.getPicID()%>.jpg"
+						width=215 height=215 />
 
 
-						<h4>
-							"<%= user.getBio()%>"
-						</h4>
+					<h4>
+						"<%= user.getBio()%>"
+					</h4>
 
-						Gender:
-						<%= user.getGender()%><br>
-						Birthdate:
-						<%= user.getBirthdate()%><br> Mail:
-						<%= user.getEmail()%><br> Phone:
-						<%= user.getPhone()%><br> 
+					Gender:
+					<%= user.getGender()%><br> Birthdate:
+					<%= user.getBirthdate()%><br> Mail:
+					<%= user.getEmail()%><br> Phone:
+					<%= user.getPhone()%><br>
 
-					</div>
-					</div>
-					</div>
-					<br><br><br>
-					<center>
-						<h2>Stories of <%= user.getName()%></h2>
-					</center>
-					<br><br>
-						<% 
+				</div>
+			</div>
+		</div>
+		<br>
+		<br>
+		<br>
+		<center>
+			<h2>
+				Stories of
+				<%= user.getName()%></h2>
+		</center>
+		<br>
+		<br>
+		<% 
 						db = new DatabaseService();
 						ResultSet rs2 = null;
 						try{
@@ -191,40 +200,44 @@
 				            out.println(e);
 				        }
 						%>
-						<table style="width:100%" border = "1">
-						<col style = "width:1%">
-						<col style = "width:5%">
-						<col style = "width:1%">
-						<tr>
-							<th>When did it happen?</th>
-							<th>Story</th>
-							<th>Creation Date</th>
-						</tr>
-						
-						<%
+		<table style="width: 100%" border="1">
+			<col style="width: 1%">
+			<col style="width: 5%">
+			<col style="width: 1%">
+			<tr>
+				<th>When did it happen?</th>
+				<th>Story</th>
+				<th>Creation Date</th>
+			</tr>
+
+			<%
 						while(rs2.next())
 						{
 						%>
-							<tr>
-								<td><% if(rs2.getString(10)==null)
+			<tr>
+				<td>
+					<% if(rs2.getString(10)==null)
 									out.print(rs2.getString(11)); 
-								else out.print(rs2.getString(10)); %></td>
-								<td><% out.print(rs2.getString(3)); %></td>
-								<td><% out.print(rs2.getString(8)); %></td>
-							</tr>
-						<%	
+								else out.print(rs2.getString(10)); %>
+				</td>
+				<td>
+					<% out.print(rs2.getString(3)); %>
+				</td>
+				<td>
+					<% out.print(rs2.getString(8)); %>
+				</td>
+			</tr>
+			<%	
 						}
 						%>
-						
-						</table><br><br><br>
-						
-				
-			
 
+		</table>
+		<br>
+		<br>
+		<br>
+	</div>
 
-		</div>
-
-		<%
+	<%
 		
 		}
 		catch(Exception e)
@@ -234,7 +247,7 @@
 	    }
         
     %>
-    <%	
+	<%	
 	}
 	%>
 </body>
