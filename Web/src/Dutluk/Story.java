@@ -1,6 +1,7 @@
 package Dutluk;
 import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -33,13 +34,14 @@ public class Story {
 	{
 		int id = 0;
 		db = new DatabaseService();
-
+		PreparedStatement pstatement = null;
+		
 		String sql = "INSERT INTO Stories (UserID, Content, ThemeID, IsDeleted, ReportCount, AvgRate, CreationDate, LastUpdate,";
 		if(dateisAbsolute) sql+= " StoryDateAbsolute";
 		else sql+= " StoryDateApproximate";
 		sql+= ") VALUES(";
 		sql += "'" + userId + "',";
-		sql += "'" + content + "',";
+		sql += "?,";
 		sql += "'" + themeId + "',";  
 		sql += "'" + isDeleted + "',";
 		sql += "'" + reportCount + "',";
@@ -48,8 +50,22 @@ public class Story {
 		sql += "'" + updatedOn + "',";
 		if(dateisAbsolute) sql += "'" + absoluteDate + "'";
 		else sql += "'" + approximateDate + "'";
+		
 		sql += " ) ";
-		boolean a = db.executeSql(sql);
+		
+		try {
+			Connection con = db.getConnection();
+			pstatement = con.prepareStatement(sql);
+			pstatement.setString(1, content);
+
+			pstatement.execute();
+		} catch (ClassNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 
 		ResultSet rs = null;
 		try {
