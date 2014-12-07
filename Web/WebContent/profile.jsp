@@ -9,12 +9,6 @@
 </head>
 <body>
 	<%
-	String userId = request.getParameter("id");
-	if(userId == null)   //to see own profile
-	{
-	%>
-	<%@ page import="Dutluk.*"%>
-	<%
 		HttpSession newSession = request.getSession();
 		if(newSession == null)
 		{
@@ -32,7 +26,14 @@
 		{
 			request.getRequestDispatcher("loginRegister.jsp").forward(request,response);
 		}	
+	DatabaseService db = new DatabaseService();
+	User originalUser = db.findUserByEmail(request.getSession().getAttribute("email").toString());
+	String userId = request.getParameter("id");
+	if(userId == null || Integer.parseInt(userId) == originalUser.getUserID())   //to see own profile
+	{
 	%>
+	<%@ page import="Dutluk.*"%>
+	
 	<jsp:include page="header.jsp" />
 	<jsp:include page="footer.jsp" />
 
@@ -78,7 +79,6 @@
 		<br>
 		<br>
 		<% 
-					DatabaseService db = new DatabaseService();
 					ResultSet rs = null;
 					try{
 						Connection connection = db.getConnection();
@@ -134,7 +134,6 @@
 	<%@ page import="java.sql.*, Dutluk.DatabaseService"%>
 	<%
 	try{
-		DatabaseService db = new DatabaseService();
 		User user = null;
 		Connection connection = db.getConnection();
         Statement statement = connection.createStatement() ;
@@ -160,7 +159,7 @@
 						class="form-horizontal">
 						<input type="hidden" name="userId" value=<%=userId %> />
 						<%
-							User originalUser = db.findUserByEmail(request.getSession().getAttribute("email").toString());
+							
 							Boolean isFollowing = db.isFollowing(originalUser.getUserID(), Integer.parseInt(userId));
 							if(isFollowing)
 							{
