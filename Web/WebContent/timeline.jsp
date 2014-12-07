@@ -9,34 +9,55 @@
 
 </head>
 <body>
-	
+	<%
+		String placeId = request.getParameter("Id");
+		HttpSession newSession = request.getSession(true);
+		if(newSession == null)
+		{
+			request.getRequestDispatcher("loginRegister.jsp").forward(request,response);
+		}else if(newSession.getAttribute("email") == null
+				)	
+		{
+			request.getRequestDispatcher("loginRegister.jsp").forward(request,response);
+		}else if(placeId == null)
+			request.getRequestDispatcher("index.jsp").forward(request, response);
+		
+	DatabaseService db = new DatabaseService();
+	User originalUser = db.findUserByEmail(request.getSession().getAttribute("email").toString());
+	Place place = db.findPlacebyPlaceId(Integer.parseInt(placeId));
+	%>
 	<jsp:include page="header.jsp" />
 	<jsp:include page="footer.jsp" />
-	<center><h2>Timeline of <% out.print(request.getParameter("Name")); %></h2></center>
-	<br><br>
+	<center><h2>Timeline of <% out.print(place.getName()); %></h2></center>
+	<br>
+	
+	<br>
 	<%@ page import="Dutluk.*"%>
 	<%@ page import="java.sql.*, Dutluk.DatabaseService" %>
-	<% 
-	DatabaseService db = new DatabaseService();
-	ResultSet rs = null;
-	//ResultSet rs2 = null;
-	String lat = request.getParameter("Lat");
-	int placeId = 0;
-	int storyId = 0;
-	String userId = "";
-	try{
-		Connection connection = db.getConnection();
-        Statement statement = connection.createStatement() ;
-        rs =statement.executeQuery("SELECT * FROM Places WHERE Latitude = '"+lat+"'");
-        while(rs.next())
-        	placeId = rs.getInt(1);
-        
-	}catch(Exception e)
-       {
-           out.println(e);
-       }
-	
-	 %>
+	 <form id="subscribeForm" method="post" action="Subscribe"
+		class="form-horizontal">
+		<input type="hidden" name="placeId" value=<%=placeId %> />
+		<%
+			
+			Boolean isFollowing = db.isFollowingPlace(originalUser.getUserID(), place.getPlaceID());
+			if(isFollowing)
+			{
+				%>
+					<input type="hidden" name="func" value="unsubscribePlace"/> 
+					<button type="submit" class="btn btn-default">Unsubscribe</button>
+				<%
+			}
+			else
+			{
+				%>
+				<input type="hidden" name="func" value="subscribePlace"/> 
+				<button type="submit" class="btn btn-default">Subscribe</button>
+				<%
+			}
+		%>
+		
+	</form>
+	 
 		<table style="width:100%" border = "1">
 		<col style = "width:2%">
 		<col style = "width:5%">
@@ -52,6 +73,9 @@
 		<%
 	
 	try{
+		int storyId = 0;
+		String userId = "";
+		ResultSet rs = null;
 		Connection connection = db.getConnection();
         Statement statement = connection.createStatement() ;
         rs =statement.executeQuery("SELECT * FROM StoriesInPlaces WHERE PlaceID = '"+placeId+"'");
