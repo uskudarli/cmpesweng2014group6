@@ -237,17 +237,6 @@ $(document).ready(function() {
 		});
 	});
 	
-	$("#addStoryButton").click(function(){
-		$.ajax({
-			type: "POST",
-			url: "AddStory",
-			data: $("#addStoryForm, #uploadForm").serialize(),
-			success: function(data){
-				alert(data);
-			}
-			
-		})
-	});
 
 });
 

@@ -432,4 +432,166 @@ public class DatabaseService {
 	    }
 		return null;
 	}
+	
+	public void subscribe(int followerId, int followedId)
+	{
+		try
+		{
+			Class.forName(JDBC_DRIVER);
+			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			pstmt = conn.prepareStatement("SELECT * FROM SubscriptionsToUsers WHERE FollowerID = ? AND FollowedID = ?");
+			pstmt.setInt(1, followerId);
+			pstmt.setInt(2, followedId);
+			ResultSet rs = pstmt.executeQuery();
+			if(rs.next())
+			{
+				int isActive = rs.getInt("IsActive");
+				//user subscribed before then unsubscribed, make isActive 1 to subscribe again
+				if(isActive == 0)
+				{
+					try
+					{
+						pstmt = conn.prepareStatement("UPDATE SubscriptionsToUsers SET IsActive = 1, LastUpdate=? WHERE FollowerID = ? AND FollowedID = ?");
+						java.util.Date today = new java.util.Date();
+						pstmt.setTimestamp(1, new java.sql.Timestamp(today.getTime()));
+						pstmt.setInt(2, followerId);
+						pstmt.setInt(3, followedId);
+						pstmt.executeUpdate();
+					}catch(SQLException se)
+					{
+						se.printStackTrace();
+					}
+				}
+			}else // subscribe for the first time
+			{
+				try
+				{
+					pstmt = conn.prepareStatement("INSERT INTO SubscriptionsToUsers (FollowerID, FollowedID, CreationDate, LastUpdate, IsActive) VALUES(?,?,?,?,?)");
+					pstmt.setInt(1, followerId);
+					pstmt.setInt(2, followedId);
+					java.util.Date today = new java.util.Date();
+					pstmt.setTimestamp(3, new java.sql.Timestamp(today.getTime()));
+					pstmt.setTimestamp(4, new java.sql.Timestamp(today.getTime()));
+					pstmt.setInt(5, 1);
+					pstmt.executeUpdate();
+				}catch(SQLException se)
+				{
+					se.printStackTrace();
+				}
+			}
+			
+		}catch(SQLException se){
+	         //Handle errors for JDBC
+	         se.printStackTrace();
+		}catch(Exception e){
+	         //Handle errors for Class.forName
+	         e.printStackTrace();
+	    }finally{
+	         //finally block used to close resources
+	   		try{
+	   			if(stmt!=null)
+	   				stmt.close();
+	   		}catch(SQLException se2){
+	   		}// nothing we can do
+	   		try{
+	   			if(conn!=null)
+	   				conn.close();
+	   		}catch(SQLException se){
+	   			se.printStackTrace();
+	   		}//end finally try
+	    }
+	}
+	
+	public Boolean isFollowing(int followerId, int followedId)
+	{
+		try
+		{
+			Class.forName(JDBC_DRIVER);
+			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			pstmt = conn.prepareStatement("SELECT * FROM SubscriptionsToUsers WHERE FollowerID = ? AND FollowedID = ? AND IsActive = ?");
+			pstmt.setInt(1, followerId);
+			pstmt.setInt(2, followedId);
+			pstmt.setInt(3, 1);
+			ResultSet rs = pstmt.executeQuery();
+			//following
+			if(rs.next())
+			{
+				return true;
+			}else // not following
+			{
+				return false;
+			}
+			
+		}catch(SQLException se){
+	         //Handle errors for JDBC
+	         se.printStackTrace();
+		}catch(Exception e){
+	         //Handle errors for Class.forName
+	         e.printStackTrace();
+	    }finally{
+	         //finally block used to close resources
+	   		try{
+	   			if(stmt!=null)
+	   				stmt.close();
+	   		}catch(SQLException se2){
+	   		}// nothing we can do
+	   		try{
+	   			if(conn!=null)
+	   				conn.close();
+	   		}catch(SQLException se){
+	   			se.printStackTrace();
+	   		}//end finally try
+	    }
+		return false;
+	}
+	public void unsubscribe(int followerId, int followedId)
+	{
+		try
+		{
+			Class.forName(JDBC_DRIVER);
+			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			pstmt = conn.prepareStatement("SELECT * FROM SubscriptionsToUsers WHERE FollowerID = ? AND FollowedID = ? AND IsActive = ?");
+			pstmt.setInt(1, followerId);
+			pstmt.setInt(2, followedId);
+			pstmt.setInt(3, 1);
+			ResultSet rs = pstmt.executeQuery();
+			if(rs.next())
+			{
+				
+				try
+				{
+					pstmt = conn.prepareStatement("UPDATE SubscriptionsToUsers SET IsActive = 0, LastUpdate=? WHERE FollowerID = ? AND FollowedID = ?");
+					java.util.Date today = new java.util.Date();
+					pstmt.setTimestamp(1, new java.sql.Timestamp(today.getTime()));
+					pstmt.setInt(2, followerId);
+					pstmt.setInt(3, followedId);
+					pstmt.executeUpdate();
+				}catch(SQLException se)
+				{
+					se.printStackTrace();
+				}
+				
+			}
+			
+		}catch(SQLException se){
+	         //Handle errors for JDBC
+	         se.printStackTrace();
+		}catch(Exception e){
+	         //Handle errors for Class.forName
+	         e.printStackTrace();
+	    }finally{
+	         //finally block used to close resources
+	   		try{
+	   			if(stmt!=null)
+	   				stmt.close();
+	   		}catch(SQLException se2){
+	   		}// nothing we can do
+	   		try{
+	   			if(conn!=null)
+	   				conn.close();
+	   		}catch(SQLException se){
+	   			se.printStackTrace();
+	   		}//end finally try
+	    }
+	}
 }

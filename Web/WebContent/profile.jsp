@@ -43,7 +43,7 @@
 				<div style="padding: 10px">
 					<br> <br>
 					<h2 style="display: inline;"><%= request.getSession().getAttribute("name")%></h2>
-					<a>subscribe</a> <br>level
+					 <br>level
 					<%= request.getSession().getAttribute("level")%>
 					writer,
 					<%= request.getSession().getAttribute("xp")%>
@@ -156,7 +156,30 @@
 				<div style="padding: 10px">
 					<br> <br>
 					<h2 style="display: inline;"><%= user.getName()%></h2>
-					<a>subscribe</a> <br>level
+					<form id="subscribeForm" method="post" action="Subscribe"
+						class="form-horizontal">
+						<input type="hidden" name="userId" value=<%=userId %> />
+						<%
+							User originalUser = db.findUserByEmail(request.getSession().getAttribute("email").toString());
+							Boolean isFollowing = db.isFollowing(originalUser.getUserID(), Integer.parseInt(userId));
+							if(isFollowing)
+							{
+								%>
+									<input type="hidden" name="func" value="unsubscribe"/> 
+									<button type="submit" class="btn btn-default">Unsubscribe</button>
+								<%
+							}
+							else
+							{
+								%>
+								<input type="hidden" name="func" value="subscribe"/> 
+								<button type="submit" class="btn btn-default">Subscribe</button>
+								<%
+							}
+						%>
+						
+					</form>
+					<br>level
 					<%= user.getLevel()%>
 					writer,
 					<%= user.getExperiencePoint()%>
