@@ -193,6 +193,7 @@ public class User {
 
 	public void setBirthdate(String s) throws ParseException{
 		Date date = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH).parse(s);
+		//System.out.print(date);
 		this.setBirthdate(date);
 	}
 

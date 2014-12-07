@@ -95,7 +95,7 @@ public class ProfileEdit extends HttpServlet {
 		String newName = request.getParameter("editName");
 		String newPhone = request.getParameter("editPhone");
 		String newBio = request.getParameter("editBio");
-
+		System.out.print(newBirthdate);
 		if(newBirthdate!=null){
 			try {
 				user.setBirthdate(newBirthdate);

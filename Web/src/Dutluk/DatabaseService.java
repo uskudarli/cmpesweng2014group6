@@ -502,6 +502,104 @@ public class DatabaseService {
 	    }
 	}
 	
+	public boolean isRemembered(int userId, int storyId)
+	{
+		try
+		{
+			Class.forName(JDBC_DRIVER);
+			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			pstmt = conn.prepareStatement("SELECT * FROM IRememberThat WHERE StoryID = ? AND UserID = ?");
+			pstmt.setInt(1, storyId);
+			pstmt.setInt(2, userId);
+			ResultSet rs = pstmt.executeQuery();
+			if(rs.next())
+			{
+				return true;
+			}
+			else
+				return false;
+		 
+		}catch(SQLException se){
+	        //Handle errors for JDBC
+	        se.printStackTrace();
+	        return false;
+		}catch(Exception e){
+	        //Handle errors for Class.forName
+	        e.printStackTrace();
+	        return false;
+		}finally{
+	        //finally block used to close resources
+	  		try{
+	  			if(stmt!=null)
+	  				stmt.close();
+	  		}catch(SQLException se2){
+	  		}// nothing we can do
+	  		try{
+	  			if(conn!=null)
+	  				conn.close();
+	  		}catch(SQLException se){
+	  			se.printStackTrace();
+	  		}//end finally try
+	   }
+	}
+	
+	public void remember(int userId, int storyId)
+	{
+		try
+		{
+			
+			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			pstmt = conn.prepareStatement("INSERT INTO IRememberThat (StoryID, UserID, CreationDate, LastUpdate) VALUES(?,?,NOW(),NOW())");
+			pstmt.setInt(1, storyId);
+			pstmt.setInt(2, userId);
+			pstmt.execute();
+		}catch(SQLException se)
+		{
+			se.printStackTrace();
+		}finally{
+	         //finally block used to close resources
+	   		try{
+	   			if(stmt!=null)
+	   				stmt.close();
+	   		}catch(SQLException se2){
+	   		}// nothing we can do
+	   		try{
+	   			if(conn!=null)
+	   				conn.close();
+	   		}catch(SQLException se){
+	   			se.printStackTrace();
+	   		}//end finally try
+	    }
+	}
+	
+	public void dontRemember(int userId, int storyId)
+	{
+		try
+		{
+			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			pstmt = conn.prepareStatement("DELETE FROM IRememberThat WHERE StoryID = ? AND UserID = ?");
+			pstmt.setInt(1, storyId);
+			pstmt.setInt(2, userId);
+			pstmt.executeUpdate();
+		}catch(SQLException se)
+		{
+			se.printStackTrace();
+		}finally{
+	         //finally block used to close resources
+	   		try{
+	   			if(stmt!=null)
+	   				stmt.close();
+	   		}catch(SQLException se2){
+	   		}// nothing we can do
+	   		try{
+	   			if(conn!=null)
+	   				conn.close();
+	   		}catch(SQLException se){
+	   			se.printStackTrace();
+	   		}//end finally try
+	    }
+	}
+	
 	public Boolean isFollowing(int followerId, int followedId)
 	{
 		try
