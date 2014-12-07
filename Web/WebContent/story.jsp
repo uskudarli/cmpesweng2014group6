@@ -35,12 +35,14 @@
 	<%@ page import="java.sql.*, Dutluk.DatabaseService"%>
 	<%
 		ResultSet rs = null;
+		int currentUserId = 0;
 		String author = null;
 		DatabaseService db = new DatabaseService();
 		String storyId = request.getParameter("storyId");
 		try{
 			Connection connection = db.getConnection();
 	        Statement statement = connection.createStatement() ;
+	        
 	        rs =statement.executeQuery("SELECT * FROM Stories WHERE StoryID = '"+storyId+"'");
 	        while(rs.next())
 	        {
@@ -72,7 +74,7 @@
 				String email = request.getSession().getAttribute("email").toString();
 				statement3 = connection.createStatement();
 				rs3 = statement3.executeQuery("SELECT * FROM Users WHERE Mail = '"+email+"'");
-				int currentUserId = 0;
+				
 				while(rs3.next())
 				{
 					currentUserId = rs3.getInt(1);
@@ -115,6 +117,28 @@
 		}
 		catch(Exception e){
 			out.print(e);
+		}
+		out.print(storyId);
+		Boolean isRemembered = db.isRemembered(currentUserId, Integer.parseInt(storyId));
+		if(isRemembered)
+		{
+			%>
+			<form id="rememberForm" method="post" action="RememberStory"
+						class="form-horizontal">
+			<input type="hidden" name="funct" value="dontRemember"/> 
+			<button type="submit" class="btn btn-default">I don't Remember</button>
+			</form>
+			<%
+		}
+		else
+		{
+			%>
+			<form id="rememberForm" method="post" action="RememberStory"
+						class="form-horizontal">
+			<input type="hidden" name="funct" value="remember"/> 
+			<button type="submit" class="btn btn-default">I Remember That!</button>
+			</form>
+			<%
 		}
 	%>
 </body>
