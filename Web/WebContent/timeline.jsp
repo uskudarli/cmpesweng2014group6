@@ -57,6 +57,10 @@
 		%>
 		
 	</form>
+	<%
+		String addStoryDirect = "addStory.jsp?Lat=" + place.getLatitude() + "&Lon=" + place.getLongtitude() + "&Name=" + place.getName();
+	%>
+	<a class="btn btn-default" href=<%out.print(addStoryDirect); %> >Add new Story</a>
 	 
 		<table style="width:100%" border = "1">
 		<col style = "width:2%">
