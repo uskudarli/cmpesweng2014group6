@@ -118,7 +118,6 @@
 		catch(Exception e){
 			out.print(e);
 		}
-		out.print(storyId);
 		Boolean isRemembered = db.isRemembered(currentUserId, Integer.parseInt(storyId));
 		if(isRemembered)
 		{
