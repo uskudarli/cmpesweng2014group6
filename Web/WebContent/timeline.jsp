@@ -45,6 +45,9 @@
 	<jsp:include page="footer.jsp" />
 	<center><h2>Timeline of <% out.print(place.getName()); %></h2></center>
 	<br>
+	<%
+	if(paths != null && paths.size()>0)
+	{%>
 	<div id="blueimpContainer">
 		<div id="blueimp-gallery-carousel" class="blueimp-gallery blueimp-gallery-carousel blueimp-gallery-controls">
 		    <div class="slides"></div>
@@ -56,8 +59,6 @@
 		</div>
 	</div>
 	<%
-	if(paths != null)
-	{
 		String uploadPath = "http://titan.cmpe.boun.edu.tr:8085/image";
 		out.print("<div id='links' style='display: none;'>");
 		for(String s: paths)

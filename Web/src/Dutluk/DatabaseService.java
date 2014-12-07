@@ -207,59 +207,13 @@ public class DatabaseService {
 	    }
 		return places;
 	}
+	
 	public Connection getConnection() throws ClassNotFoundException, SQLException{
 		Class.forName(JDBC_DRIVER);
 		conn = DriverManager.getConnection(DB_URL, USER, PASS);
 		return conn;
 	}
 	
-	/*public Boolean Update(User user)
-	{
-		try
-		{
-			Class.forName(JDBC_DRIVER);
-			conn = DriverManager.getConnection(DB_URL, USER, PASS);
-			pstmt = conn.prepareStatement("UPDATE Users SET Name=?, Birthdate=?, Gender=?, Phone=?, Bio=?, LastUpdate=? WHERE Mail = ?");
-			pstmt.setString(1, user.getName());
-			java.sql.Date sqlDate = new java.sql.Date(user.getBirthdate().getTime());
-			pstmt.setDate(2, sqlDate);
-			pstmt.setString(3, user.getGender().toString());
-			pstmt.setString(4, user.getPhone());
-			pstmt.setString(5, user.getBio());
-			java.util.Date today = new java.util.Date();
-			pstmt.setTimestamp(6, new java.sql.Timestamp(today.getTime()));
-			pstmt.setString(7, user.getEmail());
-			pstmt.executeUpdate();
-			
-			return true;
-		}catch(SQLException se){
-	         //Handle errors for JDBC
-	         se.printStackTrace();
-		}catch(Exception e){
-	         //Handle errors for Class.forName
-	         e.printStackTrace();
-	    }finally{
-	         //finally block used to close resources
-	   		try{
-	   			if(stmt!=null)
-	   				stmt.close();
-	   		}catch(SQLException se2){
-	   		}// nothing we can do
-	   		try{
-	   			if(conn!=null)
-	   				conn.close();
-	   		}catch(SQLException se){
-	   			se.printStackTrace();
-	   		}//end finally try
-	    }
-		return null;
-		
-	}*/
-	
-	public void executeStmt(PreparedStatement stmt)
-	{
-		
-	}
 	
 	public Boolean register(User user)
 	{
@@ -320,6 +274,50 @@ public class DatabaseService {
 			java.util.Date today = new java.util.Date();
 			pstmt.setTimestamp(2, new java.sql.Timestamp(today.getTime()));
 			pstmt.setTimestamp(3, new java.sql.Timestamp(today.getTime()));
+			pstmt.executeUpdate();
+			ResultSet rs = pstmt.getGeneratedKeys();
+			while(rs.next())
+			{
+				ResultSetMetaData rsMetaData = rs.getMetaData();
+		        int columnCount = rsMetaData.getColumnCount();
+		        for (int i = 1; i <= columnCount; i++) {
+		            String key = rs.getString(i);
+		            return Integer.parseInt(key);
+		          }
+			}
+		}catch(SQLException se){
+	         //Handle errors for JDBC
+	         se.printStackTrace();
+		}catch(Exception e){
+	         //Handle errors for Class.forName
+	         e.printStackTrace();
+	    }finally{
+	         //finally block used to close resources
+	   		try{
+	   			if(stmt!=null)
+	   				stmt.close();
+	   		}catch(SQLException se2){
+	   		}// nothing we can do
+	   		try{
+	   			if(conn!=null)
+	   				conn.close();
+	   		}catch(SQLException se){
+	   			se.printStackTrace();
+	   		}//end finally try
+	    }
+		return 0;
+	}
+	
+	public int insertPlace(String placeName, String lon, String lat)
+	{
+		try
+		{
+			Class.forName(JDBC_DRIVER);
+			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			pstmt = conn.prepareStatement("INSERT INTO Places (Name, Longtitude, Latitude, CreationDate, LastUpdate) VALUES (?,?,?,NOW(),NOW())", Statement.RETURN_GENERATED_KEYS);
+			pstmt.setString(1, placeName);
+			pstmt.setString(2, lon);
+            pstmt.setString(3, lat);
 			pstmt.executeUpdate();
 			ResultSet rs = pstmt.getGeneratedKeys();
 			while(rs.next())

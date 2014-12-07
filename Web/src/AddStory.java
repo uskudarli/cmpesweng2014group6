@@ -97,45 +97,7 @@ public class AddStory extends HttpServlet {
                         // TODO Auto-generated catch block
                         e2.printStackTrace();
                 }
-                if(!(placeId > 0))
-                {
-                        String placeName = request.getParameter("placeName");
-
-                        statement = null;
-                        String Sql = "INSERT INTO Places (Name, Longtitude, Latitude, CreationDate, LastUpdate) VALUES (?,?,?,NOW(),NOW())";
-                        try {
-                                Connection con = db.getConnection();
-                                statement = con.prepareStatement(Sql);
-                                statement.setString(1, placeName);
-                                statement.setString(2, lon);
-                                statement.setString(3, lat);
-
-                                statement.execute();
-                        } catch (ClassNotFoundException e1) {
-                                // TODO Auto-generated catch block
-                                e1.printStackTrace();
-                        } catch (SQLException e1) {
-                                // TODO Auto-generated catch block
-                                e1.printStackTrace();
-                        }
-
-
-                        try {
-                                Connection con = db.getConnection();
-                                Statement statement2 = con.createStatement() ;
-                                ResultSet rs3 =statement2.executeQuery("SELECT * FROM Places ORDER BY PlaceID DESC Limit 1") ;
-                                while(rs3.next())
-                                {
-                                        placeId = rs3.getInt(1);
-                                }
-                        } catch (ClassNotFoundException e1) {
-                                // TODO Auto-generated catch block
-                                e1.printStackTrace();
-                        } catch (SQLException e1) {
-                                // TODO Auto-generated catch block
-                                e1.printStackTrace();
-                        }
-                }
+                
 
                 Calendar cal = Calendar.getInstance();
                 java.sql.Timestamp timestamp = new java.sql.Timestamp(cal.getTimeInMillis());
@@ -144,6 +106,7 @@ public class AddStory extends HttpServlet {
 
                 String fileName = null;
         		String storyTime = null;
+        		String placeName = null;
         		Story story = new Story();
         		boolean isMultipart = ServletFileUpload.isMultipartContent(request);
         		if(isMultipart)
@@ -201,6 +164,8 @@ public class AddStory extends HttpServlet {
         	                    		story.setThemeId(Integer.parseInt(fieldvalue));
         	                    	else if(fieldname.equals("editStime"))
         	                    		storyTime = fieldvalue;
+        	                    	else if(fieldname.equals("placeName"))
+        	                    		placeName = fieldvalue;
         	            			
         	                    }
         	                   
@@ -228,6 +193,8 @@ public class AddStory extends HttpServlet {
         		story.setCreatedOn(timestamp);
         		story.setUpdatedOn(timestamp);
         		
+        		
+        		
         		if((storyTime!=null) && isValidDate(storyTime)){ 
         			story.setdateisAbsolute(true);
         			try {
@@ -242,6 +209,10 @@ public class AddStory extends HttpServlet {
         			story.setApproximateDate(storyTime);
         		}
 
+        		if(!(placeId > 0))
+                {
+        			placeId = db.insertPlace(placeName, lon, lat);
+                }
 
         		int storyId = story.addStory();
         		if((storyId != 0) && (placeId != 0))
@@ -251,7 +222,7 @@ public class AddStory extends HttpServlet {
         				request.setAttribute("error", "true");
         				request.setAttribute("message", "Story is added.");
         				request.getRequestDispatcher("index.jsp").forward(request, response);
-        				if(fileName != null)
+        				if(fileName != null && !fileName.equals(""))
         				{
         					int pictureId = db.insertPhoto(fileName);
         					db.insertPhotoStoryConnection(storyId, pictureId);
