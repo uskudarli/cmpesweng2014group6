@@ -13,6 +13,44 @@ $(document).ready(function() {
 		}
 	});
 
+	$('#addStoryForm').bootstrapValidator({
+		feedbackIcons: {
+			valid: 'glyphicon glyphicon-ok',
+			invalid: 'glyphicon glyphicon-remove',
+			validating: 'glyphicon glyphicon-refresh'
+		},
+		fields: {
+			placeName: {
+				message: 'Place name is not valid',
+				validators: {
+					notEmpty: {
+						message: 'Place name is required and cannot be empty'
+					},
+					stringLength: {
+						min: 3,
+						max: 30,
+						message: 'Place name must be more than 3 and less than 30 characters long'
+					}
+				}
+			},
+			editStory: {
+				message: 'Story is not valid',
+				validators: {
+					notEmpty: {
+						message: 'Story is required and cannot be empty'
+					}
+				}
+			},
+			editStime: {
+				message: 'Time is not valid',
+				validators: {
+					notEmpty: {
+						message: 'Time is required and cannot be empty'
+					}
+				}
+			}
+		}
+	});
 
 	$('#registerForm').bootstrapValidator({
 		feedbackIcons: {
@@ -69,7 +107,6 @@ $(document).ready(function() {
 			}
 		}
 	});
-
 
 	$("#registerButton").click(function(){
 		var $form = $("#registerForm");

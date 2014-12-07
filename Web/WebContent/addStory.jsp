@@ -8,26 +8,27 @@
 </head>
 <body>
 	<%
+		String lat = request.getParameter("Lat");
+		String lon = request.getParameter("Lon");
+		String name = request.getParameter("Name");
 		HttpSession newSession = request.getSession();
 		if(newSession == null)
 		{
 			request.getRequestDispatcher("loginRegister.jsp").forward(request,response);
-		}else if(newSession.getAttribute("email") == null
-				)	
+		}else if(newSession.getAttribute("email") == null)	
 		{
 			request.getRequestDispatcher("loginRegister.jsp").forward(request,response);
-		}	
+		}else if(lat == null
+				|| lon == null)
+			request.getRequestDispatcher("index.jsp").forward(request,response);
+		newSession.setAttribute("lon", lon);
+		newSession.setAttribute("lat", lat);
 	%>
 	<jsp:include page="header.jsp" />
 	<jsp:include page="footer.jsp" />
 	<%@ page import="java.sql.*, Dutluk.DatabaseService" %>
 	<%
 	ResultSet rs =null;
-	String lat = request.getParameter("Lat");
-	String lon = request.getParameter("Lon");
-	String name = request.getParameter("Name");
-	request.getSession().setAttribute("lati", lat);
-	request.getSession().setAttribute("long", lon);
 	
 	%>
 	<div class="container">
@@ -36,11 +37,19 @@
 			<div class="col-xs-6">
 				<div style="padding: 10px">
 					<h2>New Story</h2>
-					<form id="editForm" method="post" action="AddStory"
-						class="editForm form-horizontal">
+					<form id="addStoryForm" method="post" action="AddStory"
+						class="loginform form-horizontal">
 						<div class="form-group">
-							
-							Place Name:<input class="form-control" name="placeName" type="text" value="<%out.print(name);%>"/>
+							Place Name:<input class="form-control" name="placeName" type="text"
+							<%if(name == null)
+							{
+								%>
+								 placeholder="Specify a name"/>
+							<%
+							}else {
+								%>
+								value="<%out.print(name);%>"/>
+							<%}%>
 							Story: <input class="form-control" name="editStory" type="text" style="height: 200px;"/>
 							When did it happen?: <input class="form-control" id="editBirthdate" name="editStime" type=text 
 							 placeholder="dd/mm/yyyy or any format"></input>
@@ -71,7 +80,7 @@
 							%>		
 						</div>
 						<div class="form-group">
-							<button type="submit" class="btn btn-default">Add Story</button>
+							<button id="addStoryButton" type="submit" class="btn btn-default">Add Story</button>
 						</div>
 						<input type="hidden" name="func" value="edit" />
 					</form>

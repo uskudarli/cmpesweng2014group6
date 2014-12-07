@@ -42,12 +42,31 @@ public class Subscribe extends HttpServlet {
 		String userMail = request.getSession().getAttribute("email").toString();
 		DatabaseService db = new DatabaseService();
 		User user = db.findUserByEmail(userMail);
-		String otherUserId = request.getParameter("userId");
 		if(action.equals("subscribe"))
+		{
+			String otherUserId = request.getParameter("userId");
 			db.subscribe(user.getUserID(), Integer.parseInt(otherUserId));
-		else
+			String redirect = "profile.jsp?id="+otherUserId;
+			response.sendRedirect(redirect);
+		}
+		else if(action.equals("unsubscribe"))
+		{
+			String otherUserId = request.getParameter("userId");
 			db.unsubscribe(user.getUserID(), Integer.parseInt(otherUserId));
-		String redirect = "profile.jsp?id="+otherUserId;
-		response.sendRedirect(redirect);
+			String redirect = "profile.jsp?id="+otherUserId;
+			response.sendRedirect(redirect);
+		}else if(action.equals("subscribePlace"))
+		{
+			String placeId = request.getParameter("placeId");
+			db.subscribePlace(user.getUserID(), Integer.parseInt(placeId));
+			String redirect = "timeline.jsp?Id="+placeId;
+			response.sendRedirect(redirect);
+		}else
+		{
+			String placeId = request.getParameter("placeId");
+			db.unsubscribePlace(user.getUserID(), Integer.parseInt(placeId));
+			String redirect = "timeline.jsp?Id="+placeId;
+			response.sendRedirect(redirect);
+		}
 	}
 }
