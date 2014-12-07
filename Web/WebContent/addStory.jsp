@@ -40,7 +40,7 @@
 					<form id="addStoryForm" method="post" action="AddStory"
 						class="loginform form-horizontal">
 						<div class="form-group">
-							Place Name:<input class="form-control" name="placeName" type="text"
+							<label>Place Name:</label><input class="form-control" name="placeName" type="text"
 							<%if(name == null)
 							{
 								%>
@@ -50,8 +50,8 @@
 								%>
 								value="<%out.print(name);%>"/>
 							<%}%>
-							Story: <input class="form-control" name="editStory" type="text" style="height: 200px;"/>
-							When did it happen?: <input class="form-control" id="editBirthdate" name="editStime" type=text 
+							<label>Story: </label><input class="form-control" name="editStory" type="text" style="height: 200px;"/>
+							<label>When did it happen?: </label><input class="form-control" id="editBirthdate" name="editStime" type=text 
 							 placeholder="dd/mm/yyyy or any format"></input>
 							
 							<%
