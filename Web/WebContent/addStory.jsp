@@ -37,7 +37,7 @@
 			<div class="col-xs-6">
 				<div style="padding: 10px">
 					<h2>New Story</h2>
-					<form id="addStoryForm" method="post" action="AddStory"
+					<form id="addStoryForm" method="post" action="AddStory" enctype="multipart/form-data"
 						class="loginform form-horizontal">
 						<div class="form-group">
 							<label>Place Name:</label><input class="form-control" name="placeName" type="text"
@@ -78,6 +78,9 @@
 					             out.println(e);
 					        }
 							%>		
+						</div>
+						<div class="form-group">
+							<input class="btn btn-default" type="file" name="file" size="50" />
 						</div>
 						<div class="form-group">
 							<button id="addStoryButton" type="submit" class="btn btn-default">Add Story</button>
