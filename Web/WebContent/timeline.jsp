@@ -62,8 +62,6 @@
 		out.print("<div id='links' style='display: none;'>");
 		for(String s: paths)
 		{
-			
-			System.out.println(uploadPath+File.separator + s);
 			out.print("<a href='");
 			out.print(uploadPath+File.separator + s + "'>");
 			out.print("<img src='" + uploadPath+File.separator + s + "' alt='"+s +"'></a>");	
