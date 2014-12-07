@@ -63,13 +63,13 @@ public class AddStory extends HttpServlet {
                 User user = db.findUserByEmail(email);
 
                 String lat = request.getParameter("lat");
-                String lon = request.getParameter("lng");
-                lat = request.getSession().getAttribute("lati").toString();
-                lon = request.getSession().getAttribute("long").toString();
+                String lon = request.getParameter("lon");
+                lat = request.getSession().getAttribute("lat").toString();
+                lon = request.getSession().getAttribute("lon").toString();
                 int placeId = 0;
                 ResultSet rs = null;
                 PreparedStatement statement = null;
-                String sql = "SELECT * FROM Places WHERE Latitude ='"+lat+"'";
+                String sql = "SELECT * FROM Places WHERE Latitude ='"+lat+"' AND Longtitude= '"+ lon + "'";
                 try {
                         Connection con = db.getConnection();
                         Statement statement3 = con.createStatement() ;

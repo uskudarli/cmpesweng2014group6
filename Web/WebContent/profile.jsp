@@ -9,6 +9,12 @@
 </head>
 <body>
 	<%
+			
+	DatabaseService db = new DatabaseService();
+	User originalUser = db.findUserByEmail(request.getSession().getAttribute("email").toString());
+	String userId = request.getParameter("id");
+	if(userId == null || Integer.parseInt(userId) == originalUser.getUserID())   //to see own profile
+	{
 		HttpSession newSession = request.getSession();
 		if(newSession == null)
 		{
@@ -25,12 +31,7 @@
 				)	
 		{
 			request.getRequestDispatcher("loginRegister.jsp").forward(request,response);
-		}	
-	DatabaseService db = new DatabaseService();
-	User originalUser = db.findUserByEmail(request.getSession().getAttribute("email").toString());
-	String userId = request.getParameter("id");
-	if(userId == null || Integer.parseInt(userId) == originalUser.getUserID())   //to see own profile
-	{
+		}
 	%>
 	<%@ page import="Dutluk.*"%>
 	
