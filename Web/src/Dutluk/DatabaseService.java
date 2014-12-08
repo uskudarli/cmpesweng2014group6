@@ -894,4 +894,35 @@ public class DatabaseService {
 	    }
 		return null;
 	}
+
+	public void deleteProfilePic(int userId){
+		try
+		{
+			Class.forName(JDBC_DRIVER);
+			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			pstmt = conn.prepareStatement("UPDATE Users SET PicID = ?, LastUpdate=NOW() WHERE UserID = ?");
+			pstmt.setInt(1, 0);
+			pstmt.setInt(2, userId);
+			pstmt.executeUpdate();
+		}catch(SQLException se){
+	         //Handle errors for JDBC
+	         se.printStackTrace();
+		}catch(Exception e){
+	         //Handle errors for Class.forName
+	         e.printStackTrace();
+	    }finally{
+	         //finally block used to close resources
+	   		try{
+	   			if(stmt!=null)
+	   				stmt.close();
+	   		}catch(SQLException se2){
+	   		}// nothing we can do
+	   		try{
+	   			if(conn!=null)
+	   				conn.close();
+	   		}catch(SQLException se){
+	   			se.printStackTrace();
+	   		}//end finally try
+	    }
+	}
 }

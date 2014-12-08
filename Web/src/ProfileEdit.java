@@ -45,35 +45,41 @@ public class ProfileEdit extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//doPost(request, response);
-		response.setContentType("text/html"); 
-
+		response.setContentType("text/html");
+		String action = request.getParameter("func");
 		HttpSession session = request.getSession();
 		DatabaseService db = new DatabaseService();
 		String email = session.getAttribute("email").toString();
 		User user = db.findUserByEmail(email);
-		request.getSession().setAttribute("name", user.getName());
-		request.getSession().setAttribute("mail", user.getEmail());
-		request.getSession().setAttribute("xp", user.getExperiencePoint());
-		request.getSession().setAttribute("level", user.getLevel());
-		request.getSession().setAttribute("gender", user.getGender().toString());
+		if(action != null)
+		{
+			db.deleteProfilePic(user.getUserID());
+		}else{
 
+			
+			request.getSession().setAttribute("name", user.getName());
+			request.getSession().setAttribute("mail", user.getEmail());
+			request.getSession().setAttribute("xp", user.getExperiencePoint());
+			request.getSession().setAttribute("level", user.getLevel());
+			request.getSession().setAttribute("gender", user.getGender().toString());
+	
+	
+			if(user.getBirthdate()==null)
+				request.getSession().setAttribute("birthdate", "");
+			else
+				request.getSession().setAttribute("birthdate", new SimpleDateFormat("dd/MM/yyyy").format(user.getBirthdate().getTime()));
+	
+			if(user.getPhone()==null)
+				request.getSession().setAttribute("phone", "");
+			else
+				request.getSession().setAttribute("phone", user.getPhone());
+	
+			if(user.getBio()==null)
+				request.getSession().setAttribute("bio", " ");
+			else
+				request.getSession().setAttribute("bio", user.getBio());
 
-		if(user.getBirthdate()==null)
-			request.getSession().setAttribute("birthdate", "");
-		else
-			request.getSession().setAttribute("birthdate", new SimpleDateFormat("dd/MM/yyyy").format(user.getBirthdate().getTime()));
-
-		if(user.getPhone()==null)
-			request.getSession().setAttribute("phone", "");
-		else
-			request.getSession().setAttribute("phone", user.getPhone());
-
-		if(user.getBio()==null)
-			request.getSession().setAttribute("bio", " ");
-		else
-			request.getSession().setAttribute("bio", user.getBio());
-
-
+		}
 
 		request.getRequestDispatcher("profile_edit.jsp").forward(request, response);
 
