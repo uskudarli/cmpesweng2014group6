@@ -24,18 +24,20 @@
 			//This is inappropriate, and forwards at random time.
 			//request.getRequestDispatcher("loginRegister.jsp").forward(request,response);	
 		}
+		DatabaseService db = new DatabaseService();
+		User user = db.findUserByEmail(newSession.getAttribute("email").toString());
 	%>
 	<jsp:include page="header.jsp" />
 	<jsp:include page="footer.jsp" />
 
 	<div class="container">
 		<div class="row">
-
+			
 			<div class="col-xs-6">
 				<div style="padding: 10px">
 					<h2><%=request.getSession().getAttribute("name")%></h2>
 
-					<form id="editProfileForm" method="post" class="loginForm form-horizontal">
+					<form id="editProfileForm" method="post" class="loginForm form-horizontal" enctype="multipart/form-data">
 						<div class="form-group">
 
 							<div class="form-group">
@@ -77,6 +79,11 @@
 								<textarea class="form-control" cols=40 rows=2 name="editBio"
 									placeholder="Bio"><%=request.getSession().getAttribute("bio")%></textarea>
 							</div>
+							
+							<div class="form-group">
+								Upload a profile picture:
+								<input class="btn btn-default" type="file" name="file" size="50" />
+							</div>
 
 						</div>
 						<div class="form-group">
@@ -89,7 +96,23 @@
 				</div>
 			</div>
 
-
+			<div class="col-xs-6">
+				<div id=picContainer>
+				<% if(user.getPicID() == 0) { %>
+					<img src="http://titan.cmpe.boun.edu.tr:8085/pictures/0.jpg"
+						width=215 height=215 />
+						<%} else {
+							String path = db.pathByPicId(user.getPicID());
+							
+							String url = "http://titan.cmpe.boun.edu.tr:8085/image/profile/"+path;
+							%>
+							<img src=<%out.print(url);%>
+						width=215 height=215 />
+						<%}
+						%>
+				</div>
+			</div>
+			
 		</div>
 	</div>
 

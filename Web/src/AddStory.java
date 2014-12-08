@@ -5,7 +5,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -37,7 +36,6 @@ public class AddStory extends HttpServlet {
          */
         public AddStory() {
                 super();
-                // TODO Auto-generated constructor stub
         }
 
         /**
@@ -76,17 +74,14 @@ public class AddStory extends HttpServlet {
                 lon = request.getSession().getAttribute("lon").toString();
                 int placeId = 0;
                 ResultSet rs = null;
-                PreparedStatement statement = null;
                 String sql = "SELECT * FROM Places WHERE Latitude ='"+lat+"' AND Longtitude= '"+ lon + "'";
                 try {
                         Connection con = db.getConnection();
                         Statement statement3 = con.createStatement() ;
                         rs =statement3.executeQuery(sql);
                 } catch (ClassNotFoundException e1) {
-                        // TODO Auto-generated catch block
                         e1.printStackTrace();
                 } catch (SQLException e1) {
-                        // TODO Auto-generated catch block
                         e1.printStackTrace();
                 }
 
@@ -94,7 +89,6 @@ public class AddStory extends HttpServlet {
                         while(rs.next())
                                 placeId = rs.getInt(1);
                 } catch (SQLException e2) {
-                        // TODO Auto-generated catch block
                         e2.printStackTrace();
                 }
                 
@@ -200,7 +194,6 @@ public class AddStory extends HttpServlet {
         			try {
         				story.setAbsoluteDateString(storyTime);
         			} catch (ParseException e) {
-        				// TODO Auto-generated catch block
         				e.printStackTrace();
         			}
         			story.setApproximateDate("");

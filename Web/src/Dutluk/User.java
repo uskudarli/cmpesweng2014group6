@@ -1,6 +1,5 @@
 package Dutluk;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -89,6 +88,14 @@ public class User {
 			pstmt.executeUpdate();
 		}
 		
+		if(this.PicID > 0){
+			sql= "UPDATE Users SET PicID = ?, LastUpdate = NOW() WHERE UserID= ? ;";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, this.PicID);
+			pstmt.setInt(2,this.UserID);
+			pstmt.executeUpdate();
+		}
+		
 		return true;
 	
 		
@@ -113,7 +120,6 @@ public class User {
 	public Boolean Login()
 	{
 		db = new DatabaseService();
-		User temp = db.findUserByEmail(Email);
 		
 		String givenmail = this.getEmail();
 		String givenpass = this.getPassword();

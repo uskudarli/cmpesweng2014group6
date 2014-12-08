@@ -13,6 +13,7 @@
 	DatabaseService db = new DatabaseService();
 	User originalUser = db.findUserByEmail(request.getSession().getAttribute("email").toString());
 	String userId = request.getParameter("id");
+	
 	if(userId == null || Integer.parseInt(userId) == originalUser.getUserID())   //to see own profile
 	{
 		HttpSession newSession = request.getSession();
@@ -49,9 +50,21 @@
 					<%= request.getSession().getAttribute("level")%>
 					writer,
 					<%= request.getSession().getAttribute("xp")%>
-					points <br> <img
-						src="http://titan.cmpe.boun.edu.tr:8085/pictures/<%= request.getSession().getAttribute("picid")%>.jpg"
+					points <br> 
+					
+					
+					<% if(originalUser.getPicID() == 0) { %>
+					<img src="http://titan.cmpe.boun.edu.tr:8085/pictures/0.jpg"
 						width=215 height=215 />
+						<%} else {
+							String path = db.pathByPicId(originalUser.getPicID());
+							
+							String url = "http://titan.cmpe.boun.edu.tr:8085/image/profile/"+path;
+							%>
+							<img src=<%out.print(url);%>
+						width=215 height=215 />
+						<%}
+						%>
 
 
 					<h4>
@@ -183,9 +196,20 @@
 					<%= user.getLevel()%>
 					writer,
 					<%= user.getExperiencePoint()%>
-					points <br> <img
-						src="http://titan.cmpe.boun.edu.tr:8085/pictures/<%= user.getPicID()%>.jpg"
+					points <br> 
+
+					<% if(user.getPicID() == 0) { %>
+					<img src="http://titan.cmpe.boun.edu.tr:8085/pictures/0.jpg"
 						width=215 height=215 />
+						<%} else {
+							String path = db.pathByPicId(user.getPicID());
+							
+							String url = "http://titan.cmpe.boun.edu.tr:8085/image/profile/"+path;
+							%>
+							<img src=<%out.print(url);%>
+						width=215 height=215 />
+						<%}
+						%>
 
 
 					<h4>

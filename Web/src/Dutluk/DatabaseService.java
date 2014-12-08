@@ -855,4 +855,43 @@ public class DatabaseService {
 	   		}//end finally try
 	    }
 	}
+
+	public String pathByPicId(int picId)
+	{
+		try
+		{
+			Class.forName(JDBC_DRIVER);
+			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			pstmt = conn.prepareStatement("SELECT * FROM Pictures WHERE PicID = ?");
+			pstmt.setInt(1, picId);
+			ResultSet rs = pstmt.executeQuery();
+			if(rs.next())
+			{
+				return rs.getString("Path");
+				
+			}
+			return null;
+			
+		}catch(SQLException se){
+	         //Handle errors for JDBC
+	         se.printStackTrace();
+		}catch(Exception e){
+	         //Handle errors for Class.forName
+	         e.printStackTrace();
+	    }finally{
+	         //finally block used to close resources
+	   		try{
+	   			if(stmt!=null)
+	   				stmt.close();
+	   		}catch(SQLException se2){
+	   		}// nothing we can do
+	   		try{
+	   			if(conn!=null)
+	   				conn.close();
+	   		}catch(SQLException se){
+	   			se.printStackTrace();
+	   		}//end finally try
+	    }
+		return null;
+	}
 }
