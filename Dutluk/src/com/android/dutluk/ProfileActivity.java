@@ -143,8 +143,8 @@ public class ProfileActivity extends Activity {
 	public void saveUser(View view){
 
 		String name = nameET.getText().toString();
-		String birthDate = birthDateET.getText().toString();
-		String gender = genderET.getText().toString();
+//		String birthDate = birthDateET.getText().toString();
+//		String gender = genderET.getText().toString();
 		String phone = phoneET.getText().toString();
 		String bio = bioET.getText().toString();
 
@@ -157,7 +157,10 @@ public class ProfileActivity extends Activity {
 		params.put("bio", bio);				
 		invokeWSforSAVE(params);
 		navigateToTimelineActivity();
+		
 	}    
+
+
 
 	public void invokeWSforSAVE(RequestParams params){
 		// Show Progress Dialog 

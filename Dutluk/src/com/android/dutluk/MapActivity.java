@@ -1,6 +1,6 @@
 package com.android.dutluk;
 
-import android.app.Activity;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -14,36 +14,22 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.maps.CameraUpdateFactory;
+
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.net.Uri;
 
-import android.os.Environment;
-import android.provider.MediaStore;
-import android.provider.MediaStore.MediaColumns;
+
+
 
 import android.app.ProgressDialog;
-
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.util.Log;
-
-import android.widget.ImageView;
-import android.widget.TextView;
 
 
 import com.loopj.android.http.AsyncHttpClient;
@@ -81,6 +67,7 @@ public class MapActivity extends FragmentActivity implements LocationListener {
 	        time = addStoryIntent.getStringExtra("time");
 	        image = addStoryIntent.getStringExtra("image");
 	        
+
 	        map = ((MapFragment) getFragmentManager()
 	                .findFragmentById(R.id.gmap)).getMap();
 	        map.setMyLocationEnabled(true);
@@ -131,25 +118,17 @@ public class MapActivity extends FragmentActivity implements LocationListener {
 	        	
 	        }
 
-//	        LatLng sydney = new LatLng(-33.867, 151.206);
-//
-//	        map.setMyLocationEnabled(true);
-//	        map.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 13));
-//
-//	        map.addMarker(new MarkerOptions()
-//	                .title("Sydney")
-//	                .snippet("The most populous city in Australia.")
-//	                .position(sydney));
+
 
 	    
-  // düzelt:)
+  
 	public void saveStory(){
 	
-		
+	
 
 		RequestParams params = new RequestParams();
-		params.put("email",mail);
-		
+		params.put("mail",mail);
+		// düzelt:)
 		//params.put("image", image);
 		params.put("story", story);
 		params.put("time", time);
@@ -172,7 +151,7 @@ public class MapActivity extends FragmentActivity implements LocationListener {
            @Override
            public void onSuccess(String response) {
           	// Hide Progress Dialog
-        	   Log.e("response",response);
+        	   
           	 prgDialog.hide();
                try {
               	 	 // JSON Object

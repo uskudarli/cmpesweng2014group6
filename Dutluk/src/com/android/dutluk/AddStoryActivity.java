@@ -70,26 +70,11 @@ public class AddStoryActivity extends Activity {
         
         Intent loginIntent = getIntent();
         mail = loginIntent.getStringExtra("mail");
-        story = storyET.getText().toString();
-		time = timeET.getText().toString();
-		// düzelt:)
-		image = "";
+       
         
     }
 
-	// düzelt:) 
 
-//	public void  startShowStoryActivity(String mail, String story_id) {
-//		Log.e("geldin", "show");
-//		Intent showStoryIntent = new Intent(getApplicationContext(),ShowStoryActivity.class);
-//		Bundle b = new Bundle();
-//		b.putString("mail",mail);
-//		b.putString("mail",story_id);
-//		showStoryIntent.putExtras(b);
-//		// Clears History of Activity
-//		showStoryIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//		startActivity(showStoryIntent);
-//	}
 	public void goImageSelector(View view) {
         final CharSequence[] items = { "Take Photo", "Choose from Library",
                 "Cancel" };
@@ -187,7 +172,10 @@ public class AddStoryActivity extends Activity {
         return cursor.getString(column_index);
     }
 	public void navigatetoMapActivity(View view){
-		
+		 story = storyET.getText().toString();
+			time = timeET.getText().toString();
+			// düzelt:)
+			image = "";
 		Intent MapIntent = new Intent(getApplicationContext(),MapActivity.class);
 		Bundle b = new Bundle();
 		b.putString("mail",mail);

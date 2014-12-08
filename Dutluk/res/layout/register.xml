@@ -80,33 +80,6 @@
             android:text="@string/btnRegister"
             android:textColor="#fff" />
 
-      
-        
-        <!-- GEREKSIZ -->
-		<!-- Link to Profile Screen -->
-        <Button
-            android:id="@+id/btnLinkToProfileScreenRegister"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dip"
-            android:background="@null"
-            android:onClick="navigatetoProfileActivity"
-			android:text="@string/btnProfile"
-            android:textColor="#228b22"
-            android:textStyle="bold" /> 
-        <!-- GEREKSIZ -->
-		<!-- Link to Add Story Screen -->
-        <Button
-            android:id="@+id/btnLinkToAddStoryScreenRegister"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dip"
-            android:background="@null"
-            android:onClick="navigatetoAddStoryActivity"
-			android:text="@string/btnAddStory"
-            android:textColor="#228b22"
-            android:textStyle="bold" /> 
-            
     </LinearLayout>
 
 </ScrollView>

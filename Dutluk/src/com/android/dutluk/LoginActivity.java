@@ -151,10 +151,6 @@ public class LoginActivity extends Activity {
 		loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(loginIntent);
 	}
-	public void navigatetoMapActivity(View view){
-		Intent loginIntent = new Intent(getApplicationContext(),MapActivity.class);
-		loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		startActivity(loginIntent);
-	}
+
 	
 }
