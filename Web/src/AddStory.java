@@ -140,7 +140,7 @@ public class AddStory extends HttpServlet {
         	                for (FileItem item : formItems) {
         	                    // processes only fields that are not form fields
         	                    if (!item.isFormField()) {
-        	                    	fileName = new File(item.getName()).getName();
+        	                    	fileName = db.pictureNameGenerator();
         	                        
         	                        File storeFile = new File(uploadPath, fileName);
         	 

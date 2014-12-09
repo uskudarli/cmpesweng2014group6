@@ -918,4 +918,47 @@ public class DatabaseService {
 	   		}//end finally try
 	    }
 	}
+	
+	public String pictureNameGenerator()
+	{
+		String result = null;
+		try
+		{
+			Class.forName(JDBC_DRIVER);
+			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			pstmt = conn.prepareStatement("SELECT * FROM Pictures ORDER BY PicID DESC");
+
+			ResultSet rs = pstmt.executeQuery();
+			int lastPicId = 0;
+			if(rs.next())
+			{
+				lastPicId = rs.getInt("PicID");
+	             
+			}
+			lastPicId++;
+			result = lastPicId + ".jpg";
+			return result;
+			
+		}catch(SQLException se){
+	         //Handle errors for JDBC
+	         se.printStackTrace();
+		}catch(Exception e){
+	         //Handle errors for Class.forName
+	         e.printStackTrace();
+	    }finally{
+	         //finally block used to close resources
+	   		try{
+	   			if(stmt!=null)
+	   				stmt.close();
+	   		}catch(SQLException se2){
+	   		}// nothing we can do
+	   		try{
+	   			if(conn!=null)
+	   				conn.close();
+	   		}catch(SQLException se){
+	   			se.printStackTrace();
+	   		}//end finally try
+	    }
+		return result;
+	}
 }
