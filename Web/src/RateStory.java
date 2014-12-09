@@ -1,17 +1,13 @@
 
 
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.sql.CallableStatement;
+
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Types;
+
 
 
 
@@ -36,21 +32,18 @@ public class RateStory extends HttpServlet {
      */
     public RateStory() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		String storyId = request.getSession().getAttribute("StoryID").toString();
 		int userId = (int)request.getSession().getAttribute("UserID");
 		int rate = Integer.parseInt(request.getParameter("rate"));
@@ -91,10 +84,8 @@ public class RateStory extends HttpServlet {
         	        
                 
         } catch (ClassNotFoundException e1) {
-                // TODO Auto-generated catch block
                 e1.printStackTrace();
         } catch (SQLException e1) {
-                // TODO Auto-generated catch block
                 e1.printStackTrace();
         }
         

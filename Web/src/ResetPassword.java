@@ -5,7 +5,6 @@ import java.util.*;
 
 import javax.mail.*;
 import javax.mail.internet.*;
-import javax.activation.*;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;

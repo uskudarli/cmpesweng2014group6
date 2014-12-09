@@ -111,9 +111,11 @@
 						<%}
 						%>
 				</div>
+				<%if(user.getPicID()>0){ %>
 				<div>
 					<a class="btn btn-default" href=<%out.print("ProfileEdit?func=deletePic"); %> >Delete Profile Picture</a>
 				</div>
+				<%} %>
 			</div>
 			
 		</div>

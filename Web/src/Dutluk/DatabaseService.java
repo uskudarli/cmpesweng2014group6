@@ -1,11 +1,8 @@
 package Dutluk;
-import java.awt.List;
-import java.sql.Array;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -278,12 +275,10 @@ public class DatabaseService {
 			ResultSet rs = pstmt.getGeneratedKeys();
 			while(rs.next())
 			{
-				ResultSetMetaData rsMetaData = rs.getMetaData();
-		        int columnCount = rsMetaData.getColumnCount();
-		        for (int i = 1; i <= columnCount; i++) {
-		            String key = rs.getString(i);
-		            return Integer.parseInt(key);
-		          }
+				
+	            String key = rs.getString(1);
+	            return Integer.parseInt(key);
+		          
 			}
 		}catch(SQLException se){
 	         //Handle errors for JDBC
@@ -322,12 +317,10 @@ public class DatabaseService {
 			ResultSet rs = pstmt.getGeneratedKeys();
 			while(rs.next())
 			{
-				ResultSetMetaData rsMetaData = rs.getMetaData();
-		        int columnCount = rsMetaData.getColumnCount();
-		        for (int i = 1; i <= columnCount; i++) {
-		            String key = rs.getString(i);
-		            return Integer.parseInt(key);
-		          }
+				
+	            String key = rs.getString(1);
+	            return Integer.parseInt(key);
+		          
 			}
 		}catch(SQLException se){
 	         //Handle errors for JDBC

@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.gson.Gson;
 
 import Dutluk.DatabaseService;
 import Dutluk.Place;
@@ -36,7 +35,6 @@ public class Timeline extends HttpServlet {
 		String placeID = request.getParameter("ID");
 		DatabaseService db = new DatabaseService();
 		Place place = db.findPlacebyPlaceId(Integer.parseInt(placeID));
-		Gson gson = new Gson();
 		request.setAttribute("Name", place.Name);
 		request.getRequestDispatcher("timeline.jsp").forward(request, response);
 	}

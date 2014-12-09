@@ -1,11 +1,9 @@
 package Dutluk;
-import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Types;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -32,7 +30,11 @@ public class Story {
 
         }
 
-        public int addStory()
+        public int getStoryId() {
+			return storyId;
+		}
+
+		public int addStory()
     	{
     		int id = 0;
     		db = new DatabaseService();

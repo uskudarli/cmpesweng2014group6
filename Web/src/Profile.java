@@ -24,7 +24,6 @@ public class Profile extends HttpServlet {
      */
     public Profile() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
@@ -32,8 +31,7 @@ public class Profile extends HttpServlet {
 	 */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//doPost(request, response);
-		response.setContentType("text/html"); 
-		String action = request.getParameter("func");
+		response.setContentType("text/html");
 		
 		HttpSession session = request.getSession();
 		DatabaseService db = new DatabaseService();
@@ -75,7 +73,6 @@ public class Profile extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 		response.setContentType("text/html"); 
 		User user = new User();
 		user.setName(request.getParameter("name"));
