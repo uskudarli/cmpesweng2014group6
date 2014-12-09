@@ -24,6 +24,12 @@
 		}
 			
 	%>
+	<form id="searchForm" class="navbar-form navbar-right" role="search" action="Search">
+	    <div class="form-group">
+	        <input type="text" class="form-control" placeholder="Search">
+	    </div>
+    <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search"></span></button>
+</form>
 </div>
 </div>
 
