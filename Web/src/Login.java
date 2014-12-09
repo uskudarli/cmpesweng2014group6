@@ -97,6 +97,11 @@ public class Login extends HttpServlet {
 			session.setAttribute("loggedIn", "true");
 			session.setAttribute("email", user.getEmail());
 			response.getWriter().write("true");
+			if(request.getAttribute("redirect") != null && request.getAttribute("var") != null && request.getAttribute("Id") != null)
+			{
+				String redirect = request.getAttribute("redirect").toString() + ".jsp?" + request.getAttribute("var").toString() + "=" + request.getAttribute("Id").toString();
+				response.sendRedirect(redirect);
+			}
 			response.sendRedirect("index.jsp");
 		}else
 		{

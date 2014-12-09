@@ -46,8 +46,8 @@ public class RememberStory extends HttpServlet {
 		String storyId = request.getSession().getAttribute("StoryID").toString();
 		if(action.equals("remember"))
 		{
-			System.out.print(storyId);
-			System.out.print(user.getUserID());
+			//System.out.print(storyId);
+			//System.out.print(user.getUserID());
 			db.remember(user.getUserID(), Integer.parseInt(storyId));
 			
 		}

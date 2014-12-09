@@ -24,6 +24,7 @@ public class Story {
         private String approximateDate;
         private boolean dateisAbsolute;
         private DatabaseService db;
+        private int placeId;
 
         public Story()
         {
@@ -34,6 +35,9 @@ public class Story {
 			return storyId;
 		}
 
+        public void setStoryId(int id) {
+        	storyId = id;
+        }
 		public int addStory()
     	{
     		int id = 0;
@@ -199,5 +203,13 @@ public class Story {
         public boolean getdateisAbsolute(){
                 return dateisAbsolute;
         }
+
+		public int getPlaceId() {
+			return placeId;
+		}
+
+		public void setPlaceId(int placeId) {
+			this.placeId = placeId;
+		}
 
 }

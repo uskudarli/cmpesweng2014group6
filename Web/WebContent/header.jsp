@@ -24,11 +24,11 @@
 		}
 			
 	%>
-	<form id="searchForm" action="Search" class="navbar-form navbar-right">
+	<form id="searchForm" action="Search" class="navbar-form navbar-right" method="post">
 	   <div class="input-group">
-	       <input type="Search" placeholder="Search..." class="form-control" />
+	       <input type="Search" name="searchText" placeholder="Search..." class="form-control" />
 	       <div class="input-group-btn">
-	           <button id="searchButton" class="btn btn-primary">
+	           <button id="searchButton" type="submit" class="btn btn-primary">
 	           <span class="glyphicon glyphicon-search"></span>
 	           </button>
 	       </div>

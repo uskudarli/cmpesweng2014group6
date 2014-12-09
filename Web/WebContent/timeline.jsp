@@ -1,3 +1,4 @@
+<%@page import="javax.xml.ws.http.HTTPException"%>
 <%@page import="com.google.gson.JsonObject"%>
 <%@ page language="java" contentType="text/html; charset=US-ASCII"
     pageEncoding="US-ASCII"%>
@@ -26,16 +27,16 @@
 	<%
 		String placeId = request.getParameter("Id");
 		HttpSession newSession = request.getSession(true);
+		
 		if(newSession == null)
 		{
 			request.getRequestDispatcher("loginRegister.jsp").forward(request,response);
-		}else if(newSession.getAttribute("email") == null
-				)	
-		{
-			request.getRequestDispatcher("loginRegister.jsp").forward(request,response);
-		}else if(placeId == null)
+		}else if(placeId == null || placeId.equals(""))
 			request.getRequestDispatcher("index.jsp").forward(request, response);
-		
+		else if(newSession.getAttribute("email") == null)	
+		{
+			request.getRequestDispatcher("loginRegister.jsp").forward(request, response);
+		}
 	DatabaseService db = new DatabaseService();
 	User originalUser = db.findUserByEmail(request.getSession().getAttribute("email").toString());
 	Place place = db.findPlacebyPlaceId(Integer.parseInt(placeId));

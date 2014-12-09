@@ -5,28 +5,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Dutluk</title>
-<style>
-#nav {
-	line-height: 30px;
-	height: 300px;
-	width: 100px;
-	float: right;
-	padding-top: 25px;
-}
 
-#story {
-	width: 350px;
-	height: 100px;
-	float: left;
-	padding: 10px;
-}
-
-#storyend {
-	width: 350px;
-	float: left;
-	padding: 10px;
-}
-</style>
 </head>
 <body>
 	<jsp:include page="header.jsp" />
@@ -34,25 +13,25 @@
 	<%@ page import="Dutluk.*"%>
 	<%@ page import="java.sql.*, Dutluk.DatabaseService"%>
 	<%
-		ResultSet rs = null;
-		int currentUserId = 0;
-		String author = null;
+	HttpSession newSession = request.getSession(true);
+	String storyId = request.getParameter("storyId");
+	if(newSession == null)
+	{
+		request.getRequestDispatcher("loginRegister.jsp").forward(request,response);
+	}else if(storyId == null || storyId.equals(""))
+		request.getRequestDispatcher("index.jsp").forward(request, response);
+	else if(newSession.getAttribute("email") == null)	
+	{
+		request.getRequestDispatcher("loginRegister.jsp").forward(request, response);
+	}
 		DatabaseService db = new DatabaseService();
-		String storyId = request.getParameter("storyId");
-		try{
-			Connection connection = db.getConnection();
-	        Statement statement = connection.createStatement() ;
-	        
-	        rs =statement.executeQuery("SELECT * FROM Stories WHERE StoryID = '"+storyId+"'");
-	        while(rs.next())
-	        {
-	        	int userId = rs.getInt(2);
-	        	Statement statement3 = connection.createStatement();
-    			ResultSet rs3 = statement3.executeQuery("SELECT * FROM Users WHERE UserId = '"+userId+"'");
-    			while(rs3.next())
-    			{
-    				author = rs3.getString(2); 
-    			}
+		
+		Story story = db.findStorybyStoryId(Integer.parseInt(storyId));
+		User user = db.findUserByUserId(story.getUserId());
+		User currentUser = db.findUserByEmail(request.getSession().getAttribute("email").toString());
+		int rate = db.getRate(currentUser.getUserID(), story.getStoryId());
+		newSession.setAttribute("StoryID", storyId);
+		newSession.setAttribute("UserID", currentUser.getUserID());
         	%>
 
 	<div id="nav">
@@ -62,39 +41,20 @@
 		<center>
 			<h2>Story Name</h2>
 			<h4>
-				Written by <a href='profile.jsp?id=<%= userId %>'> <%= author %>
+				Written by <a href='profile.jsp?id=<%= story.getUserId() %>'> <%= user.getName() %>
 				</a>
 			</h4>
 		</center>
 		<p>
-			<%= rs.getString(3) %>
+			<%=story.getContent()%>
 			<br>
 			<br>
+			Your current rate is: <%=rate %>
 			<%
-				String email = request.getSession().getAttribute("email").toString();
-				statement3 = connection.createStatement();
-				rs3 = statement3.executeQuery("SELECT * FROM Users WHERE Mail = '"+email+"'");
-				
-				while(rs3.next())
-				{
-					currentUserId = rs3.getInt(1);
-					request.getSession().setAttribute("StoryID", storyId);
-					request.getSession().setAttribute("UserID", currentUserId);
-				}
-				rs3 = statement3.executeQuery("SELECT * FROM Rate WHERE StoryID = '"+storyId+"' AND UserID = '"+currentUserId+"'");
-				int rate = 0;
-				while(rs3.next())
-				{
-					%>
-			Your current rate is:
-			<%
-					rate = rs3.getInt(3);
-					out.print(rate);
-				}
-				
 				if(rate == 0)
 				{
 				%>
+				<br>
 			Rate Story:
 		<form method="post" action="RateStory">
 			<select name="rate">
@@ -110,15 +70,12 @@
 
 	<%
 				}
-				%><br>Average Rate for this story is:<%= rs.getInt(7)%>
+				%><br>Average Rate for this story is: <%= story.getAvgRate()%>
 	<%
-	        }
+	
 	        
-		}
-		catch(Exception e){
-			out.print(e);
-		}
-		Boolean isRemembered = db.isRemembered(currentUserId, Integer.parseInt(storyId));
+	
+		Boolean isRemembered = db.isRemembered(currentUser.getUserID(), Integer.parseInt(storyId));
 		if(isRemembered)
 		{
 			%>

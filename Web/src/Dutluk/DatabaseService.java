@@ -8,6 +8,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 
+import javax.print.attribute.standard.Fidelity;
+
 
 
 public class DatabaseService {
@@ -113,6 +115,66 @@ public class DatabaseService {
 	    }
 		return user; //THIS was return null, which give 500 nullpointerexception on each call.
 	}
+	
+	public User findUserByUserId(int id)
+	{
+		User user = new User();
+		try
+		{
+			Class.forName(JDBC_DRIVER);
+			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			pstmt = conn.prepareStatement("SELECT * FROM Users WHERE UserID = ? and IsDeleted = 0");
+			pstmt.setInt(1, id);
+			ResultSet rs = pstmt.executeQuery();
+			
+			while(rs.next())
+			{
+				user.setUserID(id);
+				user.setName(rs.getString("Name"));
+				user.setEmail(rs.getString("Mail"));
+				user.setUserID(rs.getInt("UserID"));
+				Date dateIn = rs.getDate("Birthdate");
+				if(dateIn!=null) user.setBirthdate(dateIn);
+				user.setPhone(rs.getString("Phone"));
+				user.setExperiencePoint(rs.getInt("ExperiencePoint"));
+				user.setLevel(rs.getInt("Level"));
+				user.setIsDeleted(0); //TODO why?
+				user.setPicID(rs.getInt("PicID"));
+				user.setBio(rs.getString("Bio"));
+				user.setPassword(rs.getString("Password"));
+				user.setCreatedOn(rs.getDate("CreationDate"));
+				user.setUpdatedOn(rs.getDate("LastUpdate"));
+				if(rs.getString("Gender")!=null&&rs.getString("Gender").equals("Male"))
+					user.setGender(User.Gender.Male);
+				else if(rs.getString("Gender")!=null&&rs.getString("Gender").equals("Female"))
+					user.setGender(User.Gender.Female);
+				else
+					user.setGender(User.Gender.Unspecified);
+			}
+			return user;
+			
+		}catch(SQLException se){
+	         //Handle errors for JDBC
+	         se.printStackTrace();
+		}catch(Exception e){
+	         //Handle errors for Class.forName
+	         e.printStackTrace();
+	    }finally{
+	         //finally block used to close resources
+	   		try{
+	   			if(stmt!=null)
+	   				stmt.close();
+	   		}catch(SQLException se2){
+	   		}// nothing we can do
+	   		try{
+	   			if(conn!=null)
+	   				conn.close();
+	   		}catch(SQLException se){
+	   			se.printStackTrace();
+	   		}//end finally try
+	    }
+		return user; //THIS was return null, which give 500 nullpointerexception on each call.
+	}
 
 	public Place findPlacebyPlaceId(int id)
 	{
@@ -127,10 +189,10 @@ public class DatabaseService {
 			
 			while(rs.next())
 			{
+				place.setPlaceID(id);
 				place.setCreatedOn(rs.getDate("CreationDate"));
 				place.setUpdatedOn(rs.getDate("LastUpdate"));
 				place.setName(rs.getString("Name"));
-				place.setPlaceID(rs.getInt("PlaceID"));
 				place.setLongtitude(rs.getDouble("Longtitude"));
 				place.setLatitude(rs.getDouble("Latitude"));
 			}
@@ -157,6 +219,58 @@ public class DatabaseService {
 	   		}//end finally try
 	    }
 		return place;
+	}
+	
+	public Story findStorybyStoryId(int id)
+	{
+		Story story = new Story();
+		try
+		{
+			Class.forName(JDBC_DRIVER);
+			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			pstmt = conn.prepareStatement("SELECT * FROM Stories WHERE StoryID = ?");
+			pstmt.setInt(1, id);
+			ResultSet rs = pstmt.executeQuery();
+			
+			while(rs.next())
+			{
+				story.setStoryId(id);
+				story.setCreatedOn(rs.getDate("CreationDate"));
+				story.setUpdatedOn(rs.getDate("LastUpdate"));
+				story.setUserId(rs.getInt("UserID"));
+				story.setThemeId(rs.getInt("ThemeID"));
+				if(rs.getString("StoryDateApproximate") != null)
+					story.setApproximateDate(rs.getString("StoryDateApproximate"));
+				if(rs.getDate("StoryDateAbsolute") != null)
+					story.setAbsoluteDate(rs.getDate("StoryDateAbsolute"));
+				story.setReportCount(rs.getInt("ReportCount"));
+				story.setIsDeleted(rs.getInt("IsDeleted"));
+				story.setContent(rs.getString("Content"));
+				story.setAvgRate(rs.getInt("AvgRate"));
+			}
+			return story;
+			
+		}catch(SQLException se){
+	         //Handle errors for JDBC
+	         se.printStackTrace();
+		}catch(Exception e){
+	         //Handle errors for Class.forName
+	         e.printStackTrace();
+	    }finally{
+	         //finally block used to close resources
+	   		try{
+	   			if(stmt!=null)
+	   				stmt.close();
+	   		}catch(SQLException se2){
+	   		}// nothing we can do
+	   		try{
+	   			if(conn!=null)
+	   				conn.close();
+	   		}catch(SQLException se){
+	   			se.printStackTrace();
+	   		}//end finally try
+	    }
+		return story;
 	}
 	
 	public ArrayList<Place> findAllPlaces()
@@ -1039,5 +1153,145 @@ public class DatabaseService {
 				se.printStackTrace();
 			}
 		}
+	}
+	
+	public ArrayList<String> findTagIds(String text)
+	{
+		ArrayList<String> tagIds = new ArrayList<String>();
+
+		
+			try{
+				conn = getConnection();
+				pstmt = conn.prepareStatement("SELECT * FROM Tags WHERE Name LIKE ?");
+				pstmt.setString(1, "%" + text + "%");
+				ResultSet rs = pstmt.executeQuery();
+				while(rs.next())
+				{
+					tagIds.add(Integer.toString(rs.getInt("TagID")));
+				}
+				
+			}catch(SQLException | ClassNotFoundException se)
+			{
+				se.printStackTrace();
+			}
+		
+		return tagIds;
+	}
+	
+	public ArrayList<Place> findPlacesFromTags(String text)
+	{
+		ArrayList<Place> places = new ArrayList<Place>();
+		try{
+			conn = getConnection();
+			pstmt = conn.prepareStatement("SELECT * FROM Places WHERE PlaceID IN (SELECT PlaceID from TagsInPlaces where TagID IN (SELECT TagID FROM Tags WHERE Name LIKE ?))");
+			pstmt.setString(1,  "%" + text + "%");
+			ResultSet rs = pstmt.executeQuery();
+			while(rs.next())
+			{
+				places.add(findPlacebyPlaceId(rs.getInt("PlaceID")));
+			}
+			return places;
+		}catch(SQLException | ClassNotFoundException se)
+		{
+			se.printStackTrace();
+		}
+		return places;
+	}
+	
+	public ArrayList<Story> findStoriesFromTags(String text)
+	{
+		
+		ArrayList<Story> stories = new ArrayList<Story>();
+		try{
+			conn = getConnection();
+			pstmt = conn.prepareStatement("SELECT * FROM Stories WHERE StoryID IN (SELECT StoryID from TagsInStories where TagID IN (SELECT TagID FROM Tags WHERE Name LIKE ?)) AND IsDeleted = ?");
+			pstmt.setString(1,  "%" + text + "%");
+			pstmt.setInt(2, 0);
+			ResultSet rs = pstmt.executeQuery();
+			while(rs.next())
+			{
+				stories.add(findStorybyStoryId(rs.getInt("StoryID")));
+			}
+			return stories;
+		}catch(SQLException | ClassNotFoundException se)
+		{
+			se.printStackTrace();
+		}
+		return stories;
+	}
+	
+	//search in the content and tags of a story
+	public ArrayList<Story> searchStory(String text)
+	{
+		if(text == null || text.equals(""))
+			return new ArrayList<Story>();
+		text = text.toLowerCase();
+		ArrayList<Story> stories = new ArrayList<Story>();
+		try{
+			conn = getConnection();
+			pstmt = conn.prepareStatement("SELECT DISTINCT(StoryID) FROM Stories WHERE (Content LIKE ? OR StoryID IN (SELECT StoryID from TagsInStories where TagID IN (SELECT TagID FROM Tags WHERE Name LIKE ?))) AND IsDeleted = ?");
+			pstmt.setString(1,  "%" + text + "%");
+			pstmt.setString(2,  "%" + text + "%");
+			pstmt.setInt(3, 0);
+			ResultSet rs = pstmt.executeQuery();
+			while(rs.next())
+			{
+				stories.add(findStorybyStoryId(rs.getInt("StoryID")));
+			}
+			return stories;
+		}catch(SQLException | ClassNotFoundException se)
+		{
+			se.printStackTrace();
+		}
+		return stories;
+		
+	}
+	
+	//search in the name and tags of a place
+	public ArrayList<Place> searchPlace(String text)
+	{
+		if(text == null || text.equals(""))
+			return new ArrayList<Place>();
+		text = text.toLowerCase();
+		ArrayList<Place> places = new ArrayList<Place>();
+		try{
+			conn = getConnection();
+			pstmt = conn.prepareStatement("SELECT DISTINCT(PlaceID) FROM Places WHERE Name LIKE ? OR PlaceID IN (SELECT PlaceID from TagsInPlaces where TagID IN (SELECT TagID FROM Tags WHERE Name LIKE ?))");
+			pstmt.setString(1,  "%" + text + "%");
+			pstmt.setString(2,  "%" + text + "%");
+			ResultSet rs = pstmt.executeQuery();
+			while(rs.next())
+			{
+				places.add(findPlacebyPlaceId(rs.getInt("PlaceID")));
+			}
+			return places;
+		}catch(SQLException | ClassNotFoundException se)
+		{
+			se.printStackTrace();
+		}
+		
+		return places;
+		
+	}
+	
+	public int getRate(int userId, int storyId)
+	{
+		int rate = 0;
+		try{
+			conn = getConnection();
+			pstmt = conn.prepareStatement("SELECT * FROM Rate WHERE StoryID = ? AND UserID = ?");
+			pstmt.setInt(1, storyId);
+			pstmt.setInt(2, userId);
+			ResultSet rs = pstmt.executeQuery();
+			if(rs.next())
+			{
+				rate = rs.getInt("Rate");
+			}
+			return rate;
+		}catch(SQLException | ClassNotFoundException se)
+		{
+			se.printStackTrace();
+		}
+		return rate;
 	}
 }
