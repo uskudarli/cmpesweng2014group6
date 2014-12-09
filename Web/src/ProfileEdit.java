@@ -27,7 +27,7 @@ import Dutluk.User.Gender;
 @WebServlet("/ProfileEdit")
 public class ProfileEdit extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static final String UPLOAD_DIRECTORY = "image" + File.separator + "profile";
+	private static final String UPLOAD_DIRECTORY = "image";
   	 
     // upload settings
     private static final int MEMORY_THRESHOLD   = 1024 * 1024 * 3;  // 3MB

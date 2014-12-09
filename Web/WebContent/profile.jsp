@@ -8,6 +8,7 @@
 
 </head>
 <body>
+<%@page import="java.io.File"%>
 	<%
 			
 	DatabaseService db = new DatabaseService();
@@ -59,7 +60,7 @@
 						<%} else {
 							String path = db.pathByPicId(originalUser.getPicID());
 							
-							String url = "http://titan.cmpe.boun.edu.tr:8085/image/profile/"+path;
+							String url = "http://titan.cmpe.boun.edu.tr:8085/image"+File.separator+path;
 							%>
 							<img src=<%out.print(url);%>
 						width=215 height=215 />

@@ -9,6 +9,7 @@
 </head>
 <body>
 	<%@ page import="Dutluk.*"%>
+	<%@page import="java.io.File"%>
 	<%
 		HttpSession newSession = request.getSession();
 		if (newSession == null) {
@@ -104,7 +105,7 @@
 						<%} else {
 							String path = db.pathByPicId(user.getPicID());
 							
-							String url = "http://titan.cmpe.boun.edu.tr:8085/image/profile/"+path;
+							String url = "http://titan.cmpe.boun.edu.tr:8085/image"+File.separator+path;
 							%>
 							<img src=<%out.print(url);%>
 						width=215 height=215 />
