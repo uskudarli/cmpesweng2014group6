@@ -10,6 +10,7 @@
 <script>
 var map;
 var activewindow = null;
+var newmarker = null;
 function initialize() {
   var mapOptions = {
 	scrollwheel: true,
@@ -24,7 +25,11 @@ function initialize() {
 	  });
 
 	function getCoordinates(location) {
-		var marker = new google.maps.Marker({
+		if(newmarker != null)
+			newmarker.setMap(null);
+		if(activewindow != null)
+			activewindow.close();
+		newmarker = new google.maps.Marker({
 		    position: location,
 		    map: map,
 		  });
@@ -32,8 +37,8 @@ function initialize() {
 		var lon = location.lng();
 		fillLatLon(lat, lon);
 		var content= "<a href='addStory.jsp?Lat="+lat+"&Lon="+lon+"' id='infowindow'>" + "Add Story Here" + "</a>";
-		attachInfoWindow(marker, content);
-		infowindow.open(map,marker);
+		attachInfoWindow2(newmarker, content);
+		infowindow.open(map,newmarker);
 		
 	}
 	function fillLatLon(lat, lon)
@@ -56,12 +61,25 @@ function initialize() {
 				});
 				marker.setMap(map);
 				
-				var content = "<a href='timeline.jsp?Id=" + data[i].PlaceID +"' id='infowindow'>" + data[i].Name + "</a> <a href='addStory.jsp?Lat=" + data[i].Latitude +"&Lon="+data[i].Longtitude+"&Name="+data[i].Name+"' id='infowindow'>(Add new Story?)</a> or <a href='timeline.jsp?Id=" + data[i].PlaceID +"' id='infowindow'> Show stories of place</a>";
+				var content = "<a href='timeline.jsp?Id=" + data[i].PlaceID +"' id='infowindow'>" + data[i].Name + "</a><br> <a href='addStory.jsp?Lat=" + data[i].Latitude +"&Lon="+data[i].Longtitude+"&Name="+data[i].Name+"' id='infowindow'>(Add new Story?)</a> or <a href='timeline.jsp?Id=" + data[i].PlaceID +"' id='infowindow'> Show stories of place</a>";
 				
 				attachInfoWindow(marker, content);
 			}
 		}
 	});
+}
+
+function attachInfoWindow2(marker, content)
+{
+	var infowindow = new google.maps.InfoWindow({
+	    content: content
+	  });
+	google.maps.event.addListener(marker, 'click', function() {
+		if(activewindow != null)
+			activewindow.close();
+	    infowindow.open(marker.get('map'), marker);
+	    activewindow = infowindow;
+	  });
 }
 
 function attachInfoWindow(marker, content)
@@ -72,6 +90,10 @@ function attachInfoWindow(marker, content)
 	google.maps.event.addListener(marker, 'click', function() {
 		if(activewindow != null)
 			activewindow.close();
+		if(newmarker!=null) {
+			newmarker.setMap(null);
+			newmarker = null;
+		}
 	    infowindow.open(marker.get('map'), marker);
 	    activewindow = infowindow;
 	  });
