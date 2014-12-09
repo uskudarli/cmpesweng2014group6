@@ -53,7 +53,6 @@ public class ProfileActivity extends Activity {
      	levelTV = (TextView)findViewById(R.id.levelProfile);
      	bioET = (EditText)findViewById(R.id.biographyProfile);
      	
- 
      	RequestParams params = new RequestParams();
 		params.put("email", Utility.userName);
 		invokeWSforGET(params);

@@ -47,11 +47,17 @@ public class LoginActivity extends Activity {
         if (!Utility.userName.equals("")){
         	emailET.setText(Utility.userName);
         }
+      
 	}
 	
 	public void loginUser(View view){
 		// Get Email Edit View Value
-		mail = emailET.getText().toString();
+		
+		if(Utility.userName.equals("")){
+			mail = emailET.getText().toString();
+			Utility.userName = mail;
+		}
+		
 		// Get Password Edit View Value
 		password = pwdET.getText().toString();
 		// Instantiate Http Request Param Object
