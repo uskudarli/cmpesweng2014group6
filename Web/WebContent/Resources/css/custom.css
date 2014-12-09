@@ -2,7 +2,7 @@
 
 .header {
 	padding: 5px 20px 0 20px;
-	height: 40px;
+	height: 50px;
 	background-color: #e7dab7;
 	font-size:18px;	
 	font-family: Helvetica; font-weight: bold;
@@ -39,3 +39,6 @@
 	margin-top:-3px;
 }
 
+#searchButton {
+	height: 34px;
+}

@@ -9,7 +9,7 @@
 	src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCWz0T_U1zwxdI3CKepXVdlSS5iHFJste4"></script>
 <script>
 var map;
-
+var activewindow = null;
 function initialize() {
   var mapOptions = {
 	scrollwheel: true,
@@ -70,7 +70,10 @@ function attachInfoWindow(marker, content)
 	    content: content
 	  });
 	google.maps.event.addListener(marker, 'click', function() {
+		if(activewindow != null)
+			activewindow.close();
 	    infowindow.open(marker.get('map'), marker);
+	    activewindow = infowindow;
 	  });
 }
 
