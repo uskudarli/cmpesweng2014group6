@@ -50,7 +50,7 @@
 								%>
 								value="<%out.print(name);%>"/>
 							<%}%>
-							<label>Story: </label><input class="form-control" name="editStory" type="text" style="height: 200px;"/>
+							<label>Story: </label><textarea class="form-control" name="editStory" style="height: 200px;"></textarea>
 							<label>When did it happen?: </label><input class="form-control" id="editBirthdate" name="editStime" type=text 
 							 placeholder="dd/mm/yyyy or any format"></input>
 							
@@ -77,7 +77,9 @@
 					        {
 					             out.println(e);
 					        }
-							%>		
+							%>
+							<br>
+							<label>Tags: </label><textarea class="form-control" name="tags" style="height: 200px;" placeholder="You can enter up to 10 tags divided by comma (example: university,campus,istanbul)"></textarea>
 						</div>
 						<div class="form-group">
 							<input class="btn btn-default" type="file" name="file" size="50" />

@@ -2,6 +2,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.sql.Connection;
@@ -101,6 +102,7 @@ public class AddStory extends HttpServlet {
                 String fileName = null;
         		String storyTime = null;
         		String placeName = null;
+        		String tags = null;
         		Story story = new Story();
         		boolean isMultipart = ServletFileUpload.isMultipartContent(request);
         		if(isMultipart)
@@ -160,6 +162,8 @@ public class AddStory extends HttpServlet {
         	                    		storyTime = fieldvalue;
         	                    	else if(fieldname.equals("placeName"))
         	                    		placeName = fieldvalue;
+        	                    	else if(fieldname.equals("tags"))
+        	                    		tags = fieldvalue;
         	            			
         	                    }
         	                   
@@ -206,10 +210,19 @@ public class AddStory extends HttpServlet {
                 {
         			placeId = db.insertPlace(placeName, lon, lat);
                 }
-
+        		//add story to database and get added story id
         		int storyId = story.addStory();
+        		
+        		
         		if((storyId != 0) && (placeId != 0))
         		{
+        			//add tags to database and get added tags ids
+        			if(tags != null && !tags.equals(""))
+            		{
+            			ArrayList<String> tagIds = db.insertTags(tags);
+            			db.insertTagStoryConnection(tagIds, storyId);
+            			db.insertTagPlaceConnection(tagIds, placeId);
+            		}
         			if(story.addStoryAndPlace(storyId, placeId))
         			{
         				request.setAttribute("error", "true");

@@ -384,16 +384,6 @@ public class DatabaseService {
 		{
 			Class.forName(JDBC_DRIVER);
 			conn = DriverManager.getConnection(DB_URL, USER, PASS);
-			/*pstmt = conn.prepareStatement("SELECT StoryID FROM StoriesInPlaces WHERE PlaceID = ?");
-			pstmt.setInt(1, placeID);
-			ArrayList<Integer> storyIDs = new ArrayList<Integer>();
-			ResultSet rs = pstmt.executeQuery();
-			while(rs.next())
-				storyIDs.add(new Integer(rs.getInt("StoryID")));
-			Array[] array = new Array[storyIDs.size()];
-			int i = 0;
-			for(Integer n : storyIDs)
-				array[i++] = n;*/
 			pstmt = conn.prepareStatement("SELECT DISTINCT(Path) from Pictures WHERE PicID IN (SELECT PicID FROM PicturesInStories WHERE StoryID IN (SELECT StoryID FROM StoriesInPlaces WHERE PlaceID = ?))");
 			pstmt.setInt(1, placeID);
 			ResultSet rs = pstmt.executeQuery();
@@ -960,5 +950,94 @@ public class DatabaseService {
 	   		}//end finally try
 	    }
 		return result;
+	}
+	
+	//format and separate tags from string, write to database and return inserted tag ids
+	public ArrayList<String> insertTags(String tagString)
+	{
+		ArrayList<String> tagIds = new ArrayList<String>();
+		tagString = tagString.replaceAll("(\\s)*,(\\s)*", ","); // erase spaces before and after comma
+		tagString = tagString.replaceAll("(\\s)+$", ""); // erase spaces at the end of the string
+		tagString = tagString.replaceAll("(\\s)+", " "); // replace multiple spaces between words with one space
+		String[] tags = tagString.split(",");
+		for(String tag: tags)
+		{
+			try{
+				conn = getConnection();
+				pstmt = conn.prepareStatement("SELECT * FROM Tags WHERE Name=?");
+				pstmt.setString(1, tag);
+				ResultSet rs = pstmt.executeQuery();
+				if(rs.next())
+				{
+					tagIds.add(Integer.toString(rs.getInt("TagID")));
+				}else
+				{
+					PreparedStatement ps = conn.prepareStatement("INSERT INTO Tags (Name, CreationDate, LastUpdate) VALUES(?,NOW(),NOW())", Statement.RETURN_GENERATED_KEYS);
+					ps.setString(1, tag);
+					ps.executeUpdate();
+					ResultSet rs2 = ps.getGeneratedKeys();
+					while(rs2.next())
+					{
+						tagIds.add(rs2.getString(1));
+			            
+					}
+				}
+				
+			}catch(SQLException | ClassNotFoundException se)
+			{
+				se.printStackTrace();
+			}
+		}
+		return tagIds;
+	}
+
+	public void insertTagStoryConnection(ArrayList<String> tagIds, int storyId)
+	{
+		for(String tagId:tagIds)
+		{
+			try{
+				conn = getConnection();
+				pstmt = conn.prepareStatement("SELECT * FROM TagsInStories WHERE TagID=? AND StoryID=?");
+				pstmt.setInt(1, Integer.parseInt(tagId));
+				pstmt.setInt(2, storyId);
+				ResultSet rs = pstmt.executeQuery();
+				if(!rs.next())
+				{
+					pstmt = conn.prepareStatement("INSERT INTO TagsInStories (TagID, StoryID) VALUES(?,?)");
+					pstmt.setInt(1, Integer.parseInt(tagId));
+					pstmt.setInt(2, storyId);
+					pstmt.executeUpdate();
+				}
+				
+			}catch(SQLException | ClassNotFoundException se)
+			{
+				se.printStackTrace();
+			}
+		}
+	}
+	
+	public void insertTagPlaceConnection(ArrayList<String> tagIds, int placeId)
+	{
+		for(String tagId:tagIds)
+		{
+			try{
+				conn = getConnection();
+				pstmt = conn.prepareStatement("SELECT * FROM TagsInPlaces WHERE TagID=? AND PlaceID=?");
+				pstmt.setInt(1, Integer.parseInt(tagId));
+				pstmt.setInt(2, placeId);
+				ResultSet rs = pstmt.executeQuery();
+				if(!rs.next())
+				{
+					pstmt = conn.prepareStatement("INSERT INTO TagsInPlaces (TagID, PlaceID) VALUES(?,?)");
+					pstmt.setInt(1, Integer.parseInt(tagId));
+					pstmt.setInt(2, placeId);
+					pstmt.executeUpdate();
+				}
+				
+			}catch(SQLException | ClassNotFoundException se)
+			{
+				se.printStackTrace();
+			}
+		}
 	}
 }

@@ -48,6 +48,15 @@ $(document).ready(function() {
 						message: 'Time is required and cannot be empty'
 					}
 				}
+			},
+			tags: {
+				message: 'Tag format is not valid',
+				validators: {
+					regexp : {
+						regexp : /^([a-zA-Z0-9._%+-]+(\s)*[a-zA-Z0-9._%+-]*)(,(\s)*[a-zA-Z0-9._%+-]+(\s)*[a-zA-Z0-9._%+-]*)*$/i,
+						message : 'Tag format is not valid'
+					}
+				}
 			}
 		}
 	});
