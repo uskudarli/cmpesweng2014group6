@@ -85,9 +85,18 @@ $(document).ready(function() {
 					notEmpty: {
 						message: 'The email address is required and cannot be empty'
 					},
-					emailAddress: {
+					
+					
+					regexp:
+					{
+						
+						regexp: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[A-Za-z]{2,4}$/i,
 						message: 'The email address is not a valid'
 					}
+//This allows qwe@qwe, which we don't want
+//					emailAddress: {
+//						message: 'The email address is not a valid'
+//					}
 				}
 			},
 			password: {
