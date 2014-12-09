@@ -1,16 +1,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
-
-    <item
-        android:id="@+id/item3"
-        android:orderInCategory="2"
-        android:showAsAction="always"
-        android:title="Add Story"/>
     <item
         android:id="@+id/search"
         android:title="search"
         android:orderInCategory="1"
         android:actionViewClass="android.widget.SearchView"
         android:showAsAction="always|collapseActionView"/>
+    <item
+        android:id="@+id/addStory"
+        android:orderInCategory="2"
+        android:showAsAction="always"
+        android:title="Add Story"/>
     <item
         android:id="@+id/map"
         android:title="Map"

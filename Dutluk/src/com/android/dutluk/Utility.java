@@ -1,9 +1,5 @@
 package com.android.dutluk;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 /**
@@ -11,6 +7,15 @@ import java.util.regex.Pattern;
  * 
  */
 public class Utility {
+	
+	public static String userName = "" ;
+	public static String [] userList;
+	public static String [] tagList;
+	public static String [] locationList;
+	
+	public static final String SERVER_NAME = "http://titan.cmpe.boun.edu.tr:8085/dutluk_android_api/";
+	
+	
 	private static Pattern pattern;
 	private static Matcher matcher;
 	//public static Map<Integer,ArrayList<Double>> multiMap = new HashMap<Integer,ArrayList<Double>>();

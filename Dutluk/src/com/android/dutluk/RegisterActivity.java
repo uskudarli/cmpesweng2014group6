@@ -87,7 +87,7 @@ public class RegisterActivity extends Activity {
 		prgDialog.show();
 		// Make RESTful webservice call using AsyncHttpClient object
 		AsyncHttpClient client = new AsyncHttpClient();
-        client.get("http://titan.cmpe.boun.edu.tr:8085/dutluk_android_api/Register",params ,new AsyncHttpResponseHandler() {
+        client.get(Utility.SERVER_NAME + "Register",params ,new AsyncHttpResponseHandler() {
         	// When the response returned by REST has Http response code '200'
              @Override
              public void onSuccess(String response) {
@@ -146,9 +146,7 @@ public class RegisterActivity extends Activity {
 	
 	public void navigatetoLoginActivity(){
 		Intent loginIntent = new Intent(getApplicationContext(),LoginActivity.class);
-		Bundle b = new Bundle();
-		b.putString("mail",email);
-		loginIntent.putExtras(b);
+		Utility.userName = email;
 		// Clears History of Activity
 		loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(loginIntent);

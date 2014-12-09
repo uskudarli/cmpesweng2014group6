@@ -15,7 +15,8 @@
 	<string name="title_activity_forgotpwd">Forgot Password</string>
 	<string name="title_activity_addStory">Add Story</string>
 	<string name="title_activity_showStory">Show Story</string>
-
+	<string name="title_activity_search">Search</string>
+	
 	<!-- General strings -->
     <string name="email">E-mail</string>
     <string name="password">Password</string>
@@ -40,6 +41,7 @@
 	<string name="btnComments">Comments</string>
 	<string name="btnSubscribeWriter">Subscribe Writer</string>
 	<string name="btnSubscribePlace">Subscribe Place</string>
+	<string name="btnSearch">Search</string>
 	
 	<!-- Hint strings -->
 	<string name="changeName">Change Name</string>
@@ -48,6 +50,7 @@
 	<string name="changePhone">Change Phone</string>
 	<string name="changeBiography">Change Biography</string>
 	<string name="enterName">Enter Name</string>
+	<string name="enterTags"> Enter Tags of Stor </string>
 	<string name="enterEmail">Enter E-mail</string>
 	<string name="enterPassword">Enter Password</string>
 	<string name="enterTitle">Enter Title</string>
@@ -55,6 +58,9 @@
 	<string name="enterStory">Enter Story</string>
 	<string name="pickPlace">Pick a Place</string>
 	<string name="pickTime">Pick Time</string>
-	
+	<string name="giveNameToPlace">Give Name to Place</string>
+	<string name="enterUserTags">Enter Name of User</string>
+	<string name="enterPlaceTags">Enter Tags of Place(separate with comma</string>
+	<string name="enterStoryTags">Enter Tags of Story(separate with comma)</string>
 	
 </resources>

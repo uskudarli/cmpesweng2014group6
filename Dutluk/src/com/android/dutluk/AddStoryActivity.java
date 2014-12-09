@@ -36,12 +36,13 @@ public class AddStoryActivity extends Activity {
 	
 	ImageView imageV;
 	EditText storyET;
+	EditText tagsET;
 	TextView placeET;
 	EditText timeET;
 
 
-	String mail = "";
 	String story ="";
+	String tags= "";
 	String time="";
 	String image = "";
 	private final int SELECT_FILE = 1;
@@ -64,14 +65,9 @@ public class AddStoryActivity extends Activity {
      	
      	imageV = (ImageView)findViewById(R.id.imageViewAddStory);
      	storyET =  (EditText)findViewById(R.id.storyAddStory);
-     	
+     	tagsET = (EditText) findViewById(R.id.storyTagsAddStory);
      	timeET = (EditText)findViewById(R.id.timeAddStory);
 
-        
-        Intent loginIntent = getIntent();
-        mail = loginIntent.getStringExtra("mail");
-       
-        
     }
 
 
@@ -173,13 +169,14 @@ public class AddStoryActivity extends Activity {
     }
 	public void navigatetoMapActivity(View view){
 		 story = storyET.getText().toString();
+		 tags = tagsET.getText().toString();
 			time = timeET.getText().toString();
 			// düzelt:)
 			image = "";
 		Intent MapIntent = new Intent(getApplicationContext(),MapActivity.class);
 		Bundle b = new Bundle();
-		b.putString("mail",mail);
 		b.putString("story",story);
+		b.putString("tagsForStory",tags);
 		b.putString("time",time);
 		b.putString("image",image);
 		MapIntent.putExtras(b);

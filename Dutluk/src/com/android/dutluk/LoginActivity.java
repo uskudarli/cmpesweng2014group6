@@ -43,9 +43,10 @@ public class LoginActivity extends Activity {
 		emailET = (EditText)findViewById(R.id.emailLogin);
 		pwdET = (EditText)findViewById(R.id.passwordLogin);
 
-        Intent registerIntent = getIntent();
-        mail = registerIntent.getStringExtra("mail");
-        emailET.setText(mail);
+
+        if (!Utility.userName.equals("")){
+        	emailET.setText(Utility.userName);
+        }
 	}
 	
 	public void loginUser(View view){
@@ -88,7 +89,7 @@ public class LoginActivity extends Activity {
 		 prgDialog.show();
 		 // Make RESTful webservice call using AsyncHttpClient object
 		 AsyncHttpClient client = new AsyncHttpClient();		 
-         client.post("http://titan.cmpe.boun.edu.tr:8085/dutluk_android_api/Login",params ,new AsyncHttpResponseHandler() {
+         client.post(Utility.SERVER_NAME + "Login", params ,new AsyncHttpResponseHandler() {
         	 // When the response returned by REST has Http response code '200'
              @Override
              public void onSuccess(String response) {
@@ -139,9 +140,6 @@ public class LoginActivity extends Activity {
 
 	public void navigatetoProfileActivity(){
 		Intent profileIntent = new Intent(getApplicationContext(),ProfileActivity.class);
-		Bundle b = new Bundle();
-		b.putString("mail",mail);
-		profileIntent.putExtras(b);
 		profileIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(profileIntent);
 	}

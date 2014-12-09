@@ -43,14 +43,15 @@ public class MapActivity extends FragmentActivity implements LocationListener {
 
 	GoogleMap map;
 	Context context = this; 
-	String mail = "";
+
 
 	String story ="";
+	String tagsForStory = "";
 	String time="";
 	String image = "";
 	String latitude = "";
 	String longitude = "";
-	
+	String tagsForPlace = "";
 	@Override
 	    protected void onCreate(Bundle savedInstanceState) {
 	        super.onCreate(savedInstanceState);
@@ -62,8 +63,8 @@ public class MapActivity extends FragmentActivity implements LocationListener {
 		    // Set Cancelable as False
 		    prgDialog.setCancelable(false);
 	        Intent addStoryIntent = getIntent();
-	        mail = addStoryIntent.getStringExtra("mail");
 	        story = addStoryIntent.getStringExtra("story");
+	        tagsForStory = addStoryIntent.getStringExtra("tagsForStory");
 	        time = addStoryIntent.getStringExtra("time");
 	        image = addStoryIntent.getStringExtra("image");
 	        
@@ -97,6 +98,7 @@ public class MapActivity extends FragmentActivity implements LocationListener {
 					        
 					        latitude = latlng.latitude + "";
 					        longitude = latlng.longitude+ "" ;
+					        tagsForPlace = title.getText().toString();
 					        saveStory();
 					        //Toast.makeText(getApplicationContext(), "latitude is: " + latlng.latitude, Toast.LENGTH_LONG).show();
 						}
@@ -127,14 +129,15 @@ public class MapActivity extends FragmentActivity implements LocationListener {
 	
 
 		RequestParams params = new RequestParams();
-		params.put("mail",mail);
+		params.put("mail",Utility.userName);
 		// düzelt:)
 		//params.put("image", image);
 		params.put("story", story);
+		params.put("tagsForStory", tagsForStory);
 		params.put("time", time);
 		params.put("lat", latitude);
 		params.put("lng", longitude);				
-		
+		params.put("tagsForPlace", tagsForPlace);
 	
 		invokeWSforSAVE(params);
 		
@@ -146,7 +149,7 @@ public class MapActivity extends FragmentActivity implements LocationListener {
 		// Make RESTful web service call using AsyncHttpClient object
 		AsyncHttpClient client = new AsyncHttpClient();
 		
-		client.post("http://titan.cmpe.boun.edu.tr:8085/dutluk_android_api/AddStory",params ,new AsyncHttpResponseHandler() {
+		client.post(Utility.SERVER_NAME + "AddStory",params ,new AsyncHttpResponseHandler() {
       	// When the response returned by REST has Http response code '200'
            @Override
            public void onSuccess(String response) {
@@ -163,6 +166,7 @@ public class MapActivity extends FragmentActivity implements LocationListener {
 
                       	 // Display successfully registered message using Toast
                       	 Toast.makeText(getApplicationContext(), "You are successfully add new story!", Toast.LENGTH_LONG).show();
+                      	// refresh map burayý düzelt!
                        } 
                        // Else display error message
                        else{
@@ -204,4 +208,5 @@ public class MapActivity extends FragmentActivity implements LocationListener {
 		
 	}
 
+	
 }

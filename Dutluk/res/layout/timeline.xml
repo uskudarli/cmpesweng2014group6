@@ -5,7 +5,7 @@
     android:background="@android:color/background_light"
     tools:context=".MainActivity" >
 
-    <LinearLayout
+<!--     <LinearLayout
         android:id="@+id/textLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="guide" />
-    </LinearLayout>
+    </LinearLayout> -->
 
     <LinearLayout
         android:id="@+id/listlayout"

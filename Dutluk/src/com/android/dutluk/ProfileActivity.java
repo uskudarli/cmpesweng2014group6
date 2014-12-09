@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -31,8 +30,6 @@ public class ProfileActivity extends Activity {
 	TextView xpTV;
 	TextView levelTV;
 	EditText bioET;
-
-	String mail = "";
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,12 +54,8 @@ public class ProfileActivity extends Activity {
      	bioET = (EditText)findViewById(R.id.biographyProfile);
      	
  
-        
-        Intent loginIntent = getIntent();
-        mail = loginIntent.getStringExtra("mail");
-        
      	RequestParams params = new RequestParams();
-		params.put("email", mail);
+		params.put("email", Utility.userName);
 		invokeWSforGET(params);
 
     }
@@ -72,7 +65,7 @@ public class ProfileActivity extends Activity {
 		prgDialog.show();
 		// Make RESTful webservice call using AsyncHttpClient object
 		AsyncHttpClient client = new AsyncHttpClient();
-        client.post("http://titan.cmpe.boun.edu.tr:8085/dutluk_android_api/GetProfile",params ,new AsyncHttpResponseHandler() {
+        client.post(Utility.SERVER_NAME + "GetProfile",params ,new AsyncHttpResponseHandler() {
         	// When the response returned by REST has Http response code '200'
              @Override
              public void onSuccess(String response) {
@@ -149,7 +142,7 @@ public class ProfileActivity extends Activity {
 		String bio = bioET.getText().toString();
 
 		RequestParams params = new RequestParams();
-		params.put("email", mail);
+		params.put("email", Utility.userName);
 		params.put("name", name);
 		//params.put("birthDate", birthDate);
 		//params.put("gender", gender);
@@ -167,7 +160,7 @@ public class ProfileActivity extends Activity {
 		prgDialog.show();
 		// Make RESTful web service call using AsyncHttpClient object
 		AsyncHttpClient client = new AsyncHttpClient();
-        client.post("http://titan.cmpe.boun.edu.tr:8085/dutluk_android_api/updateProfile",params ,new AsyncHttpResponseHandler() {
+        client.post(Utility.SERVER_NAME + "updateProfile",params ,new AsyncHttpResponseHandler() {
         	// When the response returned by REST has Http response code '200'
              @Override
              public void onSuccess(String response) {
@@ -220,9 +213,6 @@ public class ProfileActivity extends Activity {
 	}
 	public void navigateToTimelineActivity(){
 		Intent timelineIntent = new Intent(getApplicationContext(),TimelineActivity.class);
-		Bundle b = new Bundle();
-		b.putString("mail",mail);
-		timelineIntent.putExtras(b);
 		timelineIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(timelineIntent);
 	}

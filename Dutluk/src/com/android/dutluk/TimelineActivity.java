@@ -71,20 +71,17 @@ public class TimelineActivity extends Activity {
 	LinearLayout ll;
 	String searchedTerm;
 	Parcelable state;
-	TextView guide;
-	LinearLayout guideLayout;
+//	TextView guide;
+//	LinearLayout guideLayout;
 	int searchTry = 0;
-	String mail = "";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.timeline);
-		Intent registerIntent = getIntent();
-        mail = registerIntent.getStringExtra("mail");
 		LinearLayout layout = (LinearLayout) findViewById(R.id.reklam);
-		guide = (TextView) findViewById(R.id.guide);
-		guideLayout = (LinearLayout) findViewById(R.id.textLayout);
+//		guide = (TextView) findViewById(R.id.guide);
+//		guideLayout = (LinearLayout) findViewById(R.id.textLayout);
 		lv = (ListView) findViewById(R.id.listView1);
 		final View footerView = getLayoutInflater().inflate(R.layout.more, null);
 		lv.addFooterView(footerView);
@@ -116,7 +113,7 @@ public class TimelineActivity extends Activity {
 	private void readData() {
 		// TODO Auto-generated method stub
 
-		MyAdapter adapter = new MyAdapter(this, alist);
+		TimelineAdapter adapter = new TimelineAdapter(this, alist);
 		lv.setAdapter(adapter);
 		if (state != null)
 			lv.onRestoreInstanceState(state);
@@ -184,12 +181,10 @@ public class TimelineActivity extends Activity {
 			@Override
 			public boolean onMenuItemActionExpand(MenuItem item) {
 
-				m.findItem(R.id.item3);
+				m.findItem(R.id.addStory);
 				m.findItem(R.id.map);
-				m.findItem(R.id.item3).setShowAsAction(
-						MenuItem.SHOW_AS_ACTION_IF_ROOM);
-				m.findItem(R.id.map).setShowAsAction(
-						MenuItem.SHOW_AS_ACTION_IF_ROOM);
+				m.findItem(R.id.addStory).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+				m.findItem(R.id.map).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 				return true;
 			}
 
@@ -197,12 +192,10 @@ public class TimelineActivity extends Activity {
 			public boolean onMenuItemActionCollapse(MenuItem item) {
 				// TODO Auto-generated method stub
 
-				m.findItem(R.id.item3);
-				m.findItem(R.id.item3).setShowAsAction(
-						MenuItem.SHOW_AS_ACTION_ALWAYS);
+				m.findItem(R.id.addStory);
+				m.findItem(R.id.addStory).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 				m.findItem(R.id.map);
-				m.findItem(R.id.map).setShowAsAction(
-						MenuItem.SHOW_AS_ACTION_ALWAYS);
+				m.findItem(R.id.map).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 				return true;
 			}
 		});
@@ -226,10 +219,11 @@ public class TimelineActivity extends Activity {
 		// TODO Auto-generated method stub
 		switch (item.getItemId()) {
 		case R.id.search:
-			guideLayout.setVisibility(LinearLayout.GONE);
+//			guideLayout.setVisibility(LinearLayout.GONE);
+			navigateToSearchActivity();
 			break;
 
-		case R.id.item3:
+		case R.id.addStory:
 			navigateToAddStoryActivity();
 			break;
 		case R.id.map:
@@ -240,22 +234,22 @@ public class TimelineActivity extends Activity {
 
 		return super.onOptionsItemSelected(item);
 	}
+	public void navigateToSearchActivity() {
+		Intent searchIntent = new Intent(getApplicationContext(),SearchActivity.class);
+		searchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		startActivity(searchIntent);
+		
+	}
 	public void navigateToAddStoryActivity() {
-		Intent timelineIntent = new Intent(getApplicationContext(),AddStoryActivity.class);
-		Bundle b = new Bundle();
-		b.putString("mail",mail);
-		timelineIntent.putExtras(b);
-		timelineIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		startActivity(timelineIntent);
+		Intent addStoryIntent = new Intent(getApplicationContext(),AddStoryActivity.class);
+		addStoryIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		startActivity(addStoryIntent);
 		
 	}
 	public void navigateToMapActivity() {
-		Intent timelineIntent = new Intent(getApplicationContext(),MapActivity.class);
-		Bundle b = new Bundle();
-		b.putString("mail",mail);
-		timelineIntent.putExtras(b);
-		timelineIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		startActivity(timelineIntent);
+		Intent mapIntent = new Intent(getApplicationContext(),MapActivity.class);
+		mapIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		startActivity(mapIntent);
 		
 	}
 	private class MyTask extends AsyncTask<Void, Void, Void> {
@@ -277,8 +271,8 @@ public class TimelineActivity extends Activity {
 		protected Void doInBackground(Void... params) {
 			HttpClient httpclient = new DefaultHttpClient();
 			List<NameValuePair> pairs = new ArrayList<NameValuePair>();
-			pairs.add(new BasicNameValuePair("email", mail));
-			String url = "http://titan.cmpe.boun.edu.tr:8085/dutluk_android_api/GetStory?" + URLEncodedUtils.format(pairs, "utf-8");
+			pairs.add(new BasicNameValuePair("email", Utility.userName));
+			String url = Utility.SERVER_NAME + "GetStory?" + URLEncodedUtils.format(pairs, "utf-8");
 			HttpGet httpget = new HttpGet(url);
 			//Log.w("submit", "aa" + url);
 			try {
@@ -300,7 +294,7 @@ public class TimelineActivity extends Activity {
 
 			        String name = obj.getString("content");
 			        Log.w("submit", name);
-			        HashMap<String, String> map = new HashMap<>();
+			        HashMap<String, String> map = new HashMap<String, String>();
 					map.put(KEY_ID, "a" + i);
 					map.put(KEY_TITLE, name);
 					map.put(KEY_DURATION, "info"+i);

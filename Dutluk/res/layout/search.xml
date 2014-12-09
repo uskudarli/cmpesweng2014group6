@@ -3,6 +3,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
 
+
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -14,42 +15,52 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dip"
-            android:text="@string/title_activity_login"
+            android:text="@string/title_activity_search"
             android:textSize="25sp"
             android:textStyle="bold" />
         
-		 <!-- Email Label -->
+		<!-- User Search Label -->		
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/email" />
+            android:text="@string/enterUserTags" />
         
-        <!-- Email TextField -->
-        <EditText
-            android:id="@+id/emailLogin"
+		<!-- User Search TextField -->
+        <AutoCompleteTextView 
+            android:id="@+id/searchUserTags"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/enterEmail"
-            android:inputType="textEmailAddress" />
+            android:layout_marginBottom="8dp"/>
         
-		<!-- Password Label -->		
+		<!-- Place Search Label -->		
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dip"
-            android:text="@string/password" />
+            android:text="@string/enterPlaceTags" />
         
-		<!-- Password TextField -->
-        <EditText
-            android:id="@+id/passwordLogin"
+		<!-- Place Search TextField -->
+		<MultiAutoCompleteTextView  
+            android:id="@+id/searchPlaceTags"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/enterPassword"
-            android:inputType="textPassword" />
+            android:completionThreshold="1"/>
         
+		<!-- Story Search Label -->		
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/enterStoryTags" />
+        
+		<!-- Story Search TextField -->
+        <MultiAutoCompleteTextView  
+            android:id="@+id/searchStoryTags"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:completionThreshold="1"/>
+  
 		<!-- Error message -->
         <TextView
-            android:id="@+id/errorLogin"
+            android:id="@+id/errorSearch"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -57,38 +68,17 @@
             android:textColor="#e30000"
             android:textStyle="bold" />
         
-		<!-- Login button -->
+		<!-- Search button -->
         <Button
-            android:id="@+id/btnLogin"
+            android:id="@+id/btnSearch"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dip"
             android:background="#ff6347"
-            android:onClick="loginUser"
-            android:text="@string/btnLogin"
+            android:onClick="searchAction"
+            android:text="@string/btnSearch"
             android:textColor="#fff" />
-        
-        <!-- Forgot password button -->
-        <Button
-            android:id="@+id/btnLinkToForgotPwdLogin"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:background="#fff"
-            android:onClick="forgotPassword"
-            android:text="@string/btnForgotPwdLogin"
-            android:textColor="#ff6347" />
-        
-		<!-- Link to Register Screen -->
-        <Button
-            android:id="@+id/btnLinkToRegisterScreenLogin"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dip"
-            android:background="@null"
-            android:onClick="navigatetoRegisterActivity"
-            android:text="@string/btnRegister"
-            android:textColor="#228b22"
-            android:textStyle="bold" />
+
 
         
     </LinearLayout>

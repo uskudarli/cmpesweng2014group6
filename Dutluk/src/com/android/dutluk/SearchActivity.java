@@ -16,20 +16,24 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
-public class ForgotPwdActivity extends Activity {
+public class SearchActivity extends Activity {
 
 	ProgressDialog prgDialog;
 	TextView errorMsg;
 
-	EditText emailET;
-
-	String mail = "";
+	EditText userET;
+	EditText placeET;
+	EditText storyET;
+	String user = "";
+	String place = "";
+	String storyTags = "";
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.forgotpwd);
+		setContentView(R.layout.search);
 	
-		errorMsg = (TextView)findViewById(R.id.errorForgotpwd);
+		errorMsg = (TextView)findViewById(R.id.errorSearch);
 		// Instantiate Progress Dialog object
 		prgDialog = new ProgressDialog(this);
 		// Set Progress Dialog Text
@@ -37,45 +41,54 @@ public class ForgotPwdActivity extends Activity {
         // Set Cancelable as False
         prgDialog.setCancelable(false);
         
-		emailET = (EditText)findViewById(R.id.emailForgotpwd);
-	
+		userET = (EditText)findViewById(R.id.searchUserTags);
+		placeET = (EditText)findViewById(R.id.searchPlaceTags);
+		storyET = (EditText)findViewById(R.id.searchStoryTags);
 
-    
+     
 	}
 	
-	public void resetPassword(View view){
-		// Get Email Edit View Value
-		mail = emailET.getText().toString();
-		// Instantiate Http Request Param Object
+	public void searchAction(View view){
+		
+		user = userET.getText().toString();
+		place = placeET.getText().toString();
+		story = storyET.getText().toString();
+
 		RequestParams params = new RequestParams();
-		// When Email Edit View and Password Edit View have values other than Null
-		if(Utility.isNotNull(mail)){
-			// When Email entered is Valid
+	
+		if(Utility.isNotNull(user) || Utility.isNotNull(place) || Utility.isNotNull(story)){
+		
 			if(Utility.validateEmail(mail)){
-				// Put Http parameter username with value of Email Edit View control
+				
 				params.put("mail", mail);
-				// Invoke RESTful Web Service with Http parameters
+			
+				params.put("password", password);
+			
 				invokeWS(params);
 			} 
-			// When Email is invalid
+	
 			else{
 				Toast.makeText(getApplicationContext(), "Please enter valid email", Toast.LENGTH_LONG).show();
 			}
 		} 
-		// When any of the Edit View control left blank
+		
 		else{
 			Toast.makeText(getApplicationContext(), "Please fill the form, don't leave any field blank", Toast.LENGTH_LONG).show();
 		}
 		
 	}
-
+	public void forgotPassword(View view){
+		Intent forgotPwdIntent = new Intent(getApplicationContext(),ForgotPwdActivity.class);
+		forgotPwdIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		startActivity(forgotPwdIntent);
+	}
 	
 	public void invokeWS(RequestParams params){
 		// Show Progress Dialog
 		 prgDialog.show();
 		 // Make RESTful webservice call using AsyncHttpClient object
-		 AsyncHttpClient client = new AsyncHttpClient();
-         client.get(Utility.SERVER_NAME + "forgotPassword",params ,new AsyncHttpResponseHandler() {
+		 AsyncHttpClient client = new AsyncHttpClient();		 
+         client.post(Utility.SERVER_NAME + "Login", params ,new AsyncHttpResponseHandler() {
         	 // When the response returned by REST has Http response code '200'
              @Override
              public void onSuccess(String response) {
@@ -85,15 +98,15 @@ public class ForgotPwdActivity extends Activity {
                 	 	 // JSON Object
                          JSONObject obj = new JSONObject(response);
                          // When the JSON response has status boolean value assigned with true
-                         if(obj.getBoolean("status")){
-                        	 Toast.makeText(getApplicationContext(), "Check your e-mail for your new password!", Toast.LENGTH_LONG).show();
+                         if(obj.getBoolean("result")){
+                        	 Toast.makeText(getApplicationContext(), "You are successfully logged in!", Toast.LENGTH_LONG).show();
                         	 // Navigate to Home screen
-                        	 navigatetoLoginActivity();
+                        	 navigatetoProfileActivity();
                          } 
                          // Else display error message
                          else{
-                        	 errorMsg.setText(obj.getString("error_msg"));
-                        	 Toast.makeText(getApplicationContext(), obj.getString("error_msg"), Toast.LENGTH_LONG).show();
+                        	 errorMsg.setText(obj.getString("message"));
+                        	 Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
                          }
                  } catch (JSONException e) {
                      // TODO Auto-generated catch block
@@ -124,12 +137,17 @@ public class ForgotPwdActivity extends Activity {
          });
 	}
 
-	public void navigatetoLoginActivity(){
-		Intent loginIntent = new Intent(getApplicationContext(),LoginActivity.class);
-		Utility.userName = mail;
+	public void navigatetoProfileActivity(){
+		Intent profileIntent = new Intent(getApplicationContext(),ProfileActivity.class);
+		profileIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		startActivity(profileIntent);
+	}
+	
+	public void navigatetoRegisterActivity(View view){
+		Intent loginIntent = new Intent(getApplicationContext(),RegisterActivity.class);
 		loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(loginIntent);
 	}
-	
+
 	
 }

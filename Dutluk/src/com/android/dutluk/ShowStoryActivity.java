@@ -36,7 +36,7 @@ public class ShowStoryActivity extends Activity {
 
 
 	String story_id = "" ;
-	String mail = "";
+
 	
 
 	
@@ -59,11 +59,11 @@ public class ShowStoryActivity extends Activity {
      
         
         Intent comingIntent = getIntent();
-        mail = comingIntent.getStringExtra("mail");
+       
         story_id = comingIntent.getStringExtra("story_id");
         
         RequestParams params = new RequestParams();
-		params.put("mail",mail);
+		params.put("mail",Utility.userName);
 		params.put("story_id", story_id);
         invokeWSforGET(params);
     }

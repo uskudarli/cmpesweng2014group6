@@ -8,7 +8,7 @@
 	android:padding="10dp"
 >
 	<TextView 
-	   android:text="@string/enterTitle"
+	   android:text="@string/giveNameToPlace"
 	   android:layout_width="wrap_content"
 	   android:layout_height="wrap_content"    
 	    />
