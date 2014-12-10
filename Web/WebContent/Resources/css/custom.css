@@ -8,10 +8,10 @@
 }
 
 #story {
-	width: 350px;
-	height: 100px;
+	width: 500px;
 	float: left;
 	padding: 10px;
+	margin-bottom: 40px;
 }
 
 #storyend {
@@ -61,3 +61,4 @@
 #searchButton {
 	height: 34px;
 }
+

@@ -13,6 +13,7 @@
 	<%@ page import="Dutluk.*"%>
 	<%@ page import="java.sql.*, Dutluk.DatabaseService"%>
 	<%
+	
 	HttpSession newSession = request.getSession();
 	String storyId = request.getParameter("storyId");
 	if(newSession == null)
@@ -28,64 +29,133 @@
 		request.getRequestDispatcher("loginRegister.jsp").forward(request, response);
 	}
 		DatabaseService db = new DatabaseService();
-		
-		Story story = db.findStorybyStoryId(Integer.parseInt(storyId));
+		int storyID = Integer.parseInt(storyId);
+		Story story = db.findStorybyStoryId(storyID);
 		User user = db.findUserByUserId(story.getUserId());
 		User currentUser = db.findUserByEmail(request.getSession().getAttribute("email").toString());
 		int rate = db.getRate(currentUser.getUserID(), story.getStoryId());
 		newSession.setAttribute("StoryID", storyId);
 		newSession.setAttribute("UserID", currentUser.getUserID());
-        	%>
+		
+		String storyDate="";
+		if(story.getAbsoluteDate()==null)
+			storyDate=story.getApproximateDate();
+		else storyDate=story.getAbsoluteDate().toString();
+		
+		String placeName="";
+		int placeID=0;
+        String picPath="";
+        String[] tags = new String[10];
+        int rememberCount=0;
+        double averageRate=0.0;
+		
+		%>
 
-	<div id="nav">
+	<!-- <div id="nav">
 		recommendation<br> falan<br> filan<br>
-	</div>
+	</div> -->
+	
+		<%
+	
+	try{
+		
+		//Get the place id and name
+		ResultSet rs = null;
+		Connection connection = db.getConnection();
+        Statement statement = connection.createStatement() ;
+        rs =statement.executeQuery("SELECT Places.PlaceID, Places.Name FROM Places,StoriesInPlaces WHERE Places.PlaceID=StoriesInPlaces.PlaceID AND StoriesInPlaces.StoryID='"+storyID+"';");
+        
+        while(rs.next())
+        {
+        	placeID = rs.getInt(1);
+        	placeName = rs.getString(2);
+        	
+        }
+        
+        //Get the picture of the story if exist
+        rs = statement.executeQuery("SELECT Path FROM Pictures,PicturesInStories WHERE StoryID='"+storyID+"' AND  Pictures.PicID=PicturesInStories.PicID LIMIT 1;");
+        
+		if(rs.next()){
+			picPath = rs.getString(1);
+		}
+        
+		
+		//Get tags of the story
+		rs = statement.executeQuery("SELECT Name FROM Tags, TagsInStories, Stories WHERE Tags.TagID=TagsInStories.TagID AND TagsInStories.StoryID=Stories.StoryID AND Stories.StoryID='"+storyID+"' LIMIT 10;");
+		
+		for(int i=0;rs.next();i++){
+			tags[i]=rs.getString(1);
+		}
+		
+		//Get the number of people remembers the story
+		rs = statement.executeQuery("SELECT COUNT(*) FROM IRememberThat WHERE StoryID='"+storyID+"';");
+		if(rs.next())
+			rememberCount=rs.getInt(1);
+		
+		//Get average rate
+		rs = statement.executeQuery("SELECT ROUND(AVG(Rate),2) FROM Rate WHERE StoryID='"+storyID+"';");
+		if(rs.next())
+			averageRate = rs.getDouble(1);
+		
+        
+	}catch(Exception e)
+    {
+        out.println(e);
+        
+    }
+      
+	
+	%>
+	
+	
+	
 	<div id="story">
-		<center>
-			<h2>Story Name</h2>
 			<h4>
-				Written by <a href='profile.jsp?id=<%= story.getUserId() %>'> <%= user.getName() %>
-				</a>
-			</h4>
-		</center>
+			
+				A story for <a href='timeline.jsp?Id=<%= placeID %>'><%=placeName %></a> at <%=storyDate %>
+			by <a href='profile.jsp?id=<%= story.getUserId() %>'> <%= user.getName() %> </a></h4>
+			
+			<% if(picPath!=""){ %>
+				<img src="http://titan.cmpe.boun.edu.tr:8085/image/<%=picPath%>" width=300>
+				tags: 
+			<% }
+			 
+			for(int i=0;i<10&tags[i]!=null;i++)
+				out.println(tags[i]+" ");
+			%>
+			<br>
+			
+			
+			
 		<p>
-			<%=story.getContent()%>
+			<h3><%=story.getContent()%></h3>
+			
+			
+			
 			<br>
-			<br>
-			Your current rate is: <%=rate %>
 			<%
-				if(rate == 0)
-				{
-				%>
-				<br>
-			Rate Story:
-		<form method="post" action="RateStory">
-			<select name="rate">
-				<option value="1">Terrible</option>
-				<option value="2">Not good</option>
-				<option value="3">It's OK</option>
-				<option value="4">Good</option>
-				<option value="5">Great!</option>
-			</select> <input type="submit" value="Rate">
-		</form>
-
-	</div><br>
-
-	<%
-				}
-				%><br>Average Rate for this story is: <%= story.getAvgRate()%><br>
+			if(averageRate>0)
+				out.println("Average Rate is "+averageRate);
+			else
+				out.println("Be the first one to rate!");
+			%>
+			<br><br>
 	<%
 	
-	        
+	    if(rememberCount>0)
+	    	out.println(rememberCount+" people remembers!");
+	    else
+	    	out.println("Be the first one to remember!");
 	
 		Boolean isRemembered = db.isRemembered(currentUser.getUserID(), Integer.parseInt(storyId));
 		if(isRemembered)
 		{
 			%>
+			<br><br>
 			<form id="rememberForm" method="post" action="RememberStory"
 						class="form-horizontal">
 			<input type="hidden" name="funct" value="dontRemember"/> 
-			<button type="submit" class="btn btn-default">I don't Remember</button><br><br>
+			<button type="submit" class="btn btn-default">I don't Remember</button>
 			</form>
 			<%
 		}
@@ -95,13 +165,40 @@
 			<form id="rememberForm" method="post" action="RememberStory"
 						class="form-horizontal">
 			<input type="hidden" name="funct" value="remember"/> 
-			<button type="submit" class="btn btn-default">I Remember That!</button><br><br>
+			<button type="submit" class="btn btn-default">I Remember That!</button>
 			</form>
 			<%
 		}
 	%>
 	
 	
+			<!-- Your current rate is: <%=rate %>
+			<%
+				if(rate == 0)
+				{
+				%>
+				<br>
+			Rate Story:-->
+		<form method="post" action="RateStory">
+			<select name="rate">
+				<option value="1">Terrible</option>
+				<option value="2">Not good</option>
+				<option value="3">It's OK</option>
+				<option value="4">Good</option>
+				<option value="5">Great!</option>
+			</select> <input type="submit" class="btn btn-default" value="Rate">
+		</form>
+
+	
+
+	<%
+				}
+				%>
+	</div>
+	
+	
+
+	<div >
 	<table style="width: 100%" border="1">
 			<col style="width: 5%">
 			<col style="width: 1%">
@@ -155,5 +252,10 @@
 			<button type="submit" class="btn btn-default">Submit Comment</button>
 		</div>
 	</form>
+	</div>
+<br>
+<br>
+<br>
+	
 </body>
 </html>
