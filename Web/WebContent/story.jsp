@@ -117,7 +117,7 @@
 			
 			<% if(picPath!=""){ %>
 				<img src="http://titan.cmpe.boun.edu.tr:8085/image/<%=picPath%>" width=300>
-				tags: 
+				<br>tags: 
 			<% }
 			 
 			for(int i=0;i<10&tags[i]!=null;i++)
