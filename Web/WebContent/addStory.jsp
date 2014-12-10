@@ -19,11 +19,11 @@
 			request.getRequestDispatcher("index.jsp").forward(request,response);
 		else if(newSession.getAttribute("email") == null)	
 		{
-			newSession.setAttribute("redirect", "addStory.jsp");
+			/* newSession.setAttribute("redirect", "addStory.jsp");
 			newSession.setAttribute("var", "Id");
 			newSession.setAttribute("lon", lon);
 			newSession.setAttribute("lat", lat);
-			newSession.setAttribute("name", name);
+			newSession.setAttribute("name", name); */
 			request.getRequestDispatcher("loginRegister.jsp").forward(request,response);
 		}
 		newSession.setAttribute("lon", lon);
