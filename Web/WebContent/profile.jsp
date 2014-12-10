@@ -126,11 +126,10 @@
 							else out.print(rs.getString(10)); %>
 				</td>
 				<td>
-					<% out.print(rs.getString(3)); %>
+						<a href='story.jsp?storyId=<%=rs.getInt(1) %>'><%= rs.getString(3) %></a>
+	        			
 				</td>
-				<td>
-					<% out.print(rs.getString(8)); %>
-				</td>
+				<td><% out.print(rs.getString(8)); %></td >
 			</tr>
 			<%	
 					}
