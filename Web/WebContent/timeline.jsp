@@ -114,7 +114,7 @@
 			<th>When did it happen?</th>
 			<th>Story</th>
 			<th>Written by</th>
-			<!--<th>Creation Date</th> -->
+			<th>Creation Date</th>
 		</tr>
 		
 		<%
@@ -151,7 +151,7 @@
 	        			}
 	        			
 	        			%></a></td>
-	        			<!-- <td><% out.print(rs2.getString(8)); %></td> -->
+	        			<td><% out.print(rs2.getString(8)); %></td>
 	        		</tr>
 	        	<%
         	}

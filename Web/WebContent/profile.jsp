@@ -269,7 +269,7 @@
 								else out.print(rs2.getString(10)); %>
 				</td>
 				<td>
-					<% out.print(rs2.getString(3)); %>
+					<a href='story.jsp?storyId=<%=rs2.getInt(1) %>'><%= rs2.getString(3) %></a>
 				</td>
 				<td>
 					<% out.print(rs2.getString(8)); %>
