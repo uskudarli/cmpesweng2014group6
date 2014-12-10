@@ -10,8 +10,8 @@ public class Utility {
 	
 	public static String userName = "" ;
 	public static String [] userList;
-	public static String [] tagList;
-	public static String [] locationList;
+	public static String [] storyTagsList;
+	public static String [] placeTagsList;
 	
 	public static final String SERVER_NAME = "http://titan.cmpe.boun.edu.tr:8085/dutluk_android_api/";
 	

@@ -1,14 +1,22 @@
 package com.android.dutluk;
 
+import java.util.HashMap;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
+import android.widget.MultiAutoCompleteTextView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +36,16 @@ public class SearchActivity extends Activity {
 	String placeTags = "";
 	String storyTags = "";
 	
+	 private AutoCompleteTextView searchUserTags;
+     private MultiAutoCompleteTextView searchPlaceTags;
+     private MultiAutoCompleteTextView searchStoryTags;
+     String item[]={
+    		   "January", "February", "March", "April",
+    		   "May", "June", "July", "August",
+    		   "September", "October", "November", "December"
+    		 };
+	
+	@SuppressLint("CutPasteId")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -44,8 +62,26 @@ public class SearchActivity extends Activity {
 		userET = (EditText)findViewById(R.id.searchUserTags);
 		placeET = (EditText)findViewById(R.id.searchPlaceTags);
 		storyET = (EditText)findViewById(R.id.searchStoryTags);
+		searchUserTags = (AutoCompleteTextView) findViewById(R.id.searchUserTags);
+		searchPlaceTags = (MultiAutoCompleteTextView) findViewById(R.id.searchPlaceTags);
+		searchStoryTags = (MultiAutoCompleteTextView) findViewById(R.id.searchStoryTags);
+		
+		 ArrayAdapter<String> userTagAdapter = new ArrayAdapter<String>(this,
+                 android.R.layout.simple_dropdown_item_1line,item);
+		 searchUserTags.setAdapter(userTagAdapter);
 
-     
+		 ArrayAdapter<String> placeTagsAdapter = new ArrayAdapter<String>(this,
+		                 android.R.layout.simple_dropdown_item_1line, item);
+		
+		 searchPlaceTags.setAdapter(placeTagsAdapter);
+		 searchPlaceTags.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
+		 
+		 ArrayAdapter<String> storyTagsAdapter = new ArrayAdapter<String>(this,
+                 android.R.layout.simple_dropdown_item_1line, item);
+
+		 searchStoryTags.setAdapter(storyTagsAdapter);
+		 searchStoryTags.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
+ 
 	}
 	
 	public void searchAction(View view){
@@ -97,8 +133,19 @@ public class SearchActivity extends Activity {
                          JSONObject obj = new JSONObject(response);
                          // When the JSON response has status boolean value assigned with true
                          if(obj.getBoolean("result")){
-                        	 Toast.makeText(getApplicationContext(), "You are successfully logged in!", Toast.LENGTH_LONG).show();
-                       
+                        	 Toast.makeText(getApplicationContext(), "You are successfully get user list!", Toast.LENGTH_LONG).show();
+                        	 JSONArray jsonarray = new JSONArray(obj.toString());
+
+                        	int length = jsonarray.length();
+                        	Utility.userList = new String [length];
+             			    for(int i=0; i<length; i++){
+             			        JSONObject obj2 = jsonarray.getJSONObject(i);
+
+             			        String name = obj2.getString("content");
+             			        Utility.userList[i] = name;
+
+             			    }   
+                        
                          } 
                          // Else display error message
                          else{
@@ -149,8 +196,19 @@ public class SearchActivity extends Activity {
                          JSONObject obj = new JSONObject(response);
                          // When the JSON response has status boolean value assigned with true
                          if(obj.getBoolean("result")){
-                        	 Toast.makeText(getApplicationContext(), "You are successfully logged in!", Toast.LENGTH_LONG).show();
-                       
+                        	 Toast.makeText(getApplicationContext(), "You are successfully get story list!", Toast.LENGTH_LONG).show();
+                        	 
+                        	 JSONArray jsonarray = new JSONArray(obj.toString());
+
+                         	int length = jsonarray.length();
+                         	Utility.storyTagsList= new String [length];
+              			    for(int i=0; i<length; i++){
+              			        JSONObject obj2 = jsonarray.getJSONObject(i);
+
+              			        String name = obj2.getString("content");
+              			        Utility.storyTagsList[i] = name;
+
+              			    }  
                          } 
                          // Else display error message
                          else{
@@ -201,8 +259,18 @@ public class SearchActivity extends Activity {
                          JSONObject obj = new JSONObject(response);
                          // When the JSON response has status boolean value assigned with true
                          if(obj.getBoolean("result")){
-                        	 Toast.makeText(getApplicationContext(), "You are successfully logged in!", Toast.LENGTH_LONG).show();
-                       
+                        	 Toast.makeText(getApplicationContext(), "You are successfully get place list!", Toast.LENGTH_LONG).show();
+                        	 JSONArray jsonarray = new JSONArray(obj.toString());
+
+                          	int length = jsonarray.length();
+                          	Utility.placeTagsList= new String [length];
+               			    for(int i=0; i<length; i++){
+               			        JSONObject obj2 = jsonarray.getJSONObject(i);
+
+               			        String name = obj2.getString("content");
+               			        Utility.placeTagsList[i] = name;
+
+               			    }  
                          } 
                          // Else display error message
                          else{
