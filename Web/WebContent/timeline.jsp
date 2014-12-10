@@ -26,7 +26,7 @@
 	<%@page import="java.io.File"%>
 	<%
 		String placeId = request.getParameter("Id");
-		HttpSession newSession = request.getSession(true);
+		HttpSession newSession = request.getSession();
 		
 		if(newSession == null)
 		{
@@ -35,6 +35,9 @@
 			request.getRequestDispatcher("index.jsp").forward(request, response);
 		else if(newSession.getAttribute("email") == null)	
 		{
+			newSession.setAttribute("redirect", "timeline.jsp");
+			newSession.setAttribute("var", "Id");
+			newSession.setAttribute("Id", placeId);
 			request.getRequestDispatcher("loginRegister.jsp").forward(request, response);
 		}
 	DatabaseService db = new DatabaseService();

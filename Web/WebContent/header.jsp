@@ -12,7 +12,8 @@
 
 	<!-- Hide rest if logged in,show only login-register -->
 	<%
-		if(request.getSession() != null && request.getSession().getAttribute("loggedIn")=="true")
+	HttpSession newsession = request.getSession();
+		if(newsession != null && newsession.getAttribute("email")!=null)
 		{
 			//out.println("<a href='javascript:void(0);' onclick='goToEdit()'>Profile</a>"); ->moved to profile
 			out.println("- <a href='Profile'>Me</a>");

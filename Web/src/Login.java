@@ -94,18 +94,24 @@ public class Login extends HttpServlet {
 		HttpSession session = request.getSession();
 		if(result)
 		{
-			session.setAttribute("loggedIn", "true");
 			session.setAttribute("email", user.getEmail());
-			response.getWriter().write("true");
-			if(request.getAttribute("redirect") != null && request.getAttribute("var") != null && request.getAttribute("Id") != null)
+			if(session.getAttribute("redirect") != null)
 			{
-				String redirect = request.getAttribute("redirect").toString() + ".jsp?" + request.getAttribute("var").toString() + "=" + request.getAttribute("Id").toString();
-				response.sendRedirect(redirect);
-			}
-			response.sendRedirect("index.jsp");
+				if(session.getAttribute("var") != null && session.getAttribute("Id") != null){
+					String redirect = session.getAttribute("redirect").toString() + "?" + session.getAttribute("var").toString() + "=" + session.getAttribute("Id").toString();
+					session.setAttribute("redirect", null);
+					response.sendRedirect(redirect);
+				}else if(session.getAttribute("lat") != null && session.getAttribute("lon") != null && session.getAttribute("name") != null)
+				{
+					String redirect = session.getAttribute("var").toString() + "?Lat=" + session.getAttribute("lat").toString() + "&Lon=" + session.getAttribute("lon").toString() + "&Name=" + session.getAttribute("name").toString();
+					session.setAttribute("lon", null);
+					response.sendRedirect(redirect);
+				}
+			}else 
+				response.sendRedirect("index.jsp");
 		}else
 		{
-			session.setAttribute("loggedIn", "false");
+			session.setAttribute("email", null);
 			request.setAttribute("error", "true");
 			request.setAttribute("message", "Email or password is not correct!");
 			request.getRequestDispatcher("loginRegister.jsp").forward(request, response);

@@ -142,14 +142,17 @@ public class AddStory extends HttpServlet {
         	                for (FileItem item : formItems) {
         	                    // processes only fields that are not form fields
         	                    if (!item.isFormField()) {
-        	                    	fileName = db.pictureNameGenerator();
-        	                        
-        	                        File storeFile = new File(uploadPath, fileName);
-        	 
-        	                        // saves the file on disk
-        	                        item.write(storeFile);
-        	                        request.setAttribute("message",
-        	                            "Upload has been done successfully!");
+        	                    	fileName = item.getName();
+        	                    	if(fileName != null && !fileName.equals("")) {
+	        	                    	fileName = db.pictureNameGenerator();
+	        	                        
+	        	                        File storeFile = new File(uploadPath, fileName);
+	        	 
+	        	                        // saves the file on disk
+	        	                        item.write(storeFile);
+	        	                        request.setAttribute("message",
+	        	                            "Upload has been done successfully!");
+        	                    	}
         	                    }else
         	                    {
         	                    	String fieldname = item.getFieldName();

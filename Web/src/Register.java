@@ -58,13 +58,12 @@ public class Register extends HttpServlet {
 		{
 			if(result)
 			{
-				session.setAttribute("loggedIn", "true");
 				session.setAttribute("email", request.getParameter("email"));
 				response.getWriter().write("true");
 				request.getRequestDispatcher("index.jsp").forward(request, response);
 			}else
 			{
-				session.setAttribute("loggedIn", "false");
+				session.setAttribute("email", null);
 				request.setAttribute("error", "true");
 				request.setAttribute("message", "This email address is already registered!");
 				request.getRequestDispatcher("loginRegister.jsp").forward(request, response);

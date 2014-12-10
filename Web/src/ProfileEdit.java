@@ -44,7 +44,6 @@ public class ProfileEdit extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//doPost(request, response);
 		response.setContentType("text/html");
 		String action = request.getParameter("func");
 		HttpSession session = request.getSession();
@@ -54,31 +53,6 @@ public class ProfileEdit extends HttpServlet {
 		if(action != null)
 		{
 			db.deleteProfilePic(user.getUserID());
-		}else{
-
-			
-			request.getSession().setAttribute("name", user.getName());
-			request.getSession().setAttribute("mail", user.getEmail());
-			request.getSession().setAttribute("xp", user.getExperiencePoint());
-			request.getSession().setAttribute("level", user.getLevel());
-			request.getSession().setAttribute("gender", user.getGender().toString());
-	
-	
-			if(user.getBirthdate()==null)
-				request.getSession().setAttribute("birthdate", "");
-			else
-				request.getSession().setAttribute("birthdate", new SimpleDateFormat("dd/MM/yyyy").format(user.getBirthdate().getTime()));
-	
-			if(user.getPhone()==null)
-				request.getSession().setAttribute("phone", "");
-			else
-				request.getSession().setAttribute("phone", user.getPhone());
-	
-			if(user.getBio()==null)
-				request.getSession().setAttribute("bio", " ");
-			else
-				request.getSession().setAttribute("bio", user.getBio());
-
 		}
 
 		request.getRequestDispatcher("profile_edit.jsp").forward(request, response);
@@ -139,14 +113,17 @@ public class ProfileEdit extends HttpServlet {
 	                for (FileItem item : formItems) {
 	                    // processes only fields that are not form fields
 	                    if (!item.isFormField()) {
-	                    	fileName = db.pictureNameGenerator();
-	                        
-	                        File storeFile = new File(uploadPath, fileName);
-	 
-	                        // saves the file on disk
-	                        item.write(storeFile);
-	                        request.setAttribute("message",
-	                            "Upload has been done successfully!");
+	                    	fileName = item.getName();
+	                    	if(fileName != null && !fileName.equals("")) {
+    	                    	fileName = db.pictureNameGenerator();
+    	                        
+    	                        File storeFile = new File(uploadPath, fileName);
+    	 
+    	                        // saves the file on disk
+    	                        item.write(storeFile);
+    	                        request.setAttribute("message",
+    	                            "Upload has been done successfully!");
+	                    	}
 	                    }else
 	                    {
 	                    	String fieldname = item.getFieldName();
@@ -201,30 +178,13 @@ public class ProfileEdit extends HttpServlet {
 			} catch (ClassNotFoundException | SQLException e) {
 				e.printStackTrace();
 			}
-			if(updated) request.setAttribute("success", "true");
-			else request.setAttribute("error","true");
+			if(updated) 
+				request.setAttribute("success", "true");
+			else 
+				request.setAttribute("error","true");
 			
 			//Resubmit new details to session, 
 			//otherwise although updated, old info will be shown
-			
-			request.getSession().setAttribute("name", newName);
-			request.getSession().setAttribute("gender", newGender.toString());
-	
-	
-			if(newBirthdate==null)
-				request.getSession().setAttribute("birthdate", "");
-			else
-				request.getSession().setAttribute("birthdate", newBirthdate);
-	
-			if(newPhone==null)
-				request.getSession().setAttribute("phone", "");
-			else
-				request.getSession().setAttribute("phone", newPhone);
-	
-			if(newBio==null)
-				request.getSession().setAttribute("bio", " ");
-			else
-				request.getSession().setAttribute("bio", newBio);
 			
 		}
 		

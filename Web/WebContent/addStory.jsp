@@ -15,12 +15,17 @@
 		if(newSession == null)
 		{
 			request.getRequestDispatcher("loginRegister.jsp").forward(request,response);
-		}else if(newSession.getAttribute("email") == null)	
-		{
-			request.getRequestDispatcher("loginRegister.jsp").forward(request,response);
-		}else if(lat == null
-				|| lon == null)
+		}else if(lat == null || lon == null)
 			request.getRequestDispatcher("index.jsp").forward(request,response);
+		else if(newSession.getAttribute("email") == null)	
+		{
+			newSession.setAttribute("redirect", "addStory.jsp");
+			newSession.setAttribute("var", "Id");
+			newSession.setAttribute("lon", lon);
+			newSession.setAttribute("lat", lat);
+			newSession.setAttribute("name", name);
+			request.getRequestDispatcher("loginRegister.jsp").forward(request,response);
+		}
 		newSession.setAttribute("lon", lon);
 		newSession.setAttribute("lat", lat);
 	%>

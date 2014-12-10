@@ -8,32 +8,25 @@
 
 </head>
 <body>
+<%@page import="java.text.SimpleDateFormat"%>
 <%@page import="java.io.File"%>
 	<%
-			
+	HttpSession newSession = request.getSession();
+	if(newSession == null)
+	{
+		request.getRequestDispatcher("loginRegister.jsp").forward(request,response);
+	}else if(newSession.getAttribute("email") == null
+			)	
+	{
+		request.getRequestDispatcher("loginRegister.jsp").forward(request,response);
+	}		
 	DatabaseService db = new DatabaseService();
 	User originalUser = db.findUserByEmail(request.getSession().getAttribute("email").toString());
 	String userId = request.getParameter("id");
 	
 	if(userId == null || Integer.parseInt(userId) == originalUser.getUserID())   //to see own profile
 	{
-		HttpSession newSession = request.getSession();
-		if(newSession == null)
-		{
-			request.getRequestDispatcher("loginRegister.jsp").forward(request,response);
-		}else if(newSession.getAttribute("email") == null
-				|| newSession.getAttribute("name") == null
-				|| newSession.getAttribute("birthdate") == null
-				|| newSession.getAttribute("gender") == null
-				|| newSession.getAttribute("mail") == null
-				|| newSession.getAttribute("phone") == null
-				|| newSession.getAttribute("xp") == null
-				|| newSession.getAttribute("level") == null
-				|| newSession.getAttribute("bio") == null
-				)	
-		{
-			request.getRequestDispatcher("loginRegister.jsp").forward(request,response);
-		}
+		
 	%>
 	<%@ page import="Dutluk.*"%>
 	
@@ -46,11 +39,11 @@
 			<div class="col-xs-6">
 				<div style="padding: 10px">
 					<br> <br>
-					<h2 style="display: inline;"><%= request.getSession().getAttribute("name")%></h2>
+					<h2 style="display: inline;"><%= originalUser.getName()%></h2>
 					 <br>level
-					<%= request.getSession().getAttribute("level")%>
+					<%= originalUser.getLevel()%>
 					writer,
-					<%= request.getSession().getAttribute("xp")%>
+					<%= originalUser.getExperiencePoint()%>
 					points <br> 
 					
 					
@@ -69,16 +62,24 @@
 
 
 					<h4>
-						"<%= request.getSession().getAttribute("bio")%>"
+						"<%if(originalUser.getBio() != null) {
+						out.print(originalUser.getBio());
+						}%>"
 					</h4>
 
 					Gender:
-					<%= request.getSession().getAttribute("gender")%><br>
+					<%= originalUser.getGender()%><br>
 					Birthdate:
-					<%= request.getSession().getAttribute("birthdate")%><br> Mail:
-					<%= request.getSession().getAttribute("mail")%><br> Phone:
-					<%= request.getSession().getAttribute("phone")%><br> <a
-						href='ProfileEdit'>Edit your details</a> <br>
+					<%if(originalUser.getBirthdate()!=null){
+						SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+						String bd = sdf.format(originalUser.getBirthdate().getTime());
+						out.print(bd);
+					}%><br> 
+					Mail:
+					<%= originalUser.getEmail()%><br> 
+					Phone:
+					<% if(originalUser.getPhone()!= null) out.print(originalUser.getPhone());%><br> 
+					<a href='ProfileEdit'>Edit your details</a> <br>
 
 				</div>
 			</div>
@@ -89,7 +90,7 @@
 		<center>
 			<h2>
 				Stories of
-				<%= request.getSession().getAttribute("name")%></h2>
+				<%= originalUser.getName()%></h2>
 		</center>
 		<br>
 		<br>
@@ -98,7 +99,7 @@
 					try{
 						Connection connection = db.getConnection();
 				        Statement statement = connection.createStatement() ;
-				        rs =statement.executeQuery("SELECT * FROM Stories WHERE UserID = '"+(int)request.getSession().getAttribute("userid")+"' ORDER BY  Stories.StoryDateAbsolute DESC") ;
+				        rs =statement.executeQuery("SELECT * FROM Stories WHERE UserID = '"+originalUser.getUserID()+"' ORDER BY  Stories.StoryDateAbsolute DESC") ;
 					}catch(Exception e)
 			        {
 			            out.println(e);
@@ -205,7 +206,7 @@
 						<%} else {
 							String path = db.pathByPicId(user.getPicID());
 							
-							String url = "http://titan.cmpe.boun.edu.tr:8085/image/profile/"+path;
+							String url = "http://titan.cmpe.boun.edu.tr:8085/image"+File.separator+path;
 							%>
 							<img src=<%out.print(url);%>
 						width=215 height=215 />

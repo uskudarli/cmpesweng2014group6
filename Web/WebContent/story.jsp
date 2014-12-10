@@ -13,7 +13,7 @@
 	<%@ page import="Dutluk.*"%>
 	<%@ page import="java.sql.*, Dutluk.DatabaseService"%>
 	<%
-	HttpSession newSession = request.getSession(true);
+	HttpSession newSession = request.getSession();
 	String storyId = request.getParameter("storyId");
 	if(newSession == null)
 	{
@@ -22,6 +22,9 @@
 		request.getRequestDispatcher("index.jsp").forward(request, response);
 	else if(newSession.getAttribute("email") == null)	
 	{
+		newSession.setAttribute("redirect", "story.jsp");
+		newSession.setAttribute("var", "storyId");
+		newSession.setAttribute("Id", storyId);
 		request.getRequestDispatcher("loginRegister.jsp").forward(request, response);
 	}
 		DatabaseService db = new DatabaseService();

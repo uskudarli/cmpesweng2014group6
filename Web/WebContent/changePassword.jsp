@@ -15,6 +15,7 @@
 		}else if(newSession.getAttribute("email") == null
 				)	
 		{
+			newSession.setAttribute("redirect", null);
 			request.getRequestDispatcher("loginRegister.jsp").forward(request,response);
 		}	
 	%>

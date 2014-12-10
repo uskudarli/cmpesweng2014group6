@@ -1,3 +1,4 @@
+<%@page import="java.text.SimpleDateFormat"%>
 <%@ page language="java" contentType="text/html; charset=US-ASCII"
 	pageEncoding="US-ASCII"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -18,13 +19,6 @@
 		} else if (newSession.getAttribute("email") == null)
 			request.getRequestDispatcher("loginRegister.jsp").forward(
 					request, response);
-		else if (request.getAttribute("name") == null
-				|| request.getAttribute("birthdate") == null
-				|| request.getAttribute("phone") == null
-				|| request.getAttribute("bio") == null) {
-			//This is inappropriate, and forwards at random time.
-			//request.getRequestDispatcher("loginRegister.jsp").forward(request,response);	
-		}
 		DatabaseService db = new DatabaseService();
 		User user = db.findUserByEmail(newSession.getAttribute("email").toString());
 	%>
@@ -36,57 +30,80 @@
 			
 			<div class="col-xs-6">
 				<div style="padding: 10px">
-					<h2><%=request.getSession().getAttribute("name")%></h2>
+					<h2><%=user.getName()%></h2>
 
 					<form id="editProfileForm" method="post" class="loginForm form-horizontal" enctype="multipart/form-data">
-						<div class="form-group">
-
+						
 							<div class="form-group">
-								<select id="editGenderSelect" class="form-control"
-									name="editGender">
-									<option
-										value="Female">Female</option>
-									<option
-										 value="Male">Male</option>
-									<option
-										 value="Unspecified">Unspecified</option>
-								</select>
+								<label class="col-sm-3 control-label">Name:</label>
+								<div class="col-sm-9">
+									<input class="form-control" name="editName" type="text"
+										value="<%=user.getName()%>"
+										></input>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-3 control-label">Gender:</label>
+								<div class="col-sm-9">
+									<select id="editGenderSelect" class="form-control"
+										name="editGender">
+										<option
+											value="Female">Female</option>
+										<option
+											 value="Male">Male</option>
+										<option
+											 value="Unspecified">Unspecified</option>
+									</select>
+								</div>
 							</div>
 
 							<div class="form-group">
-								
-								<input class="form-control" id="editBirthdate"
-									name="editBirthdate" type=text
-									value="<%=request.getSession().getAttribute("birthdate")%>"
-									placeholder="Birthdate"></input>
+								<label class="col-sm-3 control-label">Birthdate:</label>
+								<div class="col-sm-9">
+									<input class="form-control" id="editBirthdate"
+										name="editBirthdate" type=text
+										value="<%if(user.getBirthdate()!=null){
+											SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+											String bd = sdf.format(user.getBirthdate().getTime());
+											out.print(bd);
+											}%>"
+										></input>
+								</div>
 							</div>
 
-							<input type="hidden" name="genderHidden" value="<%= request.getSession().getAttribute("gender").toString() %>" />
+							<input type="hidden" name="genderHidden" value="<%= user.getGender() %>" />
 
 							<div class="form-group">
-								<input class="form-control" name="editPhone" type="text"
-									value="<%=request.getSession().getAttribute("phone")%>"
-									placeholder="Phone Number"></input>
+								<label class="col-sm-3 control-label">Phone:</label>
+								<div class="col-sm-9">
+									<input class="form-control" name="editPhone" type="text"
+										value="<%if(user.getPhone()!= null) out.print(user.getPhone());%>"
+										></input>
+								</div>
 							</div>
 
-							<div class="form-group">
-								<input class="form-control" name="editName" type="text"
-									value="<%=request.getSession().getAttribute("name")%>"
-									placeholder="Name"></input>
-							</div>
+							
 
 
 							<div class="form-group">
-								<textarea class="form-control" cols=40 rows=2 name="editBio"
-									placeholder="Bio"><%=request.getSession().getAttribute("bio")%></textarea>
+								<label class="col-sm-3 control-label">Biography:</label>
+								<div class="col-sm-9">
+									<textarea class="form-control" cols=40 rows=2 name="editBio"
+										><%if(user.getBio() != null) {
+												out.print(user.getBio());
+											}%>
+									</textarea>
+								</div>
 							</div>
 							
 							<div class="form-group">
-								Upload a profile picture:
-								<input class="btn btn-default" type="file" name="file" size="50" />
+								<label class="col-sm-3 control-label">Upload a profile picture:</label>
+								<div class="col-sm-9">
+									<input class="form-control btn btn-default" type="file" name="file" size="50" />
+								</div>
 							</div>
 
-						</div>
+						
 						<div class="form-group">
 							<button id="editProfileButton" type="submit"
 								class="btn btn-default">Save</button>
