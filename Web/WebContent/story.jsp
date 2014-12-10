@@ -69,11 +69,11 @@
 			</select> <input type="submit" value="Rate">
 		</form>
 
-	</div>
+	</div><br>
 
 	<%
 				}
-				%><br>Average Rate for this story is: <%= story.getAvgRate()%>
+				%><br>Average Rate for this story is: <%= story.getAvgRate()%><br>
 	<%
 	
 	        
@@ -85,7 +85,7 @@
 			<form id="rememberForm" method="post" action="RememberStory"
 						class="form-horizontal">
 			<input type="hidden" name="funct" value="dontRemember"/> 
-			<button type="submit" class="btn btn-default">I don't Remember</button>
+			<button type="submit" class="btn btn-default">I don't Remember</button><br><br>
 			</form>
 			<%
 		}
@@ -95,10 +95,58 @@
 			<form id="rememberForm" method="post" action="RememberStory"
 						class="form-horizontal">
 			<input type="hidden" name="funct" value="remember"/> 
-			<button type="submit" class="btn btn-default">I Remember That!</button>
+			<button type="submit" class="btn btn-default">I Remember That!</button><br><br>
 			</form>
 			<%
 		}
 	%>
+	
+	
+	<table style="width: 100%" border="1">
+			<col style="width: 5%">
+			<col style="width: 1%">
+			<col style="width: 1%">
+	<tr>
+    	<th>Comment</th>
+    	<th>Commenter</th>
+    	<th>Date</th>
+   	</tr>
+	<% 
+	db = new DatabaseService();
+	ResultSet rs = null;
+	ResultSet rs2 = null;
+	int commenterId = 0;
+	String commenterName = null;
+	try
+	{
+		Connection connection = db.getConnection();
+        Statement statement = connection.createStatement() ;
+        rs =statement.executeQuery("SELECT * FROM Comments WHERE StoryID = '"+storyId+"' AND IsDeleted = 0");
+        while(rs.next())
+        {
+        	commenterId = rs.getInt(3);
+        	Statement statement2 = connection.createStatement();
+        	rs2 = statement2.executeQuery("SELECT * FROM Users Where UserID = '"+commenterId+"'");
+        	if(rs2.next())
+        	{
+        		commenterName = rs2.getString(2);
+        	}
+        	%>
+        	
+        	<tr>
+        	<td><%= rs.getString(4) %></td>
+        	<td><%= commenterName %></td>
+        	<td><%= rs.getDate(7) %></td>
+        	</tr>
+
+        	<%
+        }
+	}
+	catch(Exception e)
+	{
+		out.print(e);
+	}
+	%>
+	</table>
 </body>
 </html>
