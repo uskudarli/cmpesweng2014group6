@@ -172,13 +172,11 @@
 	%>
 	
 	
-			<!-- Your current rate is: <%=rate %>
 			<%
 				if(rate == 0)
 				{
 				%>
 				<br>
-			Rate Story:-->
 		<form method="post" action="RateStory">
 			<select name="rate">
 				<option value="1">Terrible</option>
