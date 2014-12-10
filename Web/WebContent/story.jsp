@@ -147,6 +147,13 @@
 		out.print(e);
 	}
 	%>
-	</table>
+	</table><br>
+	
+	<form method="post" action="Comment" class="loginform form-horizontal">
+		<div class="form-group">
+			<input class="form-control" name="comment" type="text" placeholder="Your Comment:"/>
+			<button type="submit" class="btn btn-default">Submit Comment</button>
+		</div>
+	</form>
 </body>
 </html>
