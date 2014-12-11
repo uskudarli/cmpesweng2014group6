@@ -126,7 +126,13 @@ $(document).ready(function() {
 		}
 	});
 
-	$("#registerButton").click(function(){
+	/*
+	 * This button already of type "submit"
+	 * If you uncomment this, you'll enter doPost twice
+	 * which will try to register two times. First one will succeed,
+	 * second one will return "user already registered."
+	 * 
+	 * $("#registerButton").click(function(){
 		var $form = $("#registerForm");
 		$.ajax({
 			type: "POST",
@@ -135,7 +141,7 @@ $(document).ready(function() {
 
 		});
 	});
-
+*/
 
 	$('#loginForm').bootstrapValidator({
 		feedbackIcons: {
