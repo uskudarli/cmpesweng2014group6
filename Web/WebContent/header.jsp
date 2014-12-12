@@ -8,22 +8,21 @@
 	<div class="headerBody container">
 	
 		<div class="row">
-			<div class="col-md-1 nopadding">
+			<div class="col-md-7 nopadding">
 				<a href="index.jsp">Dutluk</a> <!-- previously "home" -->
-			</div>
-			<div class="col-md-6 nopadding">
+			
 			<!-- Hide rest if logged in,show only login-register -->
 			<%
 			HttpSession newsession = request.getSession();
 				if(newsession != null && newsession.getAttribute("email")!=null)
 				{
 					//out.println("<a href='javascript:void(0);' onclick='goToEdit()'>Profile</a>"); ->moved to profile
-					out.println("<a href='Profile'>Me</a>");
+					out.println("<a style='margin-left:15px;' href='Profile'>Me</a>");
 					//out.println("- <a href='addStory.jsp'>Write</a>");
 					out.println("<a style='margin-left:15px;' href='javascript:void(0);' onclick='logOut()'>Log Out</a>");
 					//out.println("<a href='changePassword.jsp'>Change Password</a>"); ->moved to edit profile
 				}else{
-					out.println("<a href='loginRegister.jsp'>Login/Register</a>");
+					out.println("<a style='margin-left:15px;' href='loginRegister.jsp'>Login/Register</a>");
 				}
 					
 			%>
@@ -39,6 +38,9 @@
 				       </div>
 				   </div>
 				</form>
+			</div>
+			<div class="col-md-3 nopadding">
+				<a class="alignright" href="https://code.google.com/p/cmpesweng2014group6/">About Us</a>
 			</div>
 		</div>
 </div>

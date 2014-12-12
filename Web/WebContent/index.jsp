@@ -170,7 +170,7 @@ google.maps.event.addDomListener(window, 'load', initialize);
 			<div class="col-md-9 nopadding">
 				<div id="map-container">
 					<div id="pac-container">
-					<input id="pac-input" class="controls" type="text" placeholder="Search Box">
+					<input id="pac-input" class="controls" type="text" placeholder="Search on map">
 					</div>
 					<div id="map-canvas"></div>
 				</div>
@@ -178,6 +178,9 @@ google.maps.event.addDomListener(window, 'load', initialize);
 			<div class="col-md-3 newsFeed nopadding">
 				<div id="newsFeedContainer">newsfeed</div>
 			</div>
+	  </div>
+	  <div class="row">
+	  		Top stories recommendations...
 	  </div>
 </div>
 

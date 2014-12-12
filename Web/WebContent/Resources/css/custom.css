@@ -16,9 +16,6 @@ padding: 0;
 	width:100%;
 }
 
-.headerBody > a {
-	margin-top:5px;
-}
 #nav {
 	line-height: 30px;
 	height: 300px;
@@ -142,5 +139,5 @@ body {
 
 #newsFeedContainer {
 	background-color: #f3aac4;
-	margin: 0px 10px 0 10px;
+	margin: 0px 0 0 10px;
 }
