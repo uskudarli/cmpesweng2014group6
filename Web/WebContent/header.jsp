@@ -9,7 +9,7 @@
 	
 		<div class="row">
 			<div class="col-md-1 nopadding">
-				<p class="alignleft"><a href="index.jsp">Dutluk</a> <!-- previously "home" -->
+				<a href="index.jsp">Dutluk</a> <!-- previously "home" -->
 			</div>
 			<div class="col-md-6 nopadding">
 			<!-- Hide rest if logged in,show only login-register -->
@@ -20,10 +20,10 @@
 					//out.println("<a href='javascript:void(0);' onclick='goToEdit()'>Profile</a>"); ->moved to profile
 					out.println("<a href='Profile'>Me</a>");
 					//out.println("- <a href='addStory.jsp'>Write</a>");
-					out.println("</p><p class='alignright'><a href='javascript:void(0);' onclick='logOut()'>Log Out</a></p>");
+					out.println("<a style='margin-left:15px;' href='javascript:void(0);' onclick='logOut()'>Log Out</a>");
 					//out.println("<a href='changePassword.jsp'>Change Password</a>"); ->moved to edit profile
 				}else{
-					out.println("<p><a href='loginRegister.jsp'>Login/Register</a></p>");
+					out.println("<a href='loginRegister.jsp'>Login/Register</a>");
 				}
 					
 			%>
