@@ -5,36 +5,42 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/Resources/datepicker/css/datepicker.css">
 
 <div class="header">
-
-	<div id="textbox">
-	<p class="alignleft"><a href="index.jsp">Dutluk</a> <!-- previously "home" -->
+	<div class="headerBody container">
 	
-
-	<!-- Hide rest if logged in,show only login-register -->
-	<%
-	HttpSession newsession = request.getSession();
-		if(newsession != null && newsession.getAttribute("email")!=null)
-		{
-			//out.println("<a href='javascript:void(0);' onclick='goToEdit()'>Profile</a>"); ->moved to profile
-			out.println("- <a href='Profile'>Me</a>");
-			//out.println("- <a href='addStory.jsp'>Write</a>");
-			out.println("</p><p class='alignright'><a href='javascript:void(0);' onclick='logOut()'>Log Out</a></p>");
-			//out.println("<a href='changePassword.jsp'>Change Password</a>"); ->moved to edit profile
-		}else{
-			out.println("<p class='alignright'><a href='loginRegister.jsp'>Login/Register</a></p>");
-		}
-			
-	%>
-	<form id="searchForm" action="Search" class="navbar-form navbar-right" method="post">
-	   <div class="input-group">
-	       <input type="Search" name="searchText" placeholder="Search..." class="form-control" />
-	       <div class="input-group-btn">
-	           <button id="searchButton" type="submit" class="btn btn-primary">
-	           <span class="glyphicon glyphicon-search"></span>
-	           </button>
-	       </div>
-	   </div>
-	</form>
+		<div class="row">
+			<div class="col-md-1 nopadding">
+				<p class="alignleft"><a href="index.jsp">Dutluk</a> <!-- previously "home" -->
+			</div>
+			<div class="col-md-6 nopadding">
+			<!-- Hide rest if logged in,show only login-register -->
+			<%
+			HttpSession newsession = request.getSession();
+				if(newsession != null && newsession.getAttribute("email")!=null)
+				{
+					//out.println("<a href='javascript:void(0);' onclick='goToEdit()'>Profile</a>"); ->moved to profile
+					out.println("<a href='Profile'>Me</a>");
+					//out.println("- <a href='addStory.jsp'>Write</a>");
+					out.println("</p><p class='alignright'><a href='javascript:void(0);' onclick='logOut()'>Log Out</a></p>");
+					//out.println("<a href='changePassword.jsp'>Change Password</a>"); ->moved to edit profile
+				}else{
+					out.println("<p><a href='loginRegister.jsp'>Login/Register</a></p>");
+				}
+					
+			%>
+			</div>
+			<div class="col-md-2 nopadding">
+				<form id="searchForm" action="Search" method="post">
+				   <div class="input-group">
+				       <input type="Search" name="searchText" placeholder="Search..." class="form-control" />
+				       <div class="input-group-btn">
+				           <button id="searchButton" type="submit" class="btn btn-primary">
+				           <span class="glyphicon glyphicon-search"></span>
+				           </button>
+				       </div>
+				   </div>
+				</form>
+			</div>
+		</div>
 </div>
 </div>
 
