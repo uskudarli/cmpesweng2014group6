@@ -47,11 +47,11 @@ public class TimelineAdapter extends BaseAdapter {
 		if (convertView == null)
 			vi = inflater.inflate(R.layout.list_row, null);
 		TextView title = (TextView) vi.findViewById(R.id.title); // title
-		TextView size = (TextView) vi.findViewById(R.id.info);
+		TextView info = (TextView) vi.findViewById(R.id.info);
 		HashMap<String, String> song = new HashMap<String, String>();
 		song = data.get(position);
 		title.setText(song.get(TimelineActivity.KEY_TITLE));
-		size.setText(song.get(TimelineActivity.KEY_DURATION));
+		info.setText(song.get(TimelineActivity.KEY_INFO));
 		return vi;
 
 	}

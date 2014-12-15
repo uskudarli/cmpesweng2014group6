@@ -148,7 +148,7 @@ public class ProfileActivity extends Activity {
 		params.put("phone", phone);
 		params.put("bio", bio);				
 		invokeWSforSAVE(params);
-		navigateToTimelineActivity();
+
 		
 	}    
 
@@ -210,8 +210,11 @@ public class ProfileActivity extends Activity {
              }
          });
 	}
-	public void navigateToTimelineActivity(){
+	public void navigateToTimelineActivityForMe(View view){
 		Intent timelineIntent = new Intent(getApplicationContext(),TimelineActivity.class);
+		Bundle b = new Bundle();
+		b.putString("type","myStories");
+		timelineIntent.putExtras(b);
 		timelineIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(timelineIntent);
 	}

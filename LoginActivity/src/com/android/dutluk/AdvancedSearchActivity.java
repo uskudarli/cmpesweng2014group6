@@ -24,7 +24,7 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
-public class SearchActivity extends Activity {
+public class AdvancedSearchActivity extends Activity {
 
 	ProgressDialog prgDialog;
 	TextView errorMsg;

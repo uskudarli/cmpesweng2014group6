@@ -84,11 +84,7 @@ public class LoginActivity extends Activity {
 		}
 		
 	}
-	public void forgotPassword(View view){
-		Intent forgotPwdIntent = new Intent(getApplicationContext(),ForgotPwdActivity.class);
-		forgotPwdIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		startActivity(forgotPwdIntent);
-	}
+
 	
 	public void invokeWS(RequestParams params){
 		// Show Progress Dialog
@@ -108,7 +104,7 @@ public class LoginActivity extends Activity {
                          if(obj.getBoolean("result")){
                         	 Toast.makeText(getApplicationContext(), "You are successfully logged in!", Toast.LENGTH_LONG).show();
                         	 // Navigate to Home screen
-                        	 navigatetoProfileActivity();
+                        	 navigatetoHomeMapActivity();
                          } 
                          // Else display error message
                          else{
@@ -116,7 +112,7 @@ public class LoginActivity extends Activity {
                         	 Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
                          }
                  } catch (JSONException e) {
-                     // TODO Auto-generated catch block
+                     
                      Toast.makeText(getApplicationContext(), "Error Occured [Server's JSON response might be invalid]!", Toast.LENGTH_LONG).show();
                      e.printStackTrace();
                      
@@ -144,10 +140,10 @@ public class LoginActivity extends Activity {
          });
 	}
 
-	public void navigatetoProfileActivity(){
-		Intent profileIntent = new Intent(getApplicationContext(),ProfileActivity.class);
-		profileIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		startActivity(profileIntent);
+	public void navigatetoHomeMapActivity(){
+		Intent homeMapIntent = new Intent(getApplicationContext(),HomeMapActivity.class);
+		homeMapIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		startActivity(homeMapIntent);
 	}
 	
 	public void navigatetoRegisterActivity(View view){
@@ -155,6 +151,10 @@ public class LoginActivity extends Activity {
 		loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(loginIntent);
 	}
-
+	public void navigateToForgotPasswordActivity(View view){
+		Intent forgotPwdIntent = new Intent(getApplicationContext(),ForgotPwdActivity.class);
+		forgotPwdIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		startActivity(forgotPwdIntent);
+	}
 	
 }

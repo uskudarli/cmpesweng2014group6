@@ -188,6 +188,16 @@
             android:onClick="saveUser"
             android:text="@string/btnSave"
             android:textColor="#fff" />
+        	<!-- Save button -->
+        <Button
+            android:id="@+id/btnShowMyStoriesProfile"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dip"
+            android:background="#ff6347"
+            android:onClick="navigateToTimelineActivityForMe"
+            android:text="@string/btnShowMyStories"
+            android:textColor="#fff" />
         
     </LinearLayout>
 

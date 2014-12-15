@@ -110,7 +110,7 @@ public class RegisterActivity extends Activity {
                         	 Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
                          }
                  } catch (JSONException e) {
-                     // TODO Auto-generated catch block
+                  
                      Toast.makeText(getApplicationContext(), "Error Occured [Server's JSON response might be invalid]!", Toast.LENGTH_LONG).show();
                      e.printStackTrace();
                      

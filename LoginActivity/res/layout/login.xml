@@ -74,7 +74,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:background="#fff"
-            android:onClick="forgotPassword"
+            android:onClick="navigateToForgotPasswordActivity"
             android:text="@string/btnForgotPwdLogin"
             android:textColor="#ff6347" />
         

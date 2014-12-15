@@ -30,9 +30,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+         <activity android:name="com.android.dutluk.HomeMapActivity" >
+        </activity>
         <activity android:name="com.android.dutluk.RegisterActivity" >
         </activity>
         <activity android:name="com.android.dutluk.ProfileActivity" >
+        </activity>
+         <activity android:name="com.android.dutluk.OtherUserProfileActivity" >
         </activity>
         <activity android:name="com.android.dutluk.ForgotPwdActivity" >
         </activity>
@@ -44,12 +48,12 @@
         </activity>
         <activity android:name="com.android.dutluk.TimelineActivity" >
         </activity>
-        <activity android:name="com.android.dutluk.SearchActivity" >
+        <activity android:name="com.android.dutluk.AdvancedSearchActivity" >
         </activity>
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyDdirTMlA8MAL0ua5K_6pIzAi0WIacYi-o" />
+            android:value="AIzaSyBgJijqYLF0p71zkuCTWGJQGp1KKuxoByQ" />
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />

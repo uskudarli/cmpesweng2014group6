@@ -23,7 +23,7 @@
             android:src="@drawable/background" />
     </LinearLayout>
 
-    <!-- Title Of Song -->
+    <!-- Title of Story -->
 
     <TextView
         android:id="@+id/title"
@@ -31,13 +31,12 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/thumbnail"
         android:layout_toRightOf="@+id/thumbnail"
-        android:text="Song Name"
         android:textColor="#040404"
-        android:textSize="15dip"
+        android:textSize="15sp"
         android:textStyle="bold"
         android:typeface="sans" />
 
-    <!-- Artist Name -->
+    <!-- Owner Name -->
 
     <TextView
         android:id="@+id/info"
@@ -46,9 +45,8 @@
         android:layout_below="@id/title"
         android:layout_marginTop="1dip"
         android:layout_toRightOf="@+id/thumbnail"
-        android:text="information about story"
         android:textColor="#10bcc9"
-        android:textSize="10dip"
+        android:textSize="12sp"
         android:textStyle="bold" />
 
     <!-- Rightend Arrow -->
