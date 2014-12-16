@@ -1097,10 +1097,26 @@ public class DatabaseService {
 					}
 				}
 				
-			}catch(SQLException | ClassNotFoundException se)
-			{
-				se.printStackTrace();
-			}
+			}catch(SQLException | ClassNotFoundException se){
+		         //Handle errors for JDBC
+		         se.printStackTrace();
+			}catch(Exception e){
+		         //Handle errors for Class.forName
+		         e.printStackTrace();
+		    }finally{
+		         //finally block used to close resources
+		   		try{
+		   			if(stmt!=null)
+		   				stmt.close();
+		   		}catch(SQLException se2){
+		   		}// nothing we can do
+		   		try{
+		   			if(conn!=null)
+		   				conn.close();
+		   		}catch(SQLException se){
+		   			se.printStackTrace();
+		   		}//end finally try
+		    }
 		}
 		return tagIds;
 	}
@@ -1123,10 +1139,26 @@ public class DatabaseService {
 					pstmt.executeUpdate();
 				}
 				
-			}catch(SQLException | ClassNotFoundException se)
-			{
-				se.printStackTrace();
-			}
+			}catch(SQLException | ClassNotFoundException se){
+		         //Handle errors for JDBC
+		         se.printStackTrace();
+			}catch(Exception e){
+		         //Handle errors for Class.forName
+		         e.printStackTrace();
+		    }finally{
+		         //finally block used to close resources
+		   		try{
+		   			if(stmt!=null)
+		   				stmt.close();
+		   		}catch(SQLException se2){
+		   		}// nothing we can do
+		   		try{
+		   			if(conn!=null)
+		   				conn.close();
+		   		}catch(SQLException se){
+		   			se.printStackTrace();
+		   		}//end finally try
+		    }
 		}
 	}
 	
@@ -1148,10 +1180,26 @@ public class DatabaseService {
 					pstmt.executeUpdate();
 				}
 				
-			}catch(SQLException | ClassNotFoundException se)
-			{
-				se.printStackTrace();
-			}
+			}catch(SQLException | ClassNotFoundException se){
+		         //Handle errors for JDBC
+		         se.printStackTrace();
+			}catch(Exception e){
+		         //Handle errors for Class.forName
+		         e.printStackTrace();
+		    }finally{
+		         //finally block used to close resources
+		   		try{
+		   			if(stmt!=null)
+		   				stmt.close();
+		   		}catch(SQLException se2){
+		   		}// nothing we can do
+		   		try{
+		   			if(conn!=null)
+		   				conn.close();
+		   		}catch(SQLException se){
+		   			se.printStackTrace();
+		   		}//end finally try
+		    }
 		}
 	}
 	
@@ -1170,10 +1218,26 @@ public class DatabaseService {
 					tagIds.add(Integer.toString(rs.getInt("TagID")));
 				}
 				
-			}catch(SQLException | ClassNotFoundException se)
-			{
-				se.printStackTrace();
-			}
+			}catch(SQLException | ClassNotFoundException se){
+		         //Handle errors for JDBC
+		         se.printStackTrace();
+			}catch(Exception e){
+		         //Handle errors for Class.forName
+		         e.printStackTrace();
+		    }finally{
+		         //finally block used to close resources
+		   		try{
+		   			if(stmt!=null)
+		   				stmt.close();
+		   		}catch(SQLException se2){
+		   		}// nothing we can do
+		   		try{
+		   			if(conn!=null)
+		   				conn.close();
+		   		}catch(SQLException se){
+		   			se.printStackTrace();
+		   		}//end finally try
+		    }
 		
 		return tagIds;
 	}
@@ -1191,10 +1255,26 @@ public class DatabaseService {
 				places.add(findPlacebyPlaceId(rs.getInt("PlaceID")));
 			}
 			return places;
-		}catch(SQLException | ClassNotFoundException se)
-		{
-			se.printStackTrace();
-		}
+		}catch(SQLException | ClassNotFoundException se){
+	         //Handle errors for JDBC
+	         se.printStackTrace();
+		}catch(Exception e){
+	         //Handle errors for Class.forName
+	         e.printStackTrace();
+	    }finally{
+	         //finally block used to close resources
+	   		try{
+	   			if(stmt!=null)
+	   				stmt.close();
+	   		}catch(SQLException se2){
+	   		}// nothing we can do
+	   		try{
+	   			if(conn!=null)
+	   				conn.close();
+	   		}catch(SQLException se){
+	   			se.printStackTrace();
+	   		}//end finally try
+	    }
 		return places;
 	}
 	
@@ -1213,10 +1293,26 @@ public class DatabaseService {
 				stories.add(findStorybyStoryId(rs.getInt("StoryID")));
 			}
 			return stories;
-		}catch(SQLException | ClassNotFoundException se)
-		{
-			se.printStackTrace();
-		}
+		}catch(SQLException | ClassNotFoundException se){
+	         //Handle errors for JDBC
+	         se.printStackTrace();
+		}catch(Exception e){
+	         //Handle errors for Class.forName
+	         e.printStackTrace();
+	    }finally{
+	         //finally block used to close resources
+	   		try{
+	   			if(stmt!=null)
+	   				stmt.close();
+	   		}catch(SQLException se2){
+	   		}// nothing we can do
+	   		try{
+	   			if(conn!=null)
+	   				conn.close();
+	   		}catch(SQLException se){
+	   			se.printStackTrace();
+	   		}//end finally try
+	    }
 		return stories;
 	}
 	
@@ -1239,10 +1335,26 @@ public class DatabaseService {
 				stories.add(findStorybyStoryId(rs.getInt("StoryID")));
 			}
 			return stories;
-		}catch(SQLException | ClassNotFoundException se)
-		{
-			se.printStackTrace();
-		}
+		}catch(SQLException | ClassNotFoundException se){
+	         //Handle errors for JDBC
+	         se.printStackTrace();
+		}catch(Exception e){
+	         //Handle errors for Class.forName
+	         e.printStackTrace();
+	    }finally{
+	         //finally block used to close resources
+	   		try{
+	   			if(stmt!=null)
+	   				stmt.close();
+	   		}catch(SQLException se2){
+	   		}// nothing we can do
+	   		try{
+	   			if(conn!=null)
+	   				conn.close();
+	   		}catch(SQLException se){
+	   			se.printStackTrace();
+	   		}//end finally try
+	    }
 		return stories;
 		
 	}
@@ -1265,10 +1377,26 @@ public class DatabaseService {
 				places.add(findPlacebyPlaceId(rs.getInt("PlaceID")));
 			}
 			return places;
-		}catch(SQLException | ClassNotFoundException se)
-		{
-			se.printStackTrace();
-		}
+		}catch(SQLException | ClassNotFoundException se){
+	         //Handle errors for JDBC
+	         se.printStackTrace();
+		}catch(Exception e){
+	         //Handle errors for Class.forName
+	         e.printStackTrace();
+	    }finally{
+	         //finally block used to close resources
+	   		try{
+	   			if(stmt!=null)
+	   				stmt.close();
+	   		}catch(SQLException se2){
+	   		}// nothing we can do
+	   		try{
+	   			if(conn!=null)
+	   				conn.close();
+	   		}catch(SQLException se){
+	   			se.printStackTrace();
+	   		}//end finally try
+	    }
 		
 		return places;
 		
@@ -1288,10 +1416,26 @@ public class DatabaseService {
 				rate = rs.getInt("Rate");
 			}
 			return rate;
-		}catch(SQLException | ClassNotFoundException se)
-		{
-			se.printStackTrace();
-		}
+		}catch(SQLException | ClassNotFoundException se){
+	         //Handle errors for JDBC
+	         se.printStackTrace();
+		}catch(Exception e){
+	         //Handle errors for Class.forName
+	         e.printStackTrace();
+	    }finally{
+	         //finally block used to close resources
+	   		try{
+	   			if(stmt!=null)
+	   				stmt.close();
+	   		}catch(SQLException se2){
+	   		}// nothing we can do
+	   		try{
+	   			if(conn!=null)
+	   				conn.close();
+	   		}catch(SQLException se){
+	   			se.printStackTrace();
+	   		}//end finally try
+	    }
 		return rate;
 	}
 }
