@@ -71,62 +71,58 @@
         String[] tags = new String[10];
         int rememberCount=0;
         double averageRate=0.0;
-		
-		%>
 
-	
-		<%
-	Place place = null;
-	try{
+		Place place = null;
+		try{
 		
-		//Get the place id and name
-		ResultSet rs = null;
-		Connection connection = db.getConnection();
-        Statement statement = connection.createStatement() ;
-        rs =statement.executeQuery("SELECT Places.PlaceID, Places.Name FROM Places,StoriesInPlaces WHERE Places.PlaceID=StoriesInPlaces.PlaceID AND StoriesInPlaces.StoryID='"+storyID+"';");
-        
-        while(rs.next())
-        {
-        	placeID = rs.getInt(1);
-        	placeName = rs.getString(2);
-        	
-        }
-        
-        place = db.findPlacebyPlaceId(placeID);
+			//Get the place id and name
+			ResultSet rs = null;
+			Connection connection = db.getConnection();
+	        Statement statement = connection.createStatement() ;
+	        rs =statement.executeQuery("SELECT Places.PlaceID, Places.Name FROM Places,StoriesInPlaces WHERE Places.PlaceID=StoriesInPlaces.PlaceID AND StoriesInPlaces.StoryID='"+storyID+"';");
+	        
+	        while(rs.next())
+	        {
+	        	placeID = rs.getInt(1);
+	        	placeName = rs.getString(2);
+	        	
+	        }
+	        
+	        place = db.findPlacebyPlaceId(placeID);
         
         
         //Get the picture of the story if exist
-        rs = statement.executeQuery("SELECT Path FROM Pictures,PicturesInStories WHERE StoryID='"+storyID+"' AND  Pictures.PicID=PicturesInStories.PicID LIMIT 1;");
-        
-		if(rs.next()){
-			picPath = rs.getString(1);
-		}
+	        rs = statement.executeQuery("SELECT Path FROM Pictures,PicturesInStories WHERE StoryID='"+storyID+"' AND  Pictures.PicID=PicturesInStories.PicID LIMIT 1;");
+	        
+			if(rs.next()){
+				picPath = rs.getString(1);
+			}
         
 		
 		//Get tags of the story
-		rs = statement.executeQuery("SELECT Name FROM Tags, TagsInStories, Stories WHERE Tags.TagID=TagsInStories.TagID AND TagsInStories.StoryID=Stories.StoryID AND Stories.StoryID='"+storyID+"' LIMIT 10;");
-		
-		for(int i=0;rs.next();i++){
-			tags[i]=rs.getString(1);
-		}
-		
+			rs = statement.executeQuery("SELECT Name FROM Tags, TagsInStories, Stories WHERE Tags.TagID=TagsInStories.TagID AND TagsInStories.StoryID=Stories.StoryID AND Stories.StoryID='"+storyID+"' LIMIT 10;");
+			
+			for(int i=0;rs.next();i++){
+				tags[i]=rs.getString(1);
+			}
+			
 		//Get the number of people remembers the story
-		rs = statement.executeQuery("SELECT COUNT(*) FROM IRememberThat WHERE StoryID='"+storyID+"';");
-		if(rs.next())
-			rememberCount=rs.getInt(1);
+			rs = statement.executeQuery("SELECT COUNT(*) FROM IRememberThat WHERE StoryID='"+storyID+"';");
+			if(rs.next())
+				rememberCount=rs.getInt(1);
 		
 		//Get average rate
-		rs = statement.executeQuery("SELECT ROUND(AVG(Rate),2) FROM Rate WHERE StoryID='"+storyID+"';");
-		if(rs.next())
-			averageRate = rs.getDouble(1);
-		statement.close();
-		connection.close();
+			rs = statement.executeQuery("SELECT ROUND(AVG(Rate),2) FROM Rate WHERE StoryID='"+storyID+"';");
+			if(rs.next())
+				averageRate = rs.getDouble(1);
+			statement.close();
+			connection.close();
         
-	}catch(Exception e)
-    {
-        out.println(e);
-        
-    }
+		}catch(Exception e)
+	    {
+	        out.println(e);
+	        
+	    }
       
 	
 	%>
@@ -155,10 +151,12 @@
 			<p>
 				<h3><%=story.getContent()%></h3>
 				
-				
+			
 				
 				<br>
+				
 				<%
+			if(currentUser.getUserID() != story.getUserId()){
 				if(averageRate>0)
 					out.println("Average Rate is "+averageRate);
 				else
@@ -216,6 +214,7 @@
 	
 		<%
 					}
+				}
 					%>
 		</div>
 			</div>
@@ -223,8 +222,8 @@
 				<div id="map-container">
 					<div id="map-canvas"></div>
 				</div>
-				<input type="hidden" id="latValue" value=<% out.print(place.getLatitude());%>/>
-				<input type="hidden" id="lonValue" value=<% out.print(place.getLongtitude());%>/>
+				<input type="hidden" id="latValue" value=<% out.print(place.getLatitude()); %>/>
+				<input type="hidden" id="lonValue" value=<% out.print(place.getLongtitude()); %>/>
 			</div>
 		
 		</div>
@@ -268,6 +267,8 @@
 			
 			        	<%
 			        }
+			        statement.close();
+			        connection.close();
 				}
 				catch(Exception e)
 				{
