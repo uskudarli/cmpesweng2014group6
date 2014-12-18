@@ -19,13 +19,14 @@
 	DatabaseService db = new DatabaseService();
 	ArrayList<Story> stories = db.searchStory(text);
 	ArrayList<Place> places = db.searchPlace(text);
+	ArrayList<User> users = db.searchUser(text);
 	%>
 	<jsp:include page="header.jsp" />
 	<jsp:include page="footer.jsp" />
 	<span>Search results for <%out.print(text); %>:</span>
 	<div class="container">
 		<div class="row">
-			<div class="col-xs-6">
+			<div class="col-sm-4">
 				<span>Stories</span><br><br>
 				<%
 				for(Story story:stories)
@@ -42,7 +43,7 @@
 				<%}
 				%>
 			</div>
-			<div class="col-xs-6">
+			<div class="col-sm-4">
 				<span>Places</span><br><br>
 				<%
 				for(Place place:places)
@@ -52,6 +53,18 @@
 					String timeline = "timeline.jsp?Id=" + place.getPlaceID();
 					%>
 					<a class="btn btn-default" href=<%out.print(timeline); %>>Click to view details</a><br><br>
+				<%}
+				%>
+			</div>
+			<div class="col-sm-4">
+				<span>Users</span><br><br>
+				<%
+				for(User u:users)
+				{
+					out.print("User Name: "+ u.getName() + "<br>");
+					String profile = "profile.jsp?id=" + u.getUserID();
+					%>
+					<a class="btn btn-default" href=<%out.print(profile); %>>Click to view details</a><br><br>
 				<%}
 				%>
 			</div>

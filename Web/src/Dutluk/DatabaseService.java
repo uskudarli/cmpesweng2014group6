@@ -1759,6 +1759,47 @@ public class DatabaseService {
 		
 	}
 	
+	public ArrayList<User> searchUser(String text)
+	{
+		if(text == null || text.equals(""))
+			return new ArrayList<User>();
+		text = text.toLowerCase();
+		ArrayList<User> users = new ArrayList<User>();
+		try{
+			conn = getConnection();
+			pstmt = conn.prepareStatement("SELECT DISTINCT(UserID) FROM Users WHERE Name LIKE ?");
+			pstmt.setString(1,  "%" + text + "%");
+			ResultSet rs = pstmt.executeQuery();
+			while(rs.next())
+			{
+				users.add(findUserByUserId(rs.getInt("UserID")));
+			}
+			return users;
+		}catch(SQLException | ClassNotFoundException se){
+	         //Handle errors for JDBC
+	         se.printStackTrace();
+		}catch(Exception e){
+	         //Handle errors for Class.forName
+	         e.printStackTrace();
+	    }finally{
+	         //finally block used to close resources
+	   		try{
+	   			if(stmt!=null)
+	   				stmt.close();
+	   		}catch(SQLException se2){
+	   		}// nothing we can do
+	   		try{
+	   			if(conn!=null)
+	   				conn.close();
+	   		}catch(SQLException se){
+	   			se.printStackTrace();
+	   		}//end finally try
+	    }
+		
+		return users;
+		
+	}
+	
 	public int getRate(int userId, int storyId)
 	{
 		int rate = 0;
