@@ -1,3 +1,4 @@
+<%@page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-9"
 	pageEncoding="ISO-8859-9"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -94,17 +95,9 @@
 		</center>
 		<br>
 		<br>
-		<% 
-					ResultSet rs = null;
-					try{
-						Connection connection = db.getConnection();
-				        Statement statement = connection.createStatement() ;
-				        rs =statement.executeQuery("SELECT * FROM Stories WHERE UserID = '"+originalUser.getUserID()+"' ORDER BY  Stories.StoryDateAbsolute DESC") ;
-					}catch(Exception e)
-			        {
-			            out.println(e);
-			        }
-					%>
+		<%
+			ArrayList<Story> stories = db.getStoriesOfUser(originalUser.getUserID());
+		%>
 		<table style="width: 100%" border="1">
 			<col style="width: 1%">
 			<col style="width: 5%">
@@ -116,20 +109,20 @@
 			</tr>
 
 			<%
-					while(rs.next())
+					for(Story s:stories)
 					{
 					%>
 			<tr>
 				<td>
-					<% if(rs.getString(10)==null)
-								out.print(rs.getString(11)); 
-							else out.print(rs.getString(10)); %>
+					<% if(s.getAbsoluteDate()==null)
+								out.print(s.getApproximateDate()); 
+							else out.print(s.getAbsoluteDate()); %>
 				</td>
 				<td>
-						<a href='story.jsp?storyId=<%=rs.getInt(1) %>'><%= rs.getString(3) %></a>
+						<a href='story.jsp?storyId=<%=s.getStoryId() %>'><%= s.getContent() %></a>
 	        			
 				</td>
-				<td><% out.print(rs.getString(8)); %></td >
+				<td><% out.print(s.getCreatedOn()); %></td >
 			</tr>
 			<%	
 					}
@@ -149,15 +142,7 @@
 	<%@ page import="java.sql.*, Dutluk.DatabaseService"%>
 	<%
 	try{
-		User user = null;
-		Connection connection = db.getConnection();
-        Statement statement = connection.createStatement() ;
-        ResultSet rs =statement.executeQuery("SELECT * FROM Users WHERE UserID = '"+Integer.parseInt(userId)+"'");
-		while(rs.next())
-		{
-			String email = rs.getString(5);
-			user = db.findUserByEmail(email);
-		}
+		User user = db.findUserByUserId(Integer.parseInt(userId));
 		
 		%>
 	<jsp:include page="header.jsp" />
@@ -237,17 +222,8 @@
 		<br>
 		<br>
 		<% 
-						db = new DatabaseService();
-						ResultSet rs2 = null;
-						try{
-							connection = db.getConnection();
-					        Statement statement2 = connection.createStatement() ;
-					        rs2 =statement2.executeQuery("SELECT * FROM Stories WHERE UserID = '"+Integer.parseInt(userId)+"' ORDER BY  Stories.StoryDateAbsolute DESC") ;
-						}catch(Exception e)
-				        {
-				            out.println(e);
-				        }
-						%>
+			ArrayList<Story> stories = db.getStoriesOfUser(user.getUserID());
+		%>
 		<table style="width: 100%" border="1">
 			<col style="width: 1%">
 			<col style="width: 5%">
@@ -259,20 +235,20 @@
 			</tr>
 
 			<%
-						while(rs2.next())
+						for(Story s:stories)
 						{
 						%>
 			<tr>
 				<td>
-					<% if(rs2.getString(10)==null)
-									out.print(rs2.getString(11)); 
-								else out.print(rs2.getString(10)); %>
+					<% if(s.getAbsoluteDate()==null)
+									out.print(s.getApproximateDate()); 
+								else out.print(s.getAbsoluteDate()); %>
 				</td>
 				<td>
-					<a href='story.jsp?storyId=<%=rs2.getInt(1) %>'><%= rs2.getString(3) %></a>
+					<a href='story.jsp?storyId=<%=s.getStoryId() %>'><%= s.getContent() %></a>
 				</td>
 				<td>
-					<% out.print(rs2.getString(8)); %>
+					<% out.print(s.getCreatedOn()); %>
 				</td>
 			</tr>
 			<%	

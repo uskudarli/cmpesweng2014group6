@@ -24,6 +24,77 @@ public class DatabaseService {
 		
 	}
 	
+	public ArrayList<Story> getStoriesOfUser(int userId)
+	{
+		ArrayList<Story> stories = new ArrayList<Story>();
+		try{
+			conn = getConnection();
+			pstmt = conn.prepareStatement("SELECT * FROM Stories WHERE UserID = ? AND IsDeleted = 0 ORDER BY  Stories.StoryDateAbsolute DESC");
+			pstmt.setInt(1, userId);
+			ResultSet rs = pstmt.executeQuery();
+			while(rs.next())
+			{
+				stories.add(new Story(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getInt(4), 0, rs.getInt(6), rs.getInt(7), rs.getDate(8), rs.getDate(9), rs.getDate(10), rs.getString(11)));
+			}
+			return stories;
+		}catch(SQLException | ClassNotFoundException se){
+	         //Handle errors for JDBC
+	         se.printStackTrace();
+		}catch(Exception e){
+	         //Handle errors for Class.forName
+	         e.printStackTrace();
+	    }finally{
+	         //finally block used to close resources
+	   		try{
+	   			if(stmt!=null)
+	   				stmt.close();
+	   		}catch(SQLException se2){
+	   		}// nothing we can do
+	   		try{
+	   			if(conn!=null)
+	   				conn.close();
+	   		}catch(SQLException se){
+	   			se.printStackTrace();
+	   		}//end finally try
+	    }		
+		return stories;
+	}
+	
+	public ArrayList<Theme> getAllThemes()
+	{
+		ArrayList<Theme> themes = new ArrayList<Theme>();
+		try{
+			conn = getConnection();
+			pstmt = conn.prepareStatement("SELECT * FROM Themes ORDER BY  Themes.ThemeID ASC");
+			ResultSet rs = pstmt.executeQuery();
+			while(rs.next())
+			{
+				themes.add(new Theme(rs.getInt(1), rs.getString(2)));
+			}
+			return themes;
+		}catch(SQLException | ClassNotFoundException se){
+	         //Handle errors for JDBC
+	         se.printStackTrace();
+		}catch(Exception e){
+	         //Handle errors for Class.forName
+	         e.printStackTrace();
+	    }finally{
+	         //finally block used to close resources
+	   		try{
+	   			if(stmt!=null)
+	   				stmt.close();
+	   		}catch(SQLException se2){
+	   		}// nothing we can do
+	   		try{
+	   			if(conn!=null)
+	   				conn.close();
+	   		}catch(SQLException se){
+	   			se.printStackTrace();
+	   		}//end finally try
+	    }		
+		return themes;
+	}
+	
 	public Boolean Login(User user)
 	{
 		try{
@@ -85,7 +156,7 @@ public class DatabaseService {
 			pstmt.executeUpdate();
 			if(user.getBirthdate() != null){
 				pstmt = conn.prepareStatement("UPDATE Users SET Birthdate = ?, LastUpdate = NOW() WHERE UserID= ?");
-				pstmt.setDate(1, (java.sql.Date) user.getBirthdate());
+				pstmt.setDate(1, new java.sql.Date(user.getBirthdate().getTime()));
 				pstmt.setInt(2, user.getUserID());
 				pstmt.executeUpdate();
 			}
@@ -145,7 +216,7 @@ public class DatabaseService {
             pstmt.setString(2, story.getContent());
             pstmt.setInt(3, story.getThemeId());
             if(story.getdateisAbsolute())
-            	pstmt.setDate(4, (java.sql.Date) story.getAbsoluteDate());
+            	pstmt.setDate(4, new java.sql.Date(story.getAbsoluteDate().getTime()));
         	else
         		pstmt.setString(4, story.getApproximateDate());
 			pstmt.executeUpdate();

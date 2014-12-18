@@ -22,7 +22,21 @@ public class Story {
 
         public Story()
         {
-
+        	
+        }
+        public Story(int id, int userid, String content, int themeid, int isDeleted, int report, int avgrate, Date created, Date updated, Date absolute, String approximate)
+        {
+        	this.storyId = id;
+        	this.userId = userid;
+        	this.content = content;
+        	this.themeId = themeid;
+        	this.isDeleted = isDeleted;
+        	this.reportCount = report;
+        	this.avgRate = avgrate;
+        	this.createdOn = created;
+        	this.updatedOn = updated;
+        	this.absoluteDate = absolute;
+        	this.approximateDate = approximate;
         }
 
         public int getStoryId() {

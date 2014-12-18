@@ -96,7 +96,8 @@
 		rs = statement.executeQuery("SELECT ROUND(AVG(Rate),2) FROM Rate WHERE StoryID='"+storyID+"';");
 		if(rs.next())
 			averageRate = rs.getDouble(1);
-		
+		statement.close();
+		connection.close();
         
 	}catch(Exception e)
     {

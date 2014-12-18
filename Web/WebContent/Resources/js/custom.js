@@ -289,14 +289,7 @@ $(document).ready(function() {
 		format: "dd/mm/yyyy"
 	});
 
-	$("#editProfileButton").click(function(e){
-		var $form = $("#editProfileForm");
-		$.ajax({
-			type: "POST",
-			url: "ProfileEdit",
-			data: $form.serialize()
-		});
-	});
+	
 	
 
 });

@@ -1,3 +1,5 @@
+<%@page import="java.util.ArrayList"%>
+<%@page import="Dutluk.*"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-9"
 	pageEncoding="ISO-8859-9"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -55,34 +57,23 @@
 								%>
 								value="<%out.print(name);%>"/>
 							<%}%>
-							<label>Story: </label><textarea class="form-control" name="editStory" style="height: 200px;"></textarea>
+							<label>Story: </label><textarea class="form-control" id="editStory" name="editStory" style="height: 200px;"></textarea>
 							<label>When did it happen?: </label><input class="form-control" id="editBirthdate" name="editStime" type=text 
 							 placeholder="dd/mm/yyyy or any format"></input>
 							
 							<%
 							DatabaseService db = new DatabaseService();
-							try{
-								Connection connection = db.getConnection();
-						        Statement statement = connection.createStatement() ;
-						        rs =statement.executeQuery("SELECT * FROM Themes ORDER BY  Themes.ThemeID ASC") ;
+							ArrayList<Theme> themes = db.getAllThemes();
 							%>
 							
 					        Theme:
 					        <select name = "theme">
-					        <%  while(rs.next()){ %>
-					            <option value="<%=rs.getString(1)%>"><%=rs.getString(2)%></option>
+					        <%  for(Theme theme: themes){ %>
+					            <option value="<%=theme.getThemeId()%>"><%=theme.getName()%></option>
 					        <%
 					        	} 
 					        %>
 					        </select>
-					        <%
-							
-					        }
-					        catch(Exception e)
-					        {
-					             out.println(e);
-					        }
-							%>
 							<br>
 							<label>Tags: </label><textarea class="form-control" name="tags" style="height: 200px;" placeholder="You can enter up to 10 tags divided by comma (example: university,campus,istanbul)"></textarea>
 						</div>
@@ -100,6 +91,5 @@
 			
 		</div>
 	</div>
-
 </body>
 </html>

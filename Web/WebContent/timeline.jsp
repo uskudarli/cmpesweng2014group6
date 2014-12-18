@@ -157,6 +157,8 @@
         	}
         	
         }
+        statement.close();
+        connection.close();
 	}catch(Exception e)
     {
         out.println(e);
