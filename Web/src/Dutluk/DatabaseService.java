@@ -8,7 +8,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 
-import javax.print.attribute.standard.Fidelity;
 
 
 
@@ -24,13 +23,320 @@ public class DatabaseService {
 	{
 		
 	}
+	
+	public Boolean Login(User user)
+	{
+		try{
+			User dbuser = findUserByEmail(user.getEmail());
+			String dbpass = dbuser.getPassword();
+			
+			if(user.getPassword().equals(dbpass))
+				return true;
+			else 
+				return false;
+		}catch(Exception e){
+	         //Handle errors for Class.forName
+	         e.printStackTrace();
+	    }	
+		return false;
+		
+	}
+	
+	public Boolean ChangePassword(String mail, String pass)
+	{
+		try{
+			conn = getConnection();
+			pstmt = conn.prepareStatement("UPDATE Users SET Password = ?, LastUpdate = NOW() WHERE Mail = ?");
+			pstmt.setString(1, pass);
+			pstmt.setString(2, mail);
+			pstmt.executeUpdate();
+			return true;
+		}catch(SQLException | ClassNotFoundException se){
+	         //Handle errors for JDBC
+	         se.printStackTrace();
+		}catch(Exception e){
+	         //Handle errors for Class.forName
+	         e.printStackTrace();
+	    }finally{
+	         //finally block used to close resources
+	   		try{
+	   			if(stmt!=null)
+	   				stmt.close();
+	   		}catch(SQLException se2){
+	   		}// nothing we can do
+	   		try{
+	   			if(conn!=null)
+	   				conn.close();
+	   		}catch(SQLException se){
+	   			se.printStackTrace();
+	   		}//end finally try
+	    }		
+		return false;
+	}
+	
+	public Boolean UpdateProfile(User user)
+	{
+		try{
+			conn = getConnection();
+			pstmt = conn.prepareStatement("UPDATE Users SET Name = ? , Gender = ? ,  LastUpdate = NOW() WHERE UserID= ?");
+			pstmt.setString(1, user.getName());
+			pstmt.setString(2,	user.getGender().toString());
+			pstmt.setInt(3, user.getUserID());
+			pstmt.executeUpdate();
+			if(user.getBirthdate() != null){
+				pstmt = conn.prepareStatement("UPDATE Users SET Birthdate = ?, LastUpdate = NOW() WHERE UserID= ?");
+				pstmt.setDate(1, (java.sql.Date) user.getBirthdate());
+				pstmt.setInt(2, user.getUserID());
+				pstmt.executeUpdate();
+			}
+			if(user.getPhone() != null){
+				pstmt = conn.prepareStatement("UPDATE Users SET Phone = ?, LastUpdate = NOW() WHERE UserID= ?");
+				pstmt.setString(1, user.getPhone());
+				pstmt.setInt(2,user.getUserID());
+				pstmt.executeUpdate();
+			}
+			if(user.getBio() != null){
+				pstmt = conn.prepareStatement("UPDATE Users SET Bio = ?, LastUpdate = NOW() WHERE UserID= ?");
+				pstmt.setString(1, user.getBio());
+				pstmt.setInt(2,user.getUserID());
+				pstmt.executeUpdate();
+			}
+			if(user.getPicID() > 0){
+				pstmt = conn.prepareStatement("UPDATE Users SET PicID = ?, LastUpdate = NOW() WHERE UserID= ?");
+				pstmt.setInt(1, user.getPicID());
+				pstmt.setInt(2, user.getUserID());
+				pstmt.executeUpdate();
+			}
+			return true;
+		}catch(SQLException | ClassNotFoundException se){
+	         //Handle errors for JDBC
+	         se.printStackTrace();
+		}catch(Exception e){
+	         //Handle errors for Class.forName
+	         e.printStackTrace();
+	    }finally{
+	         //finally block used to close resources
+	   		try{
+	   			if(stmt!=null)
+	   				stmt.close();
+	   		}catch(SQLException se2){
+	   		}// nothing we can do
+	   		try{
+	   			if(conn!=null)
+	   				conn.close();
+	   		}catch(SQLException se){
+	   			se.printStackTrace();
+	   		}//end finally try
+	    }		
+		return false;
+
+	}
+	
+	public int addStory(Story story)
+	{
+		int id = 0;
+		try{
+			conn = getConnection();
+			if(story.getdateisAbsolute())
+				pstmt = conn.prepareStatement("INSERT INTO Stories (UserID, Content, ThemeID, IsDeleted, ReportCount, AvgRate, CreationDate, LastUpdate,StoryDateAbsolute) VALUES (?,?,?,0,0,0,NOW(),NOW(),?)", Statement.RETURN_GENERATED_KEYS);
+			else
+				pstmt = conn.prepareStatement("INSERT INTO Stories (UserID, Content, ThemeID, IsDeleted, ReportCount, AvgRate, CreationDate, LastUpdate,StoryDateApproximate) VALUES (?,?,?,0,0,0,NOW(),NOW(),?)", Statement.RETURN_GENERATED_KEYS);
+			pstmt.setInt(1, story.getUserId());
+            pstmt.setString(2, story.getContent());
+            pstmt.setInt(3, story.getThemeId());
+            if(story.getdateisAbsolute())
+            	pstmt.setDate(4, (java.sql.Date) story.getAbsoluteDate());
+        	else
+        		pstmt.setString(4, story.getApproximateDate());
+			pstmt.executeUpdate();
+			ResultSet rs = pstmt.getGeneratedKeys();
+			while(rs.next())
+			{
+				
+	            String key = rs.getString(1);
+	            id = Integer.parseInt(key);    
+			}
+			return id;
+		}catch(SQLException | ClassNotFoundException se){
+	         //Handle errors for JDBC
+	         se.printStackTrace();
+		}catch(Exception e){
+	         //Handle errors for Class.forName
+	         e.printStackTrace();
+	    }finally{
+	         //finally block used to close resources
+	   		try{
+	   			if(stmt!=null)
+	   				stmt.close();
+	   		}catch(SQLException se2){
+	   		}// nothing we can do
+	   		try{
+	   			if(conn!=null)
+	   				conn.close();
+	   		}catch(SQLException se){
+	   			se.printStackTrace();
+	   		}//end finally try
+	    }
+		return id;
+
+	}
+
+	
+	public boolean addStoryAndPlace(int storyId, int placeId)
+    {
+            
+        try{
+			conn = getConnection();
+			pstmt = conn.prepareStatement("INSERT INTO StoriesInPlaces (StoryID, PlaceID) VALUES (?, ?)");
+			pstmt.setInt(1, storyId);
+            pstmt.setInt(2, placeId);
+			pstmt.executeUpdate();
+			return true;
+		}catch(SQLException | ClassNotFoundException se){
+	         //Handle errors for JDBC
+	         se.printStackTrace();
+		}catch(Exception e){
+	         //Handle errors for Class.forName
+	         e.printStackTrace();
+	    }finally{
+	         //finally block used to close resources
+	   		try{
+	   			if(stmt!=null)
+	   				stmt.close();
+	   		}catch(SQLException se2){
+	   		}// nothing we can do
+	   		try{
+	   			if(conn!=null)
+	   				conn.close();
+	   		}catch(SQLException se){
+	   			se.printStackTrace();
+	   		}//end finally try
+	    }
+        return false;
+    }
+	
+	public void insertRate(int storyId, int userId, int rate)
+	{
+		try{
+			conn = getConnection();
+			pstmt = conn.prepareStatement("INSERT INTO Rate (StoryID, UserID, Rate, CreationDate, LastUpdate) VALUES (?, ?, ?, NOW(), NOW())");
+			pstmt.setInt(1, storyId);
+            pstmt.setInt(2, userId);
+            pstmt.setInt(3, rate);
+			pstmt.executeUpdate();
+			int totalRate = 0;
+        	int rateCount = 0;
+        	pstmt = conn.prepareStatement("SELECT * FROM Rate WHERE StoryID = ?");
+        	pstmt.setInt(1, storyId);
+        	ResultSet rs = pstmt.executeQuery();
+        	while(rs.next())
+	        {
+	        	totalRate += rs.getInt(3);
+	        	rateCount++;
+	        }
+        	int avgRate = totalRate / rateCount;
+        	pstmt = conn.prepareStatement("UPDATE Stories SET AvgRate = ? WHERE StoryID = ?");
+        	pstmt.setInt(1, avgRate);
+        	pstmt.setInt(2, storyId);
+        	pstmt.executeUpdate();
+		}catch(SQLException | ClassNotFoundException se){
+	         //Handle errors for JDBC
+	         se.printStackTrace();
+		}catch(Exception e){
+	         //Handle errors for Class.forName
+	         e.printStackTrace();
+	    }finally{
+	         //finally block used to close resources
+	   		try{
+	   			if(stmt!=null)
+	   				stmt.close();
+	   		}catch(SQLException se2){
+	   		}// nothing we can do
+	   		try{
+	   			if(conn!=null)
+	   				conn.close();
+	   		}catch(SQLException se){
+	   			se.printStackTrace();
+	   		}//end finally try
+	    }
+	}
+	
+	public boolean insertComment(int storyId, int userId, String comment)
+	{
+		try{
+			conn = getConnection();
+			pstmt = conn.prepareStatement("INSERT INTO Comments (StoryID, UserID, Comment, IsDeleted, CreationDate, LastUpdate) VALUES (?, ?, ?, 0, NOW(), NOW())");
+			pstmt.setInt(1, storyId);
+            pstmt.setInt(2, userId);
+            pstmt.setString(3, comment);
+			pstmt.executeUpdate();
+			return true;
+		}catch(SQLException | ClassNotFoundException se){
+	         //Handle errors for JDBC
+	         se.printStackTrace();
+		}catch(Exception e){
+	         //Handle errors for Class.forName
+	         e.printStackTrace();
+	    }finally{
+	         //finally block used to close resources
+	   		try{
+	   			if(stmt!=null)
+	   				stmt.close();
+	   		}catch(SQLException se2){
+	   		}// nothing we can do
+	   		try{
+	   			if(conn!=null)
+	   				conn.close();
+	   		}catch(SQLException se){
+	   			se.printStackTrace();
+	   		}//end finally try
+	    }
+		return false;
+	}
+	
+	public int findPlaceByLatLon(String lat, String lon)
+	{
+		int id = 0;
+		try{
+			conn = getConnection();
+			pstmt = conn.prepareStatement("SELECT * FROM Places WHERE Latitude = ? AND Longtitude = ?");
+			pstmt.setString(1, lat);
+			pstmt.setString(2, lon);
+			ResultSet rs = pstmt.executeQuery();
+			if(rs.next())
+			{
+				id = rs.getInt("PlaceID");
+			}
+			return id;
+		}catch(SQLException | ClassNotFoundException se){
+	         //Handle errors for JDBC
+	         se.printStackTrace();
+		}catch(Exception e){
+	         //Handle errors for Class.forName
+	         e.printStackTrace();
+	    }finally{
+	         //finally block used to close resources
+	   		try{
+	   			if(stmt!=null)
+	   				stmt.close();
+	   		}catch(SQLException se2){
+	   		}// nothing we can do
+	   		try{
+	   			if(conn!=null)
+	   				conn.close();
+	   		}catch(SQLException se){
+	   			se.printStackTrace();
+	   		}//end finally try
+	    }
+		return id;
+	}
+	
 	Boolean executeSql(String sql)
 	{
 		Boolean result = false;
 		try
 		{
-			Class.forName(JDBC_DRIVER);
-			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			conn = getConnection();
 			stmt = conn.createStatement();
 			stmt.executeUpdate(sql);
 			result = true;
@@ -62,8 +368,7 @@ public class DatabaseService {
 		User user = new User();
 		try
 		{
-			Class.forName(JDBC_DRIVER);
-			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			conn = getConnection();
 			pstmt = conn.prepareStatement("SELECT * FROM Users WHERE Mail = ? and IsDeleted = 0");
 			pstmt.setString(1, mail);
 			ResultSet rs = pstmt.executeQuery();
@@ -121,8 +426,7 @@ public class DatabaseService {
 		User user = new User();
 		try
 		{
-			Class.forName(JDBC_DRIVER);
-			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			conn = getConnection();
 			pstmt = conn.prepareStatement("SELECT * FROM Users WHERE UserID = ? and IsDeleted = 0");
 			pstmt.setInt(1, id);
 			ResultSet rs = pstmt.executeQuery();
@@ -181,8 +485,7 @@ public class DatabaseService {
 		Place place = new Place();
 		try
 		{
-			Class.forName(JDBC_DRIVER);
-			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			conn = getConnection();
 			pstmt = conn.prepareStatement("SELECT * FROM Places WHERE PlaceID = ?");
 			pstmt.setInt(1, id);
 			ResultSet rs = pstmt.executeQuery();
@@ -226,8 +529,7 @@ public class DatabaseService {
 		Story story = new Story();
 		try
 		{
-			Class.forName(JDBC_DRIVER);
-			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			conn = getConnection();
 			pstmt = conn.prepareStatement("SELECT * FROM Stories WHERE StoryID = ?");
 			pstmt.setInt(1, id);
 			ResultSet rs = pstmt.executeQuery();
@@ -278,8 +580,7 @@ public class DatabaseService {
 		ArrayList<Place> places = new ArrayList<Place>();
 		try
 		{
-			Class.forName(JDBC_DRIVER);
-			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			conn = getConnection();
 			pstmt = conn.prepareStatement("SELECT * FROM Places");
 			ResultSet rs = pstmt.executeQuery();
 			
@@ -335,8 +636,7 @@ public class DatabaseService {
 		{
 			try
 			{
-				Class.forName(JDBC_DRIVER);
-				conn = DriverManager.getConnection(DB_URL, USER, PASS);
+				conn = getConnection();
 				pstmt = conn.prepareStatement("INSERT INTO Users (Name,Mail,IsDeleted,Gender,Password, CreationDate, LastUpdate) VALUES(?,?,?,?,?,?,?)");
 				pstmt.setString(1, user.getName());
 				pstmt.setString(2, user.getEmail());
@@ -378,8 +678,7 @@ public class DatabaseService {
 	{
 		try
 		{
-			Class.forName(JDBC_DRIVER);
-			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			conn = getConnection();
 			pstmt = conn.prepareStatement("INSERT INTO Pictures (Path, CreationDate, LastUpdate) VALUES(?,?,?)", Statement.RETURN_GENERATED_KEYS);
 			pstmt.setString(1, filePath);
 			java.util.Date today = new java.util.Date();
@@ -421,8 +720,7 @@ public class DatabaseService {
 	{
 		try
 		{
-			Class.forName(JDBC_DRIVER);
-			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			conn = getConnection();
 			pstmt = conn.prepareStatement("INSERT INTO Places (Name, Longtitude, Latitude, CreationDate, LastUpdate) VALUES (?,?,?,NOW(),NOW())", Statement.RETURN_GENERATED_KEYS);
 			pstmt.setString(1, placeName);
 			pstmt.setString(2, lon);
@@ -463,8 +761,7 @@ public class DatabaseService {
 	{
 		try
 		{
-			Class.forName(JDBC_DRIVER);
-			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			conn = getConnection();
 			pstmt = conn.prepareStatement("INSERT INTO PicturesInStories (PicID, StoryID) VALUES(?,?)");
 			pstmt.setInt(1, pictureID);
 			pstmt.setInt(2, storyID);
@@ -496,8 +793,7 @@ public class DatabaseService {
 		ArrayList<String> paths = new ArrayList<String>();
 		try
 		{
-			Class.forName(JDBC_DRIVER);
-			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			conn = getConnection();
 			pstmt = conn.prepareStatement("SELECT DISTINCT(Path) from Pictures WHERE PicID IN (SELECT PicID FROM PicturesInStories WHERE StoryID IN (SELECT StoryID FROM StoriesInPlaces WHERE PlaceID = ?))");
 			pstmt.setInt(1, placeID);
 			ResultSet rs = pstmt.executeQuery();
@@ -532,8 +828,7 @@ public class DatabaseService {
 	{
 		try
 		{
-			Class.forName(JDBC_DRIVER);
-			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			conn = getConnection();
 			pstmt = conn.prepareStatement("SELECT * FROM SubscriptionsToUsers WHERE FollowerID = ? AND FollowedID = ?");
 			pstmt.setInt(1, followerId);
 			pstmt.setInt(2, followedId);
@@ -601,8 +896,7 @@ public class DatabaseService {
 	{
 		try
 		{
-			Class.forName(JDBC_DRIVER);
-			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			conn = getConnection();
 			pstmt = conn.prepareStatement("SELECT * FROM IRememberThat WHERE StoryID = ? AND UserID = ?");
 			pstmt.setInt(1, storyId);
 			pstmt.setInt(2, userId);
@@ -699,8 +993,7 @@ public class DatabaseService {
 	{
 		try
 		{
-			Class.forName(JDBC_DRIVER);
-			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			conn = getConnection();
 			pstmt = conn.prepareStatement("SELECT * FROM SubscriptionsToUsers WHERE FollowerID = ? AND FollowedID = ? AND IsActive = ?");
 			pstmt.setInt(1, followerId);
 			pstmt.setInt(2, followedId);
@@ -742,8 +1035,7 @@ public class DatabaseService {
 	{
 		try
 		{
-			Class.forName(JDBC_DRIVER);
-			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			conn = getConnection();
 			pstmt = conn.prepareStatement("SELECT * FROM SubscriptionsToPlaces WHERE FollowerID = ? AND FollowedID = ? AND IsActive = ?");
 			pstmt.setInt(1, followerId);
 			pstmt.setInt(2, followedId);
@@ -785,8 +1077,7 @@ public class DatabaseService {
 	{
 		try
 		{
-			Class.forName(JDBC_DRIVER);
-			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			conn = getConnection();
 			pstmt = conn.prepareStatement("SELECT * FROM SubscriptionsToUsers WHERE FollowerID = ? AND FollowedID = ? AND IsActive = ?");
 			pstmt.setInt(1, followerId);
 			pstmt.setInt(2, followedId);
@@ -837,8 +1128,7 @@ public class DatabaseService {
 	{
 		try
 		{
-			Class.forName(JDBC_DRIVER);
-			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			conn = getConnection();
 			pstmt = conn.prepareStatement("SELECT * FROM SubscriptionsToPlaces WHERE FollowerID = ? AND FollowedID = ?");
 			pstmt.setInt(1, followerId);
 			pstmt.setInt(2, followedId);
@@ -906,8 +1196,7 @@ public class DatabaseService {
 	{
 		try
 		{
-			Class.forName(JDBC_DRIVER);
-			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			conn = getConnection();
 			pstmt = conn.prepareStatement("SELECT * FROM SubscriptionsToPlaces WHERE FollowerID = ? AND FollowedID = ? AND IsActive = ?");
 			pstmt.setInt(1, followerId);
 			pstmt.setInt(2, followedId);
@@ -957,8 +1246,7 @@ public class DatabaseService {
 	{
 		try
 		{
-			Class.forName(JDBC_DRIVER);
-			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			conn = getConnection();
 			pstmt = conn.prepareStatement("SELECT * FROM Pictures WHERE PicID = ?");
 			pstmt.setInt(1, picId);
 			ResultSet rs = pstmt.executeQuery();
@@ -995,8 +1283,7 @@ public class DatabaseService {
 	public void deleteProfilePic(int userId){
 		try
 		{
-			Class.forName(JDBC_DRIVER);
-			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			conn = getConnection();
 			pstmt = conn.prepareStatement("UPDATE Users SET PicID = ?, LastUpdate=NOW() WHERE UserID = ?");
 			pstmt.setInt(1, 0);
 			pstmt.setInt(2, userId);
@@ -1028,8 +1315,7 @@ public class DatabaseService {
 		String result = null;
 		try
 		{
-			Class.forName(JDBC_DRIVER);
-			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			conn = getConnection();
 			pstmt = conn.prepareStatement("SELECT * FROM Pictures ORDER BY PicID DESC");
 
 			ResultSet rs = pstmt.executeQuery();

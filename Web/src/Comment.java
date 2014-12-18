@@ -1,9 +1,6 @@
 
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,7 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import Dutluk.DatabaseService;
-import Dutluk.User;
 
 /**
  * Servlet implementation class Comment
@@ -48,25 +44,12 @@ public class Comment extends HttpServlet {
 		String comment = request.getParameter("comment").toString();
 		
 		DatabaseService db = new DatabaseService();
-
-		PreparedStatement statement = null;
-		String sql = "INSERT INTO Comments (StoryID, UserID, Comment, IsDeleted, CreationDate, LastUpdate) VALUES (?, ?, ?, 0, NOW(), NOW())";
-		
-        try {
-                Connection con = db.getConnection();
-                statement = con.prepareStatement(sql);
-                statement.setInt(1, Integer.parseInt(storyId));
-                statement.setInt(2, Integer.parseInt(userId));
-                statement.setString(3, comment);
-
-                statement.execute();
-
-        
-		} catch (ClassNotFoundException e1) {
-	        e1.printStackTrace();
-		} catch (SQLException e1) {
-	        e1.printStackTrace();
-	}
+		boolean result = db.insertComment(Integer.parseInt(storyId), Integer.parseInt(userId), comment);
+		if(result)
+			request.setAttribute("success", "true");
+		else 
+			request.setAttribute("error","true");
+	
         
         request.getRequestDispatcher("story.jsp?storyId="+storyId).forward(request, response);
 

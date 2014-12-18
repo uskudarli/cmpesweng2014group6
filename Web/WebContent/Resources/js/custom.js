@@ -312,7 +312,7 @@ function errorCheck()
 function successCheck()
 {
 	if($('input[name=success]').val()=="true"){
-		$('#editSuccess').modal('show');
+		$('.editSuccess').modal('show');
 		$('input[name=success]').val("false");
 	}
 }

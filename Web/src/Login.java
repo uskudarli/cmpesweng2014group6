@@ -90,7 +90,8 @@ public class Login extends HttpServlet {
 		User user = new User();
 		user.setPassword(request.getParameter("password"));
 		user.setEmail(request.getParameter("email"));
-		Boolean result = user.Login();
+		DatabaseService db = new DatabaseService();
+		Boolean result = db.Login(user);
 		HttpSession session = request.getSession();
 		if(result)
 		{

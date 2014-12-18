@@ -2,9 +2,7 @@
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -173,11 +171,9 @@ public class ProfileEdit extends HttpServlet {
 			user.setPicID(pictureId);
 	
 			boolean updated=false;
-			try {
-				updated = user.UpdateProfile();
-			} catch (ClassNotFoundException | SQLException e) {
-				e.printStackTrace();
-			}
+			
+			updated = db.UpdateProfile(user);
+			
 			if(updated) 
 				request.setAttribute("success", "true");
 			else 

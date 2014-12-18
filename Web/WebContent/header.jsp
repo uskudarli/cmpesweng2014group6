@@ -16,11 +16,8 @@
 			HttpSession newsession = request.getSession();
 				if(newsession != null && newsession.getAttribute("email")!=null)
 				{
-					//out.println("<a href='javascript:void(0);' onclick='goToEdit()'>Profile</a>"); ->moved to profile
 					out.println("<a style='margin-left:15px;' href='Profile'>Me</a>");
-					//out.println("- <a href='addStory.jsp'>Write</a>");
 					out.println("<a style='margin-left:15px;' href='javascript:void(0);' onclick='logOut()'>Log Out</a>");
-					//out.println("<a href='changePassword.jsp'>Change Password</a>"); ->moved to edit profile
 				}else{
 					out.println("<a style='margin-left:15px;' href='loginRegister.jsp'>Login/Register</a>");
 				}

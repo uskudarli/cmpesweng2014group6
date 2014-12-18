@@ -1,9 +1,4 @@
 package Dutluk;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -23,7 +18,6 @@ public class Story {
         private Date absoluteDate;
         private String approximateDate;
         private boolean dateisAbsolute;
-        private DatabaseService db;
         private int placeId;
 
         public Story()
@@ -38,73 +32,7 @@ public class Story {
         public void setStoryId(int id) {
         	storyId = id;
         }
-		public int addStory()
-    	{
-    		int id = 0;
-    		db = new DatabaseService();
-    		PreparedStatement pstatement = null;
-    		
-    		String sql = "INSERT INTO Stories (UserID, Content, ThemeID, IsDeleted, ReportCount, AvgRate, CreationDate, LastUpdate,";
-    		if(dateisAbsolute) sql+= " StoryDateAbsolute";
-    		else sql+= " StoryDateApproximate";
-    		sql+= ") VALUES(";
-    		sql += "'" + userId + "',";
-    		sql += "?,";
-    		sql += "'" + themeId + "',";  
-    		sql += "'" + isDeleted + "',";
-    		sql += "'" + reportCount + "',";
-    		sql += "'" + avgRate + "',";
-    		sql += "'" + createdOn + "',";
-    		sql += "'" + updatedOn + "',";
-    		if(dateisAbsolute) sql += "'" + absoluteDate + "'";
-    		else sql += "'" + approximateDate + "'";
-    		
-    		sql += " ) ";
-    		
-    		try {
-    			Connection con = db.getConnection();
-    			pstatement = con.prepareStatement(sql);
-    			pstatement.setString(1, content);
-
-    			pstatement.execute();
-    		} catch (ClassNotFoundException e1) {
-    			// TODO Auto-generated catch block
-    			e1.printStackTrace();
-    		} catch (SQLException e1) {
-    			// TODO Auto-generated catch block
-    			e1.printStackTrace();
-    		}
-
-    		ResultSet rs = null;
-    		try {
-    			Connection con = db.getConnection();
-    			Statement statement = con.createStatement() ;
-    			rs =statement.executeQuery("SELECT * FROM Stories ORDER BY StoryID DESC Limit 1") ;
-    			while(rs.next())
-    			{
-    				id = rs.getInt(1);
-    			}
-    		} catch (ClassNotFoundException e1) {
-    			// TODO Auto-generated catch block
-    			e1.printStackTrace();
-    		} catch (SQLException e1) {
-    			// TODO Auto-generated catch block
-    			e1.printStackTrace();
-    		}
-    		return id;
-
-    	}
-
-        public boolean addStoryAndPlace(int storyId, int placeId)
-        {
-                db = new DatabaseService();
-                String sql = "INSERT INTO StoriesInPlaces (StoryID, PlaceID) VALUES ('"+storyId+"', '"+placeId+"')";
-                if(db.executeSql(sql))
-                        return true;
-                else
-                        return false;
-        }
-
+		
         //setters and getters:
 
         public int getUserId() {

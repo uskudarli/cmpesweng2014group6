@@ -141,7 +141,7 @@
 
 
 
-	<div class="modal fade bs-example-modal-sm" id="editSuccess"
+	<div class="modal fade bs-example-modal-sm editSuccess"
 		tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
 		aria-hidden="true">
 		<div class="modal-dialog modal-sm">

@@ -75,7 +75,7 @@ public class ResetPassword extends HttpServlet {
 				}
 				else
 				{
-					boolean passwordChanged = user.ChangePassword(email, newPassword);
+					boolean passwordChanged = db.ChangePassword(email, newPassword);
 					if(passwordChanged)
 					{
 						//send a new random password with an e-mail to user
@@ -134,7 +134,7 @@ public class ResetPassword extends HttpServlet {
 			{
 				if(request.getParameter("newPassword").equals(request.getParameter("reNewPassword")) && !request.getParameter("newPassword").equals(""))
 				{
-					if(user.ChangePassword(email, request.getParameter("newPassword")))
+					if(db.ChangePassword(email, request.getParameter("newPassword")))
 					{
 						request.setAttribute("error", "true");
 						request.setAttribute("message", "Your password is changed!");

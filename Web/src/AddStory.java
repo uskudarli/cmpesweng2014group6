@@ -5,10 +5,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -74,26 +70,8 @@ public class AddStory extends HttpServlet {
                 lat = request.getSession().getAttribute("lat").toString();
                 lon = request.getSession().getAttribute("lon").toString();
                 int placeId = 0;
-                ResultSet rs = null;
-                String sql = "SELECT * FROM Places WHERE Latitude ='"+lat+"' AND Longtitude= '"+ lon + "'";
-                try {
-                        Connection con = db.getConnection();
-                        Statement statement3 = con.createStatement() ;
-                        rs =statement3.executeQuery(sql);
-                } catch (ClassNotFoundException e1) {
-                        e1.printStackTrace();
-                } catch (SQLException e1) {
-                        e1.printStackTrace();
-                }
-
-                try {
-                        while(rs.next())
-                                placeId = rs.getInt(1);
-                } catch (SQLException e2) {
-                        e2.printStackTrace();
-                }
-                
-
+                placeId = db.findPlaceByLatLon(lat, lon);
+               
                 Calendar cal = Calendar.getInstance();
                 java.sql.Timestamp timestamp = new java.sql.Timestamp(cal.getTimeInMillis());
 
@@ -214,7 +192,7 @@ public class AddStory extends HttpServlet {
         			placeId = db.insertPlace(placeName, lon, lat);
                 }
         		//add story to database and get added story id
-        		int storyId = story.addStory();
+        		int storyId = db.addStory(story);
         		
         		
         		if((storyId != 0) && (placeId != 0))
@@ -226,7 +204,7 @@ public class AddStory extends HttpServlet {
             			db.insertTagStoryConnection(tagIds, storyId);
             			db.insertTagPlaceConnection(tagIds, placeId);
             		}
-        			if(story.addStoryAndPlace(storyId, placeId))
+        			if(db.addStoryAndPlace(storyId, placeId))
         			{
         				request.setAttribute("error", "true");
         				request.setAttribute("message", "Story is added.");
