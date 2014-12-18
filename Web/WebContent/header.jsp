@@ -8,7 +8,7 @@
 	<div class="headerBody container">
 	
 		<div class="row">
-			<div class="col-md-7 nopadding">
+			<div class="col-md-6 nopadding">
 				<a href="index.jsp">Dutluk</a> <!-- previously "home" -->
 			
 			<!-- Hide rest if logged in,show only login-register -->
@@ -39,7 +39,7 @@
 				   </div>
 				</form>
 			</div>
-			<div class="col-md-3 nopadding">
+			<div class="col-md-4 nopadding">
 				<a class="alignright" href="https://code.google.com/p/cmpesweng2014group6/">About Us</a>
 			</div>
 		</div>
@@ -52,3 +52,4 @@
 <script type="text/javascript" src="//cdn.jsdelivr.net/jquery.bootstrapvalidator/0.5.2/js/bootstrapValidator.min.js"></script>
 <script src="${pageContext.request.contextPath}/Resources/js/custom.js" type="text/javascript"></script>
 <script src="${pageContext.request.contextPath}/Resources/datepicker/js/bootstrap-datepicker.js" type="text/javascript"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/Resources/ckeditor/ckeditor.js"></script>  
