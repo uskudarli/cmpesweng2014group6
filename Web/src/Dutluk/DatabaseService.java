@@ -1,4 +1,5 @@
 package Dutluk;
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -8,22 +9,56 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathFactory;
+
+import org.xml.sax.InputSource;
 
 
-
-public class DatabaseService {
-	static final String JDBC_DRIVER = "com.mysql.jdbc.Driver"; 
-	static final String DB_URL = "jdbc:mysql://titan.cmpe.boun.edu.tr:3306/database6";
-	static final String USER = "project6";
-	static final String PASS = "xXumhNf4";
+public class DatabaseService{
+	private String DB_URL,JDBC_DRIVER,USER,PASS;
+	
 	private Connection conn;
 	private Statement stmt;
 	private PreparedStatement pstmt;
+
 	public DatabaseService()
 	{
-		
+		this.readConfig();
 	}
 	
+	public void readConfig(){
+		try{
+
+			//In MacOS, it just couldn't find my real working directory.
+			//I had to put my config.xml file in 
+			//here:	/Applications/eclipse/Eclipse.app/Contents/MacOS
+
+			//So be careful, if it can't find your config.xml, it will catch an exception
+			//with the message "CONFIGNOTFOUND". If you can't even login, seek for this
+			//message in your console/catalina output.
+
+			//Also, titan's tomcat returns  "/."
+			//Instead of putting config.xml to that directory, I had change the wd
+			//string to /home/project6/tomcat, where I put config.xml file
+
+			String working_directory=new File(".").getAbsolutePath();
+			//System.out.println("CONFIG WD>>>\n"+working_directory+"\n<<<");
+			//Titan's tomcat returns /. here, so I modify it by hand.
+			if(working_directory.equals("/.")) working_directory="/home/project6/tomcat";	
+
+			XPath xpath = XPathFactory.newInstance().newXPath();
+			InputSource inputSource = new InputSource(working_directory+"/config.xml");
+			DB_URL = (String) xpath.evaluate("//config//jdbc//url",inputSource);
+			JDBC_DRIVER = (String) xpath.evaluate("//config//jdbc//driver",inputSource);
+			USER = (String) xpath.evaluate("//config//jdbc//username",inputSource);
+			PASS = (String) xpath.evaluate("//config//jdbc//password",inputSource);
+
+		}catch(Exception e){
+			System.err.println("CONFIGNOTFOUND: " + e.getMessage());
+		}
+	}
+
 	public ArrayList<Story> getStoriesOfUser(int userId)
 	{
 		ArrayList<Story> stories = new ArrayList<Story>();
@@ -38,28 +73,28 @@ public class DatabaseService {
 			}
 			return stories;
 		}catch(SQLException | ClassNotFoundException se){
-	         //Handle errors for JDBC
-	         se.printStackTrace();
+			//Handle errors for JDBC
+			se.printStackTrace();
 		}catch(Exception e){
-	         //Handle errors for Class.forName
-	         e.printStackTrace();
-	    }finally{
-	         //finally block used to close resources
-	   		try{
-	   			if(stmt!=null)
-	   				stmt.close();
-	   		}catch(SQLException se2){
-	   		}// nothing we can do
-	   		try{
-	   			if(conn!=null)
-	   				conn.close();
-	   		}catch(SQLException se){
-	   			se.printStackTrace();
-	   		}//end finally try
-	    }		
+			//Handle errors for Class.forName
+			e.printStackTrace();
+		}finally{
+			//finally block used to close resources
+			try{
+				if(stmt!=null)
+					stmt.close();
+			}catch(SQLException se2){
+			}// nothing we can do
+			try{
+				if(conn!=null)
+					conn.close();
+			}catch(SQLException se){
+				se.printStackTrace();
+			}//end finally try
+		}		
 		return stories;
 	}
-	
+
 	public ArrayList<Theme> getAllThemes()
 	{
 		ArrayList<Theme> themes = new ArrayList<Theme>();
@@ -73,46 +108,46 @@ public class DatabaseService {
 			}
 			return themes;
 		}catch(SQLException | ClassNotFoundException se){
-	         //Handle errors for JDBC
-	         se.printStackTrace();
+			//Handle errors for JDBC
+			se.printStackTrace();
 		}catch(Exception e){
-	         //Handle errors for Class.forName
-	         e.printStackTrace();
-	    }finally{
-	         //finally block used to close resources
-	   		try{
-	   			if(stmt!=null)
-	   				stmt.close();
-	   		}catch(SQLException se2){
-	   		}// nothing we can do
-	   		try{
-	   			if(conn!=null)
-	   				conn.close();
-	   		}catch(SQLException se){
-	   			se.printStackTrace();
-	   		}//end finally try
-	    }		
+			//Handle errors for Class.forName
+			e.printStackTrace();
+		}finally{
+			//finally block used to close resources
+			try{
+				if(stmt!=null)
+					stmt.close();
+			}catch(SQLException se2){
+			}// nothing we can do
+			try{
+				if(conn!=null)
+					conn.close();
+			}catch(SQLException se){
+				se.printStackTrace();
+			}//end finally try
+		}		
 		return themes;
 	}
-	
+
 	public Boolean Login(User user)
 	{
 		try{
 			User dbuser = findUserByEmail(user.getEmail());
 			String dbpass = dbuser.getPassword();
-			
+
 			if(user.getPassword().equals(dbpass))
 				return true;
 			else 
 				return false;
 		}catch(Exception e){
-	         //Handle errors for Class.forName
-	         e.printStackTrace();
-	    }	
+			//Handle errors for Class.forName
+			e.printStackTrace();
+		}	
 		return false;
-		
+
 	}
-	
+
 	public Boolean ChangePassword(String mail, String pass)
 	{
 		try{
@@ -123,28 +158,28 @@ public class DatabaseService {
 			pstmt.executeUpdate();
 			return true;
 		}catch(SQLException | ClassNotFoundException se){
-	         //Handle errors for JDBC
-	         se.printStackTrace();
+			//Handle errors for JDBC
+			se.printStackTrace();
 		}catch(Exception e){
-	         //Handle errors for Class.forName
-	         e.printStackTrace();
-	    }finally{
-	         //finally block used to close resources
-	   		try{
-	   			if(stmt!=null)
-	   				stmt.close();
-	   		}catch(SQLException se2){
-	   		}// nothing we can do
-	   		try{
-	   			if(conn!=null)
-	   				conn.close();
-	   		}catch(SQLException se){
-	   			se.printStackTrace();
-	   		}//end finally try
-	    }		
+			//Handle errors for Class.forName
+			e.printStackTrace();
+		}finally{
+			//finally block used to close resources
+			try{
+				if(stmt!=null)
+					stmt.close();
+			}catch(SQLException se2){
+			}// nothing we can do
+			try{
+				if(conn!=null)
+					conn.close();
+			}catch(SQLException se){
+				se.printStackTrace();
+			}//end finally try
+		}		
 		return false;
 	}
-	
+
 	public Boolean UpdateProfile(User user)
 	{
 		try{
@@ -180,29 +215,29 @@ public class DatabaseService {
 			}
 			return true;
 		}catch(SQLException | ClassNotFoundException se){
-	         //Handle errors for JDBC
-	         se.printStackTrace();
+			//Handle errors for JDBC
+			se.printStackTrace();
 		}catch(Exception e){
-	         //Handle errors for Class.forName
-	         e.printStackTrace();
-	    }finally{
-	         //finally block used to close resources
-	   		try{
-	   			if(stmt!=null)
-	   				stmt.close();
-	   		}catch(SQLException se2){
-	   		}// nothing we can do
-	   		try{
-	   			if(conn!=null)
-	   				conn.close();
-	   		}catch(SQLException se){
-	   			se.printStackTrace();
-	   		}//end finally try
-	    }		
+			//Handle errors for Class.forName
+			e.printStackTrace();
+		}finally{
+			//finally block used to close resources
+			try{
+				if(stmt!=null)
+					stmt.close();
+			}catch(SQLException se2){
+			}// nothing we can do
+			try{
+				if(conn!=null)
+					conn.close();
+			}catch(SQLException se){
+				se.printStackTrace();
+			}//end finally try
+		}		
 		return false;
 
 	}
-	
+
 	public int addStory(Story story)
 	{
 		int id = 0;
@@ -213,158 +248,158 @@ public class DatabaseService {
 			else
 				pstmt = conn.prepareStatement("INSERT INTO Stories (UserID, Content, ThemeID, IsDeleted, ReportCount, AvgRate, CreationDate, LastUpdate,StoryDateApproximate) VALUES (?,?,?,0,0,0,NOW(),NOW(),?)", Statement.RETURN_GENERATED_KEYS);
 			pstmt.setInt(1, story.getUserId());
-            pstmt.setString(2, story.getContent());
-            pstmt.setInt(3, story.getThemeId());
-            if(story.getdateisAbsolute())
-            	pstmt.setDate(4, new java.sql.Date(story.getAbsoluteDate().getTime()));
-        	else
-        		pstmt.setString(4, story.getApproximateDate());
+			pstmt.setString(2, story.getContent());
+			pstmt.setInt(3, story.getThemeId());
+			if(story.getdateisAbsolute())
+				pstmt.setDate(4, new java.sql.Date(story.getAbsoluteDate().getTime()));
+			else
+				pstmt.setString(4, story.getApproximateDate());
 			pstmt.executeUpdate();
 			ResultSet rs = pstmt.getGeneratedKeys();
 			while(rs.next())
 			{
-				
-	            String key = rs.getString(1);
-	            id = Integer.parseInt(key);    
+
+				String key = rs.getString(1);
+				id = Integer.parseInt(key);    
 			}
 			return id;
 		}catch(SQLException | ClassNotFoundException se){
-	         //Handle errors for JDBC
-	         se.printStackTrace();
+			//Handle errors for JDBC
+			se.printStackTrace();
 		}catch(Exception e){
-	         //Handle errors for Class.forName
-	         e.printStackTrace();
-	    }finally{
-	         //finally block used to close resources
-	   		try{
-	   			if(stmt!=null)
-	   				stmt.close();
-	   		}catch(SQLException se2){
-	   		}// nothing we can do
-	   		try{
-	   			if(conn!=null)
-	   				conn.close();
-	   		}catch(SQLException se){
-	   			se.printStackTrace();
-	   		}//end finally try
-	    }
+			//Handle errors for Class.forName
+			e.printStackTrace();
+		}finally{
+			//finally block used to close resources
+			try{
+				if(stmt!=null)
+					stmt.close();
+			}catch(SQLException se2){
+			}// nothing we can do
+			try{
+				if(conn!=null)
+					conn.close();
+			}catch(SQLException se){
+				se.printStackTrace();
+			}//end finally try
+		}
 		return id;
 
 	}
 
-	
+
 	public boolean addStoryAndPlace(int storyId, int placeId)
-    {
-            
-        try{
+	{
+
+		try{
 			conn = getConnection();
 			pstmt = conn.prepareStatement("INSERT INTO StoriesInPlaces (StoryID, PlaceID) VALUES (?, ?)");
 			pstmt.setInt(1, storyId);
-            pstmt.setInt(2, placeId);
+			pstmt.setInt(2, placeId);
 			pstmt.executeUpdate();
 			return true;
 		}catch(SQLException | ClassNotFoundException se){
-	         //Handle errors for JDBC
-	         se.printStackTrace();
+			//Handle errors for JDBC
+			se.printStackTrace();
 		}catch(Exception e){
-	         //Handle errors for Class.forName
-	         e.printStackTrace();
-	    }finally{
-	         //finally block used to close resources
-	   		try{
-	   			if(stmt!=null)
-	   				stmt.close();
-	   		}catch(SQLException se2){
-	   		}// nothing we can do
-	   		try{
-	   			if(conn!=null)
-	   				conn.close();
-	   		}catch(SQLException se){
-	   			se.printStackTrace();
-	   		}//end finally try
-	    }
-        return false;
-    }
-	
+			//Handle errors for Class.forName
+			e.printStackTrace();
+		}finally{
+			//finally block used to close resources
+			try{
+				if(stmt!=null)
+					stmt.close();
+			}catch(SQLException se2){
+			}// nothing we can do
+			try{
+				if(conn!=null)
+					conn.close();
+			}catch(SQLException se){
+				se.printStackTrace();
+			}//end finally try
+		}
+		return false;
+	}
+
 	public void insertRate(int storyId, int userId, int rate)
 	{
 		try{
 			conn = getConnection();
 			pstmt = conn.prepareStatement("INSERT INTO Rate (StoryID, UserID, Rate, CreationDate, LastUpdate) VALUES (?, ?, ?, NOW(), NOW())");
 			pstmt.setInt(1, storyId);
-            pstmt.setInt(2, userId);
-            pstmt.setInt(3, rate);
+			pstmt.setInt(2, userId);
+			pstmt.setInt(3, rate);
 			pstmt.executeUpdate();
 			int totalRate = 0;
-        	int rateCount = 0;
-        	pstmt = conn.prepareStatement("SELECT * FROM Rate WHERE StoryID = ?");
-        	pstmt.setInt(1, storyId);
-        	ResultSet rs = pstmt.executeQuery();
-        	while(rs.next())
-	        {
-	        	totalRate += rs.getInt(3);
-	        	rateCount++;
-	        }
-        	int avgRate = totalRate / rateCount;
-        	pstmt = conn.prepareStatement("UPDATE Stories SET AvgRate = ? WHERE StoryID = ?");
-        	pstmt.setInt(1, avgRate);
-        	pstmt.setInt(2, storyId);
-        	pstmt.executeUpdate();
+			int rateCount = 0;
+			pstmt = conn.prepareStatement("SELECT * FROM Rate WHERE StoryID = ?");
+			pstmt.setInt(1, storyId);
+			ResultSet rs = pstmt.executeQuery();
+			while(rs.next())
+			{
+				totalRate += rs.getInt(3);
+				rateCount++;
+			}
+			int avgRate = totalRate / rateCount;
+			pstmt = conn.prepareStatement("UPDATE Stories SET AvgRate = ? WHERE StoryID = ?");
+			pstmt.setInt(1, avgRate);
+			pstmt.setInt(2, storyId);
+			pstmt.executeUpdate();
 		}catch(SQLException | ClassNotFoundException se){
-	         //Handle errors for JDBC
-	         se.printStackTrace();
+			//Handle errors for JDBC
+			se.printStackTrace();
 		}catch(Exception e){
-	         //Handle errors for Class.forName
-	         e.printStackTrace();
-	    }finally{
-	         //finally block used to close resources
-	   		try{
-	   			if(stmt!=null)
-	   				stmt.close();
-	   		}catch(SQLException se2){
-	   		}// nothing we can do
-	   		try{
-	   			if(conn!=null)
-	   				conn.close();
-	   		}catch(SQLException se){
-	   			se.printStackTrace();
-	   		}//end finally try
-	    }
+			//Handle errors for Class.forName
+			e.printStackTrace();
+		}finally{
+			//finally block used to close resources
+			try{
+				if(stmt!=null)
+					stmt.close();
+			}catch(SQLException se2){
+			}// nothing we can do
+			try{
+				if(conn!=null)
+					conn.close();
+			}catch(SQLException se){
+				se.printStackTrace();
+			}//end finally try
+		}
 	}
-	
+
 	public boolean insertComment(int storyId, int userId, String comment)
 	{
 		try{
 			conn = getConnection();
 			pstmt = conn.prepareStatement("INSERT INTO Comments (StoryID, UserID, Comment, IsDeleted, CreationDate, LastUpdate) VALUES (?, ?, ?, 0, NOW(), NOW())");
 			pstmt.setInt(1, storyId);
-            pstmt.setInt(2, userId);
-            pstmt.setString(3, comment);
+			pstmt.setInt(2, userId);
+			pstmt.setString(3, comment);
 			pstmt.executeUpdate();
 			return true;
 		}catch(SQLException | ClassNotFoundException se){
-	         //Handle errors for JDBC
-	         se.printStackTrace();
+			//Handle errors for JDBC
+			se.printStackTrace();
 		}catch(Exception e){
-	         //Handle errors for Class.forName
-	         e.printStackTrace();
-	    }finally{
-	         //finally block used to close resources
-	   		try{
-	   			if(stmt!=null)
-	   				stmt.close();
-	   		}catch(SQLException se2){
-	   		}// nothing we can do
-	   		try{
-	   			if(conn!=null)
-	   				conn.close();
-	   		}catch(SQLException se){
-	   			se.printStackTrace();
-	   		}//end finally try
-	    }
+			//Handle errors for Class.forName
+			e.printStackTrace();
+		}finally{
+			//finally block used to close resources
+			try{
+				if(stmt!=null)
+					stmt.close();
+			}catch(SQLException se2){
+			}// nothing we can do
+			try{
+				if(conn!=null)
+					conn.close();
+			}catch(SQLException se){
+				se.printStackTrace();
+			}//end finally try
+		}
 		return false;
 	}
-	
+
 	public int findPlaceByLatLon(String lat, String lon)
 	{
 		int id = 0;
@@ -380,28 +415,28 @@ public class DatabaseService {
 			}
 			return id;
 		}catch(SQLException | ClassNotFoundException se){
-	         //Handle errors for JDBC
-	         se.printStackTrace();
+			//Handle errors for JDBC
+			se.printStackTrace();
 		}catch(Exception e){
-	         //Handle errors for Class.forName
-	         e.printStackTrace();
-	    }finally{
-	         //finally block used to close resources
-	   		try{
-	   			if(stmt!=null)
-	   				stmt.close();
-	   		}catch(SQLException se2){
-	   		}// nothing we can do
-	   		try{
-	   			if(conn!=null)
-	   				conn.close();
-	   		}catch(SQLException se){
-	   			se.printStackTrace();
-	   		}//end finally try
-	    }
+			//Handle errors for Class.forName
+			e.printStackTrace();
+		}finally{
+			//finally block used to close resources
+			try{
+				if(stmt!=null)
+					stmt.close();
+			}catch(SQLException se2){
+			}// nothing we can do
+			try{
+				if(conn!=null)
+					conn.close();
+			}catch(SQLException se){
+				se.printStackTrace();
+			}//end finally try
+		}
 		return id;
 	}
-	
+
 	Boolean executeSql(String sql)
 	{
 		Boolean result = false;
@@ -412,28 +447,28 @@ public class DatabaseService {
 			stmt.executeUpdate(sql);
 			result = true;
 		}catch(SQLException se){
-	         //Handle errors for JDBC
-	         se.printStackTrace();
+			//Handle errors for JDBC
+			se.printStackTrace();
 		}catch(Exception e){
-	         //Handle errors for Class.forName
-	         e.printStackTrace();
-	    }finally{
-	         //finally block used to close resources
-	   		try{
-	   			if(stmt!=null)
-	   				stmt.close();
-	   		}catch(SQLException se2){
-	   		}// nothing we can do
-	   		try{
-	   			if(conn!=null)
-	   				conn.close();
-	   		}catch(SQLException se){
-	   			se.printStackTrace();
-	   		}//end finally try
-	    }
+			//Handle errors for Class.forName
+			e.printStackTrace();
+		}finally{
+			//finally block used to close resources
+			try{
+				if(stmt!=null)
+					stmt.close();
+			}catch(SQLException se2){
+			}// nothing we can do
+			try{
+				if(conn!=null)
+					conn.close();
+			}catch(SQLException se){
+				se.printStackTrace();
+			}//end finally try
+		}
 		return result;
 	}
-	
+
 	public User findUserByEmail(String mail)
 	{
 		User user = new User();
@@ -443,7 +478,7 @@ public class DatabaseService {
 			pstmt = conn.prepareStatement("SELECT * FROM Users WHERE Mail = ? and IsDeleted = 0");
 			pstmt.setString(1, mail);
 			ResultSet rs = pstmt.executeQuery();
-			
+
 			while(rs.next())
 			{
 				user.setName(rs.getString("Name"));
@@ -468,30 +503,30 @@ public class DatabaseService {
 					user.setGender(User.Gender.Unspecified);
 			}
 			return user;
-			
+
 		}catch(SQLException se){
-	         //Handle errors for JDBC
-	         se.printStackTrace();
+			//Handle errors for JDBC
+			se.printStackTrace();
 		}catch(Exception e){
-	         //Handle errors for Class.forName
-	         e.printStackTrace();
-	    }finally{
-	         //finally block used to close resources
-	   		try{
-	   			if(stmt!=null)
-	   				stmt.close();
-	   		}catch(SQLException se2){
-	   		}// nothing we can do
-	   		try{
-	   			if(conn!=null)
-	   				conn.close();
-	   		}catch(SQLException se){
-	   			se.printStackTrace();
-	   		}//end finally try
-	    }
+			//Handle errors for Class.forName
+			e.printStackTrace();
+		}finally{
+			//finally block used to close resources
+			try{
+				if(stmt!=null)
+					stmt.close();
+			}catch(SQLException se2){
+			}// nothing we can do
+			try{
+				if(conn!=null)
+					conn.close();
+			}catch(SQLException se){
+				se.printStackTrace();
+			}//end finally try
+		}
 		return user; //THIS was return null, which give 500 nullpointerexception on each call.
 	}
-	
+
 	public User findUserByUserId(int id)
 	{
 		User user = new User();
@@ -501,7 +536,7 @@ public class DatabaseService {
 			pstmt = conn.prepareStatement("SELECT * FROM Users WHERE UserID = ? and IsDeleted = 0");
 			pstmt.setInt(1, id);
 			ResultSet rs = pstmt.executeQuery();
-			
+
 			while(rs.next())
 			{
 				user.setUserID(id);
@@ -527,27 +562,27 @@ public class DatabaseService {
 					user.setGender(User.Gender.Unspecified);
 			}
 			return user;
-			
+
 		}catch(SQLException se){
-	         //Handle errors for JDBC
-	         se.printStackTrace();
+			//Handle errors for JDBC
+			se.printStackTrace();
 		}catch(Exception e){
-	         //Handle errors for Class.forName
-	         e.printStackTrace();
-	    }finally{
-	         //finally block used to close resources
-	   		try{
-	   			if(stmt!=null)
-	   				stmt.close();
-	   		}catch(SQLException se2){
-	   		}// nothing we can do
-	   		try{
-	   			if(conn!=null)
-	   				conn.close();
-	   		}catch(SQLException se){
-	   			se.printStackTrace();
-	   		}//end finally try
-	    }
+			//Handle errors for Class.forName
+			e.printStackTrace();
+		}finally{
+			//finally block used to close resources
+			try{
+				if(stmt!=null)
+					stmt.close();
+			}catch(SQLException se2){
+			}// nothing we can do
+			try{
+				if(conn!=null)
+					conn.close();
+			}catch(SQLException se){
+				se.printStackTrace();
+			}//end finally try
+		}
 		return user; //THIS was return null, which give 500 nullpointerexception on each call.
 	}
 
@@ -560,7 +595,7 @@ public class DatabaseService {
 			pstmt = conn.prepareStatement("SELECT * FROM Places WHERE PlaceID = ?");
 			pstmt.setInt(1, id);
 			ResultSet rs = pstmt.executeQuery();
-			
+
 			while(rs.next())
 			{
 				place.setPlaceID(id);
@@ -571,30 +606,30 @@ public class DatabaseService {
 				place.setLatitude(rs.getDouble("Latitude"));
 			}
 			return place;
-			
+
 		}catch(SQLException se){
-	         //Handle errors for JDBC
-	         se.printStackTrace();
+			//Handle errors for JDBC
+			se.printStackTrace();
 		}catch(Exception e){
-	         //Handle errors for Class.forName
-	         e.printStackTrace();
-	    }finally{
-	         //finally block used to close resources
-	   		try{
-	   			if(stmt!=null)
-	   				stmt.close();
-	   		}catch(SQLException se2){
-	   		}// nothing we can do
-	   		try{
-	   			if(conn!=null)
-	   				conn.close();
-	   		}catch(SQLException se){
-	   			se.printStackTrace();
-	   		}//end finally try
-	    }
+			//Handle errors for Class.forName
+			e.printStackTrace();
+		}finally{
+			//finally block used to close resources
+			try{
+				if(stmt!=null)
+					stmt.close();
+			}catch(SQLException se2){
+			}// nothing we can do
+			try{
+				if(conn!=null)
+					conn.close();
+			}catch(SQLException se){
+				se.printStackTrace();
+			}//end finally try
+		}
 		return place;
 	}
-	
+
 	public Story findStorybyStoryId(int id)
 	{
 		Story story = new Story();
@@ -604,7 +639,7 @@ public class DatabaseService {
 			pstmt = conn.prepareStatement("SELECT * FROM Stories WHERE StoryID = ?");
 			pstmt.setInt(1, id);
 			ResultSet rs = pstmt.executeQuery();
-			
+
 			while(rs.next())
 			{
 				story.setStoryId(id);
@@ -622,30 +657,30 @@ public class DatabaseService {
 				story.setAvgRate(rs.getInt("AvgRate"));
 			}
 			return story;
-			
+
 		}catch(SQLException se){
-	         //Handle errors for JDBC
-	         se.printStackTrace();
+			//Handle errors for JDBC
+			se.printStackTrace();
 		}catch(Exception e){
-	         //Handle errors for Class.forName
-	         e.printStackTrace();
-	    }finally{
-	         //finally block used to close resources
-	   		try{
-	   			if(stmt!=null)
-	   				stmt.close();
-	   		}catch(SQLException se2){
-	   		}// nothing we can do
-	   		try{
-	   			if(conn!=null)
-	   				conn.close();
-	   		}catch(SQLException se){
-	   			se.printStackTrace();
-	   		}//end finally try
-	    }
+			//Handle errors for Class.forName
+			e.printStackTrace();
+		}finally{
+			//finally block used to close resources
+			try{
+				if(stmt!=null)
+					stmt.close();
+			}catch(SQLException se2){
+			}// nothing we can do
+			try{
+				if(conn!=null)
+					conn.close();
+			}catch(SQLException se){
+				se.printStackTrace();
+			}//end finally try
+		}
 		return story;
 	}
-	
+
 	public ArrayList<Place> findAllPlaces()
 	{
 		ArrayList<Place> places = new ArrayList<Place>();
@@ -654,7 +689,7 @@ public class DatabaseService {
 			conn = getConnection();
 			pstmt = conn.prepareStatement("SELECT * FROM Places");
 			ResultSet rs = pstmt.executeQuery();
-			
+
 			while(rs.next())
 			{
 				Place temp = new Place();
@@ -667,37 +702,37 @@ public class DatabaseService {
 				places.add(temp);
 			}
 			return places;
-			
+
 		}catch(SQLException se){
-	         //Handle errors for JDBC
-	         se.printStackTrace();
+			//Handle errors for JDBC
+			se.printStackTrace();
 		}catch(Exception e){
-	         //Handle errors for Class.forName
-	         e.printStackTrace();
-	    }finally{
-	         //finally block used to close resources
-	   		try{
-	   			if(stmt!=null)
-	   				stmt.close();
-	   		}catch(SQLException se2){
-	   		}// nothing we can do
-	   		try{
-	   			if(conn!=null)
-	   				conn.close();
-	   		}catch(SQLException se){
-	   			se.printStackTrace();
-	   		}//end finally try
-	    }
+			//Handle errors for Class.forName
+			e.printStackTrace();
+		}finally{
+			//finally block used to close resources
+			try{
+				if(stmt!=null)
+					stmt.close();
+			}catch(SQLException se2){
+			}// nothing we can do
+			try{
+				if(conn!=null)
+					conn.close();
+			}catch(SQLException se){
+				se.printStackTrace();
+			}//end finally try
+		}
 		return places;
 	}
-	
+
 	public Connection getConnection() throws ClassNotFoundException, SQLException{
 		Class.forName(JDBC_DRIVER);
 		conn = DriverManager.getConnection(DB_URL, USER, PASS);
 		return conn;
 	}
-	
-	
+
+
 	public Boolean register(User user)
 	{
 		User temp = findUserByEmail(user.getEmail());
@@ -721,30 +756,30 @@ public class DatabaseService {
 				pstmt.executeUpdate();
 				return true;
 			}catch(SQLException se){
-		         //Handle errors for JDBC
-		         se.printStackTrace();
+				//Handle errors for JDBC
+				se.printStackTrace();
 			}catch(Exception e){
-		         //Handle errors for Class.forName
-		         e.printStackTrace();
-		    }finally{
-		         //finally block used to close resources
-		   		try{
-		   			if(stmt!=null)
-		   				stmt.close();
-		   		}catch(SQLException se2){
-		   		}// nothing we can do
-		   		try{
-		   			if(conn!=null)
-		   				conn.close();
-		   		}catch(SQLException se){
-		   			se.printStackTrace();
-		   		}//end finally try
-		    }
+				//Handle errors for Class.forName
+				e.printStackTrace();
+			}finally{
+				//finally block used to close resources
+				try{
+					if(stmt!=null)
+						stmt.close();
+				}catch(SQLException se2){
+				}// nothing we can do
+				try{
+					if(conn!=null)
+						conn.close();
+				}catch(SQLException se){
+					se.printStackTrace();
+				}//end finally try
+			}
 			return null;
-			
+
 		}
 	}
-	
+
 	public int insertPhoto(String filePath)
 	{
 		try
@@ -759,34 +794,34 @@ public class DatabaseService {
 			ResultSet rs = pstmt.getGeneratedKeys();
 			while(rs.next())
 			{
-				
-	            String key = rs.getString(1);
-	            return Integer.parseInt(key);
-		          
+
+				String key = rs.getString(1);
+				return Integer.parseInt(key);
+
 			}
 		}catch(SQLException se){
-	         //Handle errors for JDBC
-	         se.printStackTrace();
+			//Handle errors for JDBC
+			se.printStackTrace();
 		}catch(Exception e){
-	         //Handle errors for Class.forName
-	         e.printStackTrace();
-	    }finally{
-	         //finally block used to close resources
-	   		try{
-	   			if(stmt!=null)
-	   				stmt.close();
-	   		}catch(SQLException se2){
-	   		}// nothing we can do
-	   		try{
-	   			if(conn!=null)
-	   				conn.close();
-	   		}catch(SQLException se){
-	   			se.printStackTrace();
-	   		}//end finally try
-	    }
+			//Handle errors for Class.forName
+			e.printStackTrace();
+		}finally{
+			//finally block used to close resources
+			try{
+				if(stmt!=null)
+					stmt.close();
+			}catch(SQLException se2){
+			}// nothing we can do
+			try{
+				if(conn!=null)
+					conn.close();
+			}catch(SQLException se){
+				se.printStackTrace();
+			}//end finally try
+		}
 		return 0;
 	}
-	
+
 	public int insertPlace(String placeName, String lon, String lat)
 	{
 		try
@@ -795,39 +830,39 @@ public class DatabaseService {
 			pstmt = conn.prepareStatement("INSERT INTO Places (Name, Longtitude, Latitude, CreationDate, LastUpdate) VALUES (?,?,?,NOW(),NOW())", Statement.RETURN_GENERATED_KEYS);
 			pstmt.setString(1, placeName);
 			pstmt.setString(2, lon);
-            pstmt.setString(3, lat);
+			pstmt.setString(3, lat);
 			pstmt.executeUpdate();
 			ResultSet rs = pstmt.getGeneratedKeys();
 			while(rs.next())
 			{
-				
-	            String key = rs.getString(1);
-	            return Integer.parseInt(key);
-		          
+
+				String key = rs.getString(1);
+				return Integer.parseInt(key);
+
 			}
 		}catch(SQLException se){
-	         //Handle errors for JDBC
-	         se.printStackTrace();
+			//Handle errors for JDBC
+			se.printStackTrace();
 		}catch(Exception e){
-	         //Handle errors for Class.forName
-	         e.printStackTrace();
-	    }finally{
-	         //finally block used to close resources
-	   		try{
-	   			if(stmt!=null)
-	   				stmt.close();
-	   		}catch(SQLException se2){
-	   		}// nothing we can do
-	   		try{
-	   			if(conn!=null)
-	   				conn.close();
-	   		}catch(SQLException se){
-	   			se.printStackTrace();
-	   		}//end finally try
-	    }
+			//Handle errors for Class.forName
+			e.printStackTrace();
+		}finally{
+			//finally block used to close resources
+			try{
+				if(stmt!=null)
+					stmt.close();
+			}catch(SQLException se2){
+			}// nothing we can do
+			try{
+				if(conn!=null)
+					conn.close();
+			}catch(SQLException se){
+				se.printStackTrace();
+			}//end finally try
+		}
 		return 0;
 	}
-	
+
 	public void insertPhotoStoryConnection(int storyID, int pictureID)
 	{
 		try
@@ -837,29 +872,29 @@ public class DatabaseService {
 			pstmt.setInt(1, pictureID);
 			pstmt.setInt(2, storyID);
 			pstmt.executeUpdate();
-			
+
 		}catch(SQLException se){
-	         //Handle errors for JDBC
-	         se.printStackTrace();
+			//Handle errors for JDBC
+			se.printStackTrace();
 		}catch(Exception e){
-	         //Handle errors for Class.forName
-	         e.printStackTrace();
-	    }finally{
-	         //finally block used to close resources
-	   		try{
-	   			if(stmt!=null)
-	   				stmt.close();
-	   		}catch(SQLException se2){
-	   		}// nothing we can do
-	   		try{
-	   			if(conn!=null)
-	   				conn.close();
-	   		}catch(SQLException se){
-	   			se.printStackTrace();
-	   		}//end finally try
-	    }
+			//Handle errors for Class.forName
+			e.printStackTrace();
+		}finally{
+			//finally block used to close resources
+			try{
+				if(stmt!=null)
+					stmt.close();
+			}catch(SQLException se2){
+			}// nothing we can do
+			try{
+				if(conn!=null)
+					conn.close();
+			}catch(SQLException se){
+				se.printStackTrace();
+			}//end finally try
+		}
 	}
-	
+
 	public ArrayList<String> getPicturePathsOfaPlace(int placeID){
 		ArrayList<String> paths = new ArrayList<String>();
 		try
@@ -871,30 +906,30 @@ public class DatabaseService {
 			while(rs.next())
 				paths.add(rs.getString("Path"));
 			return paths;
-			
+
 		}catch(SQLException se){
-	         //Handle errors for JDBC
-	         se.printStackTrace();
+			//Handle errors for JDBC
+			se.printStackTrace();
 		}catch(Exception e){
-	         //Handle errors for Class.forName
-	         e.printStackTrace();
-	    }finally{
-	         //finally block used to close resources
-	   		try{
-	   			if(stmt!=null)
-	   				stmt.close();
-	   		}catch(SQLException se2){
-	   		}// nothing we can do
-	   		try{
-	   			if(conn!=null)
-	   				conn.close();
-	   		}catch(SQLException se){
-	   			se.printStackTrace();
-	   		}//end finally try
-	    }
+			//Handle errors for Class.forName
+			e.printStackTrace();
+		}finally{
+			//finally block used to close resources
+			try{
+				if(stmt!=null)
+					stmt.close();
+			}catch(SQLException se2){
+			}// nothing we can do
+			try{
+				if(conn!=null)
+					conn.close();
+			}catch(SQLException se){
+				se.printStackTrace();
+			}//end finally try
+		}
 		return null;
 	}
-	
+
 	public void subscribe(int followerId, int followedId)
 	{
 		try
@@ -940,29 +975,29 @@ public class DatabaseService {
 					se.printStackTrace();
 				}
 			}
-			
+
 		}catch(SQLException se){
-	         //Handle errors for JDBC
-	         se.printStackTrace();
+			//Handle errors for JDBC
+			se.printStackTrace();
 		}catch(Exception e){
-	         //Handle errors for Class.forName
-	         e.printStackTrace();
-	    }finally{
-	         //finally block used to close resources
-	   		try{
-	   			if(stmt!=null)
-	   				stmt.close();
-	   		}catch(SQLException se2){
-	   		}// nothing we can do
-	   		try{
-	   			if(conn!=null)
-	   				conn.close();
-	   		}catch(SQLException se){
-	   			se.printStackTrace();
-	   		}//end finally try
-	    }
+			//Handle errors for Class.forName
+			e.printStackTrace();
+		}finally{
+			//finally block used to close resources
+			try{
+				if(stmt!=null)
+					stmt.close();
+			}catch(SQLException se2){
+			}// nothing we can do
+			try{
+				if(conn!=null)
+					conn.close();
+			}catch(SQLException se){
+				se.printStackTrace();
+			}//end finally try
+		}
 	}
-	
+
 	public boolean isRemembered(int userId, int storyId)
 	{
 		try
@@ -978,36 +1013,36 @@ public class DatabaseService {
 			}
 			else
 				return false;
-		 
+
 		}catch(SQLException se){
-	        //Handle errors for JDBC
-	        se.printStackTrace();
-	        return false;
+			//Handle errors for JDBC
+			se.printStackTrace();
+			return false;
 		}catch(Exception e){
-	        //Handle errors for Class.forName
-	        e.printStackTrace();
-	        return false;
+			//Handle errors for Class.forName
+			e.printStackTrace();
+			return false;
 		}finally{
-	        //finally block used to close resources
-	  		try{
-	  			if(stmt!=null)
-	  				stmt.close();
-	  		}catch(SQLException se2){
-	  		}// nothing we can do
-	  		try{
-	  			if(conn!=null)
-	  				conn.close();
-	  		}catch(SQLException se){
-	  			se.printStackTrace();
-	  		}//end finally try
-	   }
+			//finally block used to close resources
+			try{
+				if(stmt!=null)
+					stmt.close();
+			}catch(SQLException se2){
+			}// nothing we can do
+			try{
+				if(conn!=null)
+					conn.close();
+			}catch(SQLException se){
+				se.printStackTrace();
+			}//end finally try
+		}
 	}
-	
+
 	public void remember(int userId, int storyId)
 	{
 		try
 		{
-			
+
 			conn = DriverManager.getConnection(DB_URL, USER, PASS);
 			pstmt = conn.prepareStatement("INSERT INTO IRememberThat (StoryID, UserID, CreationDate, LastUpdate) VALUES(?,?,NOW(),NOW())");
 			pstmt.setInt(1, storyId);
@@ -1017,21 +1052,21 @@ public class DatabaseService {
 		{
 			se.printStackTrace();
 		}finally{
-	         //finally block used to close resources
-	   		try{
-	   			if(stmt!=null)
-	   				stmt.close();
-	   		}catch(SQLException se2){
-	   		}// nothing we can do
-	   		try{
-	   			if(conn!=null)
-	   				conn.close();
-	   		}catch(SQLException se){
-	   			se.printStackTrace();
-	   		}//end finally try
-	    }
+			//finally block used to close resources
+			try{
+				if(stmt!=null)
+					stmt.close();
+			}catch(SQLException se2){
+			}// nothing we can do
+			try{
+				if(conn!=null)
+					conn.close();
+			}catch(SQLException se){
+				se.printStackTrace();
+			}//end finally try
+		}
 	}
-	
+
 	public void dontRemember(int userId, int storyId)
 	{
 		try
@@ -1045,21 +1080,21 @@ public class DatabaseService {
 		{
 			se.printStackTrace();
 		}finally{
-	         //finally block used to close resources
-	   		try{
-	   			if(stmt!=null)
-	   				stmt.close();
-	   		}catch(SQLException se2){
-	   		}// nothing we can do
-	   		try{
-	   			if(conn!=null)
-	   				conn.close();
-	   		}catch(SQLException se){
-	   			se.printStackTrace();
-	   		}//end finally try
-	    }
+			//finally block used to close resources
+			try{
+				if(stmt!=null)
+					stmt.close();
+			}catch(SQLException se2){
+			}// nothing we can do
+			try{
+				if(conn!=null)
+					conn.close();
+			}catch(SQLException se){
+				se.printStackTrace();
+			}//end finally try
+		}
 	}
-	
+
 	public Boolean isFollowing(int followerId, int followedId)
 	{
 		try
@@ -1078,30 +1113,30 @@ public class DatabaseService {
 			{
 				return false;
 			}
-			
+
 		}catch(SQLException se){
-	         //Handle errors for JDBC
-	         se.printStackTrace();
+			//Handle errors for JDBC
+			se.printStackTrace();
 		}catch(Exception e){
-	         //Handle errors for Class.forName
-	         e.printStackTrace();
-	    }finally{
-	         //finally block used to close resources
-	   		try{
-	   			if(stmt!=null)
-	   				stmt.close();
-	   		}catch(SQLException se2){
-	   		}// nothing we can do
-	   		try{
-	   			if(conn!=null)
-	   				conn.close();
-	   		}catch(SQLException se){
-	   			se.printStackTrace();
-	   		}//end finally try
-	    }
+			//Handle errors for Class.forName
+			e.printStackTrace();
+		}finally{
+			//finally block used to close resources
+			try{
+				if(stmt!=null)
+					stmt.close();
+			}catch(SQLException se2){
+			}// nothing we can do
+			try{
+				if(conn!=null)
+					conn.close();
+			}catch(SQLException se){
+				se.printStackTrace();
+			}//end finally try
+		}
 		return false;
 	}
-	
+
 	public Boolean isFollowingPlace(int followerId, int followedId)
 	{
 		try
@@ -1120,30 +1155,30 @@ public class DatabaseService {
 			{
 				return false;
 			}
-			
+
 		}catch(SQLException se){
-	         //Handle errors for JDBC
-	         se.printStackTrace();
+			//Handle errors for JDBC
+			se.printStackTrace();
 		}catch(Exception e){
-	         //Handle errors for Class.forName
-	         e.printStackTrace();
-	    }finally{
-	         //finally block used to close resources
-	   		try{
-	   			if(stmt!=null)
-	   				stmt.close();
-	   		}catch(SQLException se2){
-	   		}// nothing we can do
-	   		try{
-	   			if(conn!=null)
-	   				conn.close();
-	   		}catch(SQLException se){
-	   			se.printStackTrace();
-	   		}//end finally try
-	    }
+			//Handle errors for Class.forName
+			e.printStackTrace();
+		}finally{
+			//finally block used to close resources
+			try{
+				if(stmt!=null)
+					stmt.close();
+			}catch(SQLException se2){
+			}// nothing we can do
+			try{
+				if(conn!=null)
+					conn.close();
+			}catch(SQLException se){
+				se.printStackTrace();
+			}//end finally try
+		}
 		return false;
 	}
-	
+
 	public void unsubscribe(int followerId, int followedId)
 	{
 		try
@@ -1156,7 +1191,7 @@ public class DatabaseService {
 			ResultSet rs = pstmt.executeQuery();
 			if(rs.next())
 			{
-				
+
 				try
 				{
 					pstmt = conn.prepareStatement("UPDATE SubscriptionsToUsers SET IsActive = 0, LastUpdate=? WHERE FollowerID = ? AND FollowedID = ?");
@@ -1169,32 +1204,32 @@ public class DatabaseService {
 				{
 					se.printStackTrace();
 				}
-				
+
 			}
-			
+
 		}catch(SQLException se){
-	         //Handle errors for JDBC
-	         se.printStackTrace();
+			//Handle errors for JDBC
+			se.printStackTrace();
 		}catch(Exception e){
-	         //Handle errors for Class.forName
-	         e.printStackTrace();
-	    }finally{
-	         //finally block used to close resources
-	   		try{
-	   			if(stmt!=null)
-	   				stmt.close();
-	   		}catch(SQLException se2){
-	   		}// nothing we can do
-	   		try{
-	   			if(conn!=null)
-	   				conn.close();
-	   		}catch(SQLException se){
-	   			se.printStackTrace();
-	   		}//end finally try
-	    }
+			//Handle errors for Class.forName
+			e.printStackTrace();
+		}finally{
+			//finally block used to close resources
+			try{
+				if(stmt!=null)
+					stmt.close();
+			}catch(SQLException se2){
+			}// nothing we can do
+			try{
+				if(conn!=null)
+					conn.close();
+			}catch(SQLException se){
+				se.printStackTrace();
+			}//end finally try
+		}
 	}
-	
-	
+
+
 	public void subscribePlace(int followerId, int followedId)
 	{
 		try
@@ -1240,27 +1275,27 @@ public class DatabaseService {
 					se.printStackTrace();
 				}
 			}
-			
+
 		}catch(SQLException se){
-	         //Handle errors for JDBC
-	         se.printStackTrace();
+			//Handle errors for JDBC
+			se.printStackTrace();
 		}catch(Exception e){
-	         //Handle errors for Class.forName
-	         e.printStackTrace();
-	    }finally{
-	         //finally block used to close resources
-	   		try{
-	   			if(stmt!=null)
-	   				stmt.close();
-	   		}catch(SQLException se2){
-	   		}// nothing we can do
-	   		try{
-	   			if(conn!=null)
-	   				conn.close();
-	   		}catch(SQLException se){
-	   			se.printStackTrace();
-	   		}//end finally try
-	    }
+			//Handle errors for Class.forName
+			e.printStackTrace();
+		}finally{
+			//finally block used to close resources
+			try{
+				if(stmt!=null)
+					stmt.close();
+			}catch(SQLException se2){
+			}// nothing we can do
+			try{
+				if(conn!=null)
+					conn.close();
+			}catch(SQLException se){
+				se.printStackTrace();
+			}//end finally try
+		}
 	}
 
 	public void unsubscribePlace(int followerId, int followedId)
@@ -1275,7 +1310,7 @@ public class DatabaseService {
 			ResultSet rs = pstmt.executeQuery();
 			if(rs.next())
 			{
-				
+
 				try
 				{
 					pstmt = conn.prepareStatement("UPDATE SubscriptionsToPlaces SET IsActive = 0, LastUpdate=? WHERE FollowerID = ? AND FollowedID = ?");
@@ -1288,29 +1323,29 @@ public class DatabaseService {
 				{
 					se.printStackTrace();
 				}
-				
+
 			}
-			
+
 		}catch(SQLException se){
-	         //Handle errors for JDBC
-	         se.printStackTrace();
+			//Handle errors for JDBC
+			se.printStackTrace();
 		}catch(Exception e){
-	         //Handle errors for Class.forName
-	         e.printStackTrace();
-	    }finally{
-	         //finally block used to close resources
-	   		try{
-	   			if(stmt!=null)
-	   				stmt.close();
-	   		}catch(SQLException se2){
-	   		}// nothing we can do
-	   		try{
-	   			if(conn!=null)
-	   				conn.close();
-	   		}catch(SQLException se){
-	   			se.printStackTrace();
-	   		}//end finally try
-	    }
+			//Handle errors for Class.forName
+			e.printStackTrace();
+		}finally{
+			//finally block used to close resources
+			try{
+				if(stmt!=null)
+					stmt.close();
+			}catch(SQLException se2){
+			}// nothing we can do
+			try{
+				if(conn!=null)
+					conn.close();
+			}catch(SQLException se){
+				se.printStackTrace();
+			}//end finally try
+		}
 	}
 
 	public String pathByPicId(int picId)
@@ -1324,30 +1359,30 @@ public class DatabaseService {
 			if(rs.next())
 			{
 				return rs.getString("Path");
-				
+
 			}
 			return null;
-			
+
 		}catch(SQLException se){
-	         //Handle errors for JDBC
-	         se.printStackTrace();
+			//Handle errors for JDBC
+			se.printStackTrace();
 		}catch(Exception e){
-	         //Handle errors for Class.forName
-	         e.printStackTrace();
-	    }finally{
-	         //finally block used to close resources
-	   		try{
-	   			if(stmt!=null)
-	   				stmt.close();
-	   		}catch(SQLException se2){
-	   		}// nothing we can do
-	   		try{
-	   			if(conn!=null)
-	   				conn.close();
-	   		}catch(SQLException se){
-	   			se.printStackTrace();
-	   		}//end finally try
-	    }
+			//Handle errors for Class.forName
+			e.printStackTrace();
+		}finally{
+			//finally block used to close resources
+			try{
+				if(stmt!=null)
+					stmt.close();
+			}catch(SQLException se2){
+			}// nothing we can do
+			try{
+				if(conn!=null)
+					conn.close();
+			}catch(SQLException se){
+				se.printStackTrace();
+			}//end finally try
+		}
 		return null;
 	}
 
@@ -1360,27 +1395,27 @@ public class DatabaseService {
 			pstmt.setInt(2, userId);
 			pstmt.executeUpdate();
 		}catch(SQLException se){
-	         //Handle errors for JDBC
-	         se.printStackTrace();
+			//Handle errors for JDBC
+			se.printStackTrace();
 		}catch(Exception e){
-	         //Handle errors for Class.forName
-	         e.printStackTrace();
-	    }finally{
-	         //finally block used to close resources
-	   		try{
-	   			if(stmt!=null)
-	   				stmt.close();
-	   		}catch(SQLException se2){
-	   		}// nothing we can do
-	   		try{
-	   			if(conn!=null)
-	   				conn.close();
-	   		}catch(SQLException se){
-	   			se.printStackTrace();
-	   		}//end finally try
-	    }
+			//Handle errors for Class.forName
+			e.printStackTrace();
+		}finally{
+			//finally block used to close resources
+			try{
+				if(stmt!=null)
+					stmt.close();
+			}catch(SQLException se2){
+			}// nothing we can do
+			try{
+				if(conn!=null)
+					conn.close();
+			}catch(SQLException se){
+				se.printStackTrace();
+			}//end finally try
+		}
 	}
-	
+
 	public String pictureNameGenerator()
 	{
 		String result = null;
@@ -1394,35 +1429,35 @@ public class DatabaseService {
 			if(rs.next())
 			{
 				lastPicId = rs.getInt("PicID");
-	             
+
 			}
 			lastPicId++;
 			result = lastPicId + ".jpg";
 			return result;
-			
+
 		}catch(SQLException se){
-	         //Handle errors for JDBC
-	         se.printStackTrace();
+			//Handle errors for JDBC
+			se.printStackTrace();
 		}catch(Exception e){
-	         //Handle errors for Class.forName
-	         e.printStackTrace();
-	    }finally{
-	         //finally block used to close resources
-	   		try{
-	   			if(stmt!=null)
-	   				stmt.close();
-	   		}catch(SQLException se2){
-	   		}// nothing we can do
-	   		try{
-	   			if(conn!=null)
-	   				conn.close();
-	   		}catch(SQLException se){
-	   			se.printStackTrace();
-	   		}//end finally try
-	    }
+			//Handle errors for Class.forName
+			e.printStackTrace();
+		}finally{
+			//finally block used to close resources
+			try{
+				if(stmt!=null)
+					stmt.close();
+			}catch(SQLException se2){
+			}// nothing we can do
+			try{
+				if(conn!=null)
+					conn.close();
+			}catch(SQLException se){
+				se.printStackTrace();
+			}//end finally try
+		}
 		return result;
 	}
-	
+
 	//format and separate tags from string, write to database and return inserted tag ids
 	public ArrayList<String> insertTags(String tagString)
 	{
@@ -1450,30 +1485,30 @@ public class DatabaseService {
 					while(rs2.next())
 					{
 						tagIds.add(rs2.getString(1));
-			            
+
 					}
 				}
-				
+
 			}catch(SQLException | ClassNotFoundException se){
-		         //Handle errors for JDBC
-		         se.printStackTrace();
+				//Handle errors for JDBC
+				se.printStackTrace();
 			}catch(Exception e){
-		         //Handle errors for Class.forName
-		         e.printStackTrace();
-		    }finally{
-		         //finally block used to close resources
-		   		try{
-		   			if(stmt!=null)
-		   				stmt.close();
-		   		}catch(SQLException se2){
-		   		}// nothing we can do
-		   		try{
-		   			if(conn!=null)
-		   				conn.close();
-		   		}catch(SQLException se){
-		   			se.printStackTrace();
-		   		}//end finally try
-		    }
+				//Handle errors for Class.forName
+				e.printStackTrace();
+			}finally{
+				//finally block used to close resources
+				try{
+					if(stmt!=null)
+						stmt.close();
+				}catch(SQLException se2){
+				}// nothing we can do
+				try{
+					if(conn!=null)
+						conn.close();
+				}catch(SQLException se){
+					se.printStackTrace();
+				}//end finally try
+			}
 		}
 		return tagIds;
 	}
@@ -1495,30 +1530,30 @@ public class DatabaseService {
 					pstmt.setInt(2, storyId);
 					pstmt.executeUpdate();
 				}
-				
+
 			}catch(SQLException | ClassNotFoundException se){
-		         //Handle errors for JDBC
-		         se.printStackTrace();
+				//Handle errors for JDBC
+				se.printStackTrace();
 			}catch(Exception e){
-		         //Handle errors for Class.forName
-		         e.printStackTrace();
-		    }finally{
-		         //finally block used to close resources
-		   		try{
-		   			if(stmt!=null)
-		   				stmt.close();
-		   		}catch(SQLException se2){
-		   		}// nothing we can do
-		   		try{
-		   			if(conn!=null)
-		   				conn.close();
-		   		}catch(SQLException se){
-		   			se.printStackTrace();
-		   		}//end finally try
-		    }
+				//Handle errors for Class.forName
+				e.printStackTrace();
+			}finally{
+				//finally block used to close resources
+				try{
+					if(stmt!=null)
+						stmt.close();
+				}catch(SQLException se2){
+				}// nothing we can do
+				try{
+					if(conn!=null)
+						conn.close();
+				}catch(SQLException se){
+					se.printStackTrace();
+				}//end finally try
+			}
 		}
 	}
-	
+
 	public void insertTagPlaceConnection(ArrayList<String> tagIds, int placeId)
 	{
 		for(String tagId:tagIds)
@@ -1536,69 +1571,69 @@ public class DatabaseService {
 					pstmt.setInt(2, placeId);
 					pstmt.executeUpdate();
 				}
-				
+
 			}catch(SQLException | ClassNotFoundException se){
-		         //Handle errors for JDBC
-		         se.printStackTrace();
+				//Handle errors for JDBC
+				se.printStackTrace();
 			}catch(Exception e){
-		         //Handle errors for Class.forName
-		         e.printStackTrace();
-		    }finally{
-		         //finally block used to close resources
-		   		try{
-		   			if(stmt!=null)
-		   				stmt.close();
-		   		}catch(SQLException se2){
-		   		}// nothing we can do
-		   		try{
-		   			if(conn!=null)
-		   				conn.close();
-		   		}catch(SQLException se){
-		   			se.printStackTrace();
-		   		}//end finally try
-		    }
+				//Handle errors for Class.forName
+				e.printStackTrace();
+			}finally{
+				//finally block used to close resources
+				try{
+					if(stmt!=null)
+						stmt.close();
+				}catch(SQLException se2){
+				}// nothing we can do
+				try{
+					if(conn!=null)
+						conn.close();
+				}catch(SQLException se){
+					se.printStackTrace();
+				}//end finally try
+			}
 		}
 	}
-	
+
 	public ArrayList<String> findTagIds(String text)
 	{
 		ArrayList<String> tagIds = new ArrayList<String>();
 
-		
+
+		try{
+			conn = getConnection();
+			pstmt = conn.prepareStatement("SELECT * FROM Tags WHERE Name LIKE ?");
+			pstmt.setString(1, "%" + text + "%");
+			ResultSet rs = pstmt.executeQuery();
+			while(rs.next())
+			{
+				tagIds.add(Integer.toString(rs.getInt("TagID")));
+			}
+
+		}catch(SQLException | ClassNotFoundException se){
+			//Handle errors for JDBC
+			se.printStackTrace();
+		}catch(Exception e){
+			//Handle errors for Class.forName
+			e.printStackTrace();
+		}finally{
+			//finally block used to close resources
 			try{
-				conn = getConnection();
-				pstmt = conn.prepareStatement("SELECT * FROM Tags WHERE Name LIKE ?");
-				pstmt.setString(1, "%" + text + "%");
-				ResultSet rs = pstmt.executeQuery();
-				while(rs.next())
-				{
-					tagIds.add(Integer.toString(rs.getInt("TagID")));
-				}
-				
-			}catch(SQLException | ClassNotFoundException se){
-		         //Handle errors for JDBC
-		         se.printStackTrace();
-			}catch(Exception e){
-		         //Handle errors for Class.forName
-		         e.printStackTrace();
-		    }finally{
-		         //finally block used to close resources
-		   		try{
-		   			if(stmt!=null)
-		   				stmt.close();
-		   		}catch(SQLException se2){
-		   		}// nothing we can do
-		   		try{
-		   			if(conn!=null)
-		   				conn.close();
-		   		}catch(SQLException se){
-		   			se.printStackTrace();
-		   		}//end finally try
-		    }
-		
+				if(stmt!=null)
+					stmt.close();
+			}catch(SQLException se2){
+			}// nothing we can do
+			try{
+				if(conn!=null)
+					conn.close();
+			}catch(SQLException se){
+				se.printStackTrace();
+			}//end finally try
+		}
+
 		return tagIds;
 	}
-	
+
 	public ArrayList<Place> findPlacesFromTags(String text)
 	{
 		ArrayList<Place> places = new ArrayList<Place>();
@@ -1613,31 +1648,31 @@ public class DatabaseService {
 			}
 			return places;
 		}catch(SQLException | ClassNotFoundException se){
-	         //Handle errors for JDBC
-	         se.printStackTrace();
+			//Handle errors for JDBC
+			se.printStackTrace();
 		}catch(Exception e){
-	         //Handle errors for Class.forName
-	         e.printStackTrace();
-	    }finally{
-	         //finally block used to close resources
-	   		try{
-	   			if(stmt!=null)
-	   				stmt.close();
-	   		}catch(SQLException se2){
-	   		}// nothing we can do
-	   		try{
-	   			if(conn!=null)
-	   				conn.close();
-	   		}catch(SQLException se){
-	   			se.printStackTrace();
-	   		}//end finally try
-	    }
+			//Handle errors for Class.forName
+			e.printStackTrace();
+		}finally{
+			//finally block used to close resources
+			try{
+				if(stmt!=null)
+					stmt.close();
+			}catch(SQLException se2){
+			}// nothing we can do
+			try{
+				if(conn!=null)
+					conn.close();
+			}catch(SQLException se){
+				se.printStackTrace();
+			}//end finally try
+		}
 		return places;
 	}
-	
+
 	public ArrayList<Story> findStoriesFromTags(String text)
 	{
-		
+
 		ArrayList<Story> stories = new ArrayList<Story>();
 		try{
 			conn = getConnection();
@@ -1651,28 +1686,28 @@ public class DatabaseService {
 			}
 			return stories;
 		}catch(SQLException | ClassNotFoundException se){
-	         //Handle errors for JDBC
-	         se.printStackTrace();
+			//Handle errors for JDBC
+			se.printStackTrace();
 		}catch(Exception e){
-	         //Handle errors for Class.forName
-	         e.printStackTrace();
-	    }finally{
-	         //finally block used to close resources
-	   		try{
-	   			if(stmt!=null)
-	   				stmt.close();
-	   		}catch(SQLException se2){
-	   		}// nothing we can do
-	   		try{
-	   			if(conn!=null)
-	   				conn.close();
-	   		}catch(SQLException se){
-	   			se.printStackTrace();
-	   		}//end finally try
-	    }
+			//Handle errors for Class.forName
+			e.printStackTrace();
+		}finally{
+			//finally block used to close resources
+			try{
+				if(stmt!=null)
+					stmt.close();
+			}catch(SQLException se2){
+			}// nothing we can do
+			try{
+				if(conn!=null)
+					conn.close();
+			}catch(SQLException se){
+				se.printStackTrace();
+			}//end finally try
+		}
 		return stories;
 	}
-	
+
 	//search in the content and tags of a story
 	public ArrayList<Story> searchStory(String text)
 	{
@@ -1693,29 +1728,29 @@ public class DatabaseService {
 			}
 			return stories;
 		}catch(SQLException | ClassNotFoundException se){
-	         //Handle errors for JDBC
-	         se.printStackTrace();
+			//Handle errors for JDBC
+			se.printStackTrace();
 		}catch(Exception e){
-	         //Handle errors for Class.forName
-	         e.printStackTrace();
-	    }finally{
-	         //finally block used to close resources
-	   		try{
-	   			if(stmt!=null)
-	   				stmt.close();
-	   		}catch(SQLException se2){
-	   		}// nothing we can do
-	   		try{
-	   			if(conn!=null)
-	   				conn.close();
-	   		}catch(SQLException se){
-	   			se.printStackTrace();
-	   		}//end finally try
-	    }
+			//Handle errors for Class.forName
+			e.printStackTrace();
+		}finally{
+			//finally block used to close resources
+			try{
+				if(stmt!=null)
+					stmt.close();
+			}catch(SQLException se2){
+			}// nothing we can do
+			try{
+				if(conn!=null)
+					conn.close();
+			}catch(SQLException se){
+				se.printStackTrace();
+			}//end finally try
+		}
 		return stories;
-		
+
 	}
-	
+
 	//search in the name and tags of a place
 	public ArrayList<Place> searchPlace(String text)
 	{
@@ -1735,30 +1770,30 @@ public class DatabaseService {
 			}
 			return places;
 		}catch(SQLException | ClassNotFoundException se){
-	         //Handle errors for JDBC
-	         se.printStackTrace();
+			//Handle errors for JDBC
+			se.printStackTrace();
 		}catch(Exception e){
-	         //Handle errors for Class.forName
-	         e.printStackTrace();
-	    }finally{
-	         //finally block used to close resources
-	   		try{
-	   			if(stmt!=null)
-	   				stmt.close();
-	   		}catch(SQLException se2){
-	   		}// nothing we can do
-	   		try{
-	   			if(conn!=null)
-	   				conn.close();
-	   		}catch(SQLException se){
-	   			se.printStackTrace();
-	   		}//end finally try
-	    }
-		
+			//Handle errors for Class.forName
+			e.printStackTrace();
+		}finally{
+			//finally block used to close resources
+			try{
+				if(stmt!=null)
+					stmt.close();
+			}catch(SQLException se2){
+			}// nothing we can do
+			try{
+				if(conn!=null)
+					conn.close();
+			}catch(SQLException se){
+				se.printStackTrace();
+			}//end finally try
+		}
+
 		return places;
-		
+
 	}
-	
+
 	public ArrayList<User> searchUser(String text)
 	{
 		if(text == null || text.equals(""))
@@ -1776,30 +1811,30 @@ public class DatabaseService {
 			}
 			return users;
 		}catch(SQLException | ClassNotFoundException se){
-	         //Handle errors for JDBC
-	         se.printStackTrace();
+			//Handle errors for JDBC
+			se.printStackTrace();
 		}catch(Exception e){
-	         //Handle errors for Class.forName
-	         e.printStackTrace();
-	    }finally{
-	         //finally block used to close resources
-	   		try{
-	   			if(stmt!=null)
-	   				stmt.close();
-	   		}catch(SQLException se2){
-	   		}// nothing we can do
-	   		try{
-	   			if(conn!=null)
-	   				conn.close();
-	   		}catch(SQLException se){
-	   			se.printStackTrace();
-	   		}//end finally try
-	    }
-		
+			//Handle errors for Class.forName
+			e.printStackTrace();
+		}finally{
+			//finally block used to close resources
+			try{
+				if(stmt!=null)
+					stmt.close();
+			}catch(SQLException se2){
+			}// nothing we can do
+			try{
+				if(conn!=null)
+					conn.close();
+			}catch(SQLException se){
+				se.printStackTrace();
+			}//end finally try
+		}
+
 		return users;
-		
+
 	}
-	
+
 	public int getRate(int userId, int storyId)
 	{
 		int rate = 0;
@@ -1815,25 +1850,25 @@ public class DatabaseService {
 			}
 			return rate;
 		}catch(SQLException | ClassNotFoundException se){
-	         //Handle errors for JDBC
-	         se.printStackTrace();
+			//Handle errors for JDBC
+			se.printStackTrace();
 		}catch(Exception e){
-	         //Handle errors for Class.forName
-	         e.printStackTrace();
-	    }finally{
-	         //finally block used to close resources
-	   		try{
-	   			if(stmt!=null)
-	   				stmt.close();
-	   		}catch(SQLException se2){
-	   		}// nothing we can do
-	   		try{
-	   			if(conn!=null)
-	   				conn.close();
-	   		}catch(SQLException se){
-	   			se.printStackTrace();
-	   		}//end finally try
-	    }
+			//Handle errors for Class.forName
+			e.printStackTrace();
+		}finally{
+			//finally block used to close resources
+			try{
+				if(stmt!=null)
+					stmt.close();
+			}catch(SQLException se2){
+			}// nothing we can do
+			try{
+				if(conn!=null)
+					conn.close();
+			}catch(SQLException se){
+				se.printStackTrace();
+			}//end finally try
+		}
 		return rate;
 	}
 }
