@@ -10,18 +10,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
-
-/**
- * Servlet implementation class Login
- */
-@WebServlet("/Login")
-public class Login extends HttpServlet {
+@WebServlet("/updateProfile")
+public class updateProfile extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * Default constructor.
 	 */
-	public Login() {
+	public updateProfile() {
 		// TODO Auto-generated constructor stub
 	}
 
@@ -40,25 +36,26 @@ public class Login extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		// TODO Auto-generated method stub
-		Operations operations = new Operations();
-		String mail = request.getParameter("mail");
-		String password = request.getParameter("password");
-		boolean result = operations.checkUser(mail, password);
+		User user = new User();
+		user.setName(request.getParameter("name"));
+		//user.setBirthdate(request.getParameter("birthdate"));
+		user.setGender(request.getParameter("gender"));
+		user.setPhone(request.getParameter("phone"));
+		user.setBio(request.getParameter("bio"));
+		user.setEmail(request.getParameter("email"));
+		Boolean result = user.updateProfile(request.getParameter("email"));
+		updateProfileResult registerResult  = new updateProfileResult();
 		response.reset();
 		response.setContentType("application/json");
 		response.setCharacterEncoding("UTF-8");
+		if(result){
+			registerResult.setMessage("profile successfully editted");
+		}else
+			registerResult.setMessage("editing profile halted");
+		registerResult.setResult(result);
 		Gson gson = new Gson();
-		LoginResult loginResult = new LoginResult();
-		if(result) {
-			loginResult.setMessage("permission granted");
-		}else {
-			loginResult.setMessage("permission denied");
-		}
-		loginResult.setResult(result);
 		PrintWriter pw = response.getWriter();
-		pw.print(gson.toJson(loginResult));
+		pw.print(gson.toJson(registerResult));
 		pw.flush();
 		pw.close();
 	}

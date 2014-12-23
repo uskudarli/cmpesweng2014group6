@@ -4,19 +4,148 @@
     <servlet-name>Register</servlet-name>
     <servlet-class>Register</servlet-class>
   </servlet>
-
   <servlet>
     <servlet-name>Login</servlet-name>
     <servlet-class>Login</servlet-class>
   </servlet>
-  
+  <servlet>
+    <servlet-name>GetProfile</servlet-name>
+    <servlet-class>GetProfile</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>updateProfile</servlet-name>
+    <servlet-class>updateProfile</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>AddStory</servlet-name>
+    <servlet-class>AddStory</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>RateStory</servlet-name>
+    <servlet-class>RateStory</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>Subscribe</servlet-name>
+    <servlet-class>Subscribe</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>RememberStory</servlet-name>
+    <servlet-class>RememberStory</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>Search</servlet-name>
+    <servlet-class>Search</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>GetStory</servlet-name>
+    <servlet-class>GetStory</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>GetComment</servlet-name>
+    <servlet-class>GetComment</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>AddComment</servlet-name>
+    <servlet-class>AddComment</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>GetOneStory</servlet-name>
+    <servlet-class>GetOneStory</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>GetAllRemember</servlet-name>
+    <servlet-class>GetAllRemember</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>IsRemembered</servlet-name>
+    <servlet-class>IsRemembered</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>isFollowingPlace</servlet-name>
+    <servlet-class>isFollowingPlace</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>isFollowingUser</servlet-name>
+    <servlet-class>isFollowingUser</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>GetStoryRate</servlet-name>
+    <servlet-class>GetStoryRate</servlet-class>
+  </servlet>
   <servlet-mapping>
     <servlet-name>Register</servlet-name>
     <url-pattern>/Register</url-pattern>
   </servlet-mapping>
-
   <servlet-mapping>
     <servlet-name>Login</servlet-name>
     <url-pattern>/Login</url-pattern>
   </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>GetProfile</servlet-name>
+    <url-pattern>/GetProfile</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>updateProfile</servlet-name>
+    <url-pattern>/updateProfile</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>AddStory</servlet-name>
+    <url-pattern>/AddStory</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>RateStory</servlet-name>
+    <url-pattern>/RateStory</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>Subscribe</servlet-name>
+    <url-pattern>/Subscribe</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>RememberStory</servlet-name>
+    <url-pattern>/RememberStory</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>Search</servlet-name>
+    <url-pattern>/Search</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>GetStory</servlet-name>
+    <url-pattern>/GetStory</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>GetComment</servlet-name>
+    <url-pattern>/GetComment</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>AddComment</servlet-name>
+    <url-pattern>/AddComment</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>GetOneStory</servlet-name>
+    <url-pattern>/GetOneStory</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>GetAllRemember</servlet-name>
+    <url-pattern>/GetAllRemember</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>IsRemembered</servlet-name>
+    <url-pattern>/IsRemembered</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>isFollowingPlace</servlet-name>
+    <url-pattern>/isFollowingPlace</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>isFollowingUser</servlet-name>
+    <url-pattern>/isFollowingUser</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>isFollowingUser</servlet-name>
+    <url-pattern>/isFollowingUser</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>GetRateStory</servlet-name>
+    <url-pattern>/GetRateStory</url-pattern>
+  </servlet-mapping>  
 </web-app>

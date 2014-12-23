@@ -7,8 +7,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import db.User;
-
 public class Operations {
 	static final String JDBC_DRIVER = "com.mysql.jdbc.Driver"; 
 	static final String DB_URL = "jdbc:mysql://titan.cmpe.boun.edu.tr:3306/database6";
@@ -22,10 +20,13 @@ public class Operations {
 		
 	}
 	
-	public String checkUser(String mail, String password) {
+	public boolean checkUser(String mail, String password) {
 		User user = findUserByEmail(mail);
-		//boolean b = password.equals(user.getPassword());
-			return user.getName();
+		boolean b = password.equals(user.getPassword());
+		if(b) {
+			return true;
+		}
+		return false;
 	}
 	
 	boolean executeSql(String sql)

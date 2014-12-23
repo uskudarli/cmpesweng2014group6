@@ -1,5 +1,8 @@
-package db;
+
+
 import java.util.*;
+
+import com.mysql.jdbc.log.Log;
 public class User {
 	private int UserId;
 	private String Name;
@@ -8,6 +11,7 @@ public class User {
 	private enum Gender {
 		Male, Female
 	};
+	private Gender gender;
 	private String Phone;
 	private int ExperiencePoint;
 	private int Level;
@@ -23,7 +27,26 @@ public class User {
 		
 	}
 
-	public Boolean Register()
+	User getProfile() {
+		db = new DatabaseService();
+		User user = db.findUserByEmail(Email);
+		//System.out.println(sql);
+		return user;
+	}
+	
+	Boolean updateProfile(String email) {
+		db = new DatabaseService();
+		String sql = "UPDATE Users SET ";
+		sql += "Name = '" + Name + "'";
+		sql += " , Phone = '" + Phone + "'";
+		sql += " , Bio = '" + Bio + "'";
+		sql += " WHERE Mail = '" + email + "'";
+		boolean result = db.executeSql(sql);
+		//System.out.println(sql);
+		return result;
+	}
+	
+	Boolean Register()
 	{
 		db = new DatabaseService();
 		User temp = db.findUserByEmail(Email);
@@ -59,6 +82,13 @@ public class User {
 		Name = name;
 	}
 
+	public Gender getGender() {
+		return this.gender;
+	}
+
+	public void setGender(String gender) {
+
+	}
 	public String getEmail() {
 		return Email;
 	}
