@@ -11,6 +11,8 @@
         <!-- View Title Label -->
 
         <TextView
+            android:layout_alignParentTop="true"
+            android:id="@+id/title_activity_showStory"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dip"
@@ -25,7 +27,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:orientation="vertical" >
+            android:orientation="vertical"
+            android:layout_below="@+id/title_activity_showStory" >
 
             <ImageView
                 android:id="@+id/imageViewShowStory"
@@ -38,46 +41,43 @@
         <!-- Story Part -->
 
         <LinearLayout
+             android:id="@+id/storyShowStoryLayout"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal" >
+            android:orientation="horizontal" 
+            android:layout_below="@+id/imageLayout" >
 
             <TextView
-                android:id="@+id/storyShowStory"
+               android:id="@+id/storyShowStory"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:textSize="12sp" />
+                android:textSize="18sp" />
         </LinearLayout>
 
       
 
-            <ListView
-                android:id="@+id/commentList"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:divider="#b5b5b5"
-                android:dividerHeight="1dp"
-                android:listSelector="@drawable/list_selector"
-                android:longClickable="true" >
-            </ListView>
-
-
-        <!-- Error message -->
-
-        <TextView
-            android:id="@+id/errorShowStory"
-            android:layout_width="fill_parent"
+        <ListView
+            android:id="@+id/commentList"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="10dip"
-            android:textColor="#e30000"
-            android:textStyle="bold" />
+            android:divider="#b5b5b5"
+            android:dividerHeight="1dp"
+            android:listSelector="@drawable/list_selector"
+            android:longClickable="true"
+            android:layout_below="@+id/storyShowStoryLayout"
+            android:layout_above="@+id/buttonLayout" >
+        </ListView>
+
+
+
 
         <RelativeLayout
+            android:id="@+id/buttonLayout"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
             android:gravity="center|bottom"
-            android:orientation="vertical" >
+            android:orientation="vertical"
+            android:layout_alignParentBottom="true" >
 
             <!-- I Remember That button -->
 

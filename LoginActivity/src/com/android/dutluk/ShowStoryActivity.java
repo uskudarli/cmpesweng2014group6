@@ -66,11 +66,11 @@ import com.loopj.android.http.RequestParams;
 public class ShowStoryActivity extends Activity {
 
 	ProgressDialog prgDialog;
-	TextView errorMsg;
+
 
 	static final String KEY_ID = "id";
 	static final String KEY_TITLE = "title";
-	static final String KEY_DURATION = "duration";
+	static final String KEY_INFO = "info";
 
 	ActionBar actionBar;
 	MenuInflater inflater;
@@ -88,7 +88,7 @@ public class ShowStoryActivity extends Activity {
 	ImageView imageV;
 	TextView storyTV;
 
-
+	
 	String story_id = "" ;
 
 	
@@ -97,7 +97,7 @@ public class ShowStoryActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.show_story);
         
-        errorMsg = (TextView)findViewById(R.id.errorShowStory);
+
      	// Instantiate Progress Dialog object
  		prgDialog = new ProgressDialog(this);
  		// Set Progress Dialog Text
@@ -115,11 +115,10 @@ public class ShowStoryActivity extends Activity {
         story_id = comingIntent.getStringExtra("story_id");
         
         RequestParams params = new RequestParams();
-		params.put("mail",Utility.userName);
-		params.put("story_id", story_id);
+		params.put("storyId", story_id);
         invokeWSforGetStory(params);
         
-		lv = (ListView) findViewById(R.id.listView1);
+		lv = (ListView) findViewById(R.id.commentList);
 		
 		actionBar = getActionBar();
 		actionBar.setBackgroundDrawable(new ColorDrawable(Color.rgb(16, 188, 201)));
@@ -135,7 +134,7 @@ public class ShowStoryActivity extends Activity {
 		prgDialog.show();
 		// Make RESTful web service call using AsyncHttpClient object
 		AsyncHttpClient client = new AsyncHttpClient();
-        client.get("http://192.168.43.17:9999/getStory",params ,new AsyncHttpResponseHandler() {
+        client.get(Utility.SERVER_NAME+ "GetOneStory?",params ,new AsyncHttpResponseHandler() {
         	// When the response returned by REST has Http response code '200'
              @Override
              public void onSuccess(String response) {
@@ -145,17 +144,12 @@ public class ShowStoryActivity extends Activity {
                 	 	 // JSON Object
                          JSONObject obj = new JSONObject(response);
                          // When the JSON response has status boolean value assigned with true
-                         if(obj.getBoolean("status")){
+                        	
                         	 // Set Default Values for Edit View controls
                         	 setDefaultValues(obj);
                         	 // Display successfully registered message using Toast
                         	 Toast.makeText(getApplicationContext(), "You can successfully see story!", Toast.LENGTH_LONG).show();
-                         } 
-                         // Else display error message
-                         else{
-                        	 errorMsg.setText(obj.getString("error_msg"));
-                        	 Toast.makeText(getApplicationContext(), obj.getString("error_msg"), Toast.LENGTH_LONG).show();
-                         }
+
                  } catch (JSONException e) {
                     
                      Toast.makeText(getApplicationContext(), "Error Occured [Server's JSON response might be invalid]!", Toast.LENGTH_LONG).show();
@@ -186,7 +180,7 @@ public class ShowStoryActivity extends Activity {
 	}
 	// düzelt:)
 	public void setDefaultValues(JSONObject obj) throws JSONException{
-		storyTV.setText(obj.getString("story_id"));
+		storyTV.setText(obj.getString("content"));
 		// image için de yaz bir þeyler
 	}
 	// düzelt:) 
@@ -204,8 +198,12 @@ public class ShowStoryActivity extends Activity {
 		    alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
 		        public void onClick(DialogInterface dialog, int whichButton) {
 		            String value = input.getText().toString().trim();
-		            
-		            Toast.makeText(getApplicationContext(), value, Toast.LENGTH_SHORT).show();
+		            RequestParams params = new RequestParams();
+		    		params.put("mail", Utility.userName);
+		    		params.put("storyId", story_id);
+		    		params.put("comment", value);
+		            invokeWSforAddComment(params);
+		            //Toast.makeText(getApplicationContext(), value, Toast.LENGTH_SHORT).show();
 		        }
 		    });
 
@@ -217,6 +215,57 @@ public class ShowStoryActivity extends Activity {
 		    alert.show();   
 
 	}
+	
+	public void invokeWSforAddComment(RequestParams params){
+		// Show Progress Dialog 
+		prgDialog.show();
+		// Make RESTful web service call using AsyncHttpClient object
+		AsyncHttpClient client = new AsyncHttpClient();
+        client.post(Utility.SERVER_NAME+ "AddComment?",params ,new AsyncHttpResponseHandler() {
+        	// When the response returned by REST has Http response code '200'
+             @Override
+             public void onSuccess(String response) {
+            	// Hide Progress Dialog
+            	 prgDialog.hide();
+                 try {
+                	 	 // JSON Object
+                         JSONObject obj = new JSONObject(response);
+                         // When the JSON response has status boolean value assigned with true
+                        	alist.clear();
+                         	new MyTask().execute();
+                        	 // Display successfully registered message using Toast
+                        	 Toast.makeText(getApplicationContext(), "You can successfully add comment!", Toast.LENGTH_LONG).show();
+
+                 } catch (JSONException e) {
+                    
+                     Toast.makeText(getApplicationContext(), "Error Occured [Server's JSON response might be invalid]!", Toast.LENGTH_LONG).show();
+                     e.printStackTrace();
+                     
+                 }
+             }
+             // When the response returned by REST has HTTP response code other than '200'
+             @Override
+             public void onFailure(int statusCode, Throwable error,
+                 String content) {
+                 // Hide Progress Dialog
+                 prgDialog.hide();
+                 // When HTTP response code is '404'
+                 if(statusCode == 404){
+                     Toast.makeText(getApplicationContext(), "Requested resource not found", Toast.LENGTH_LONG).show();
+                 } 
+                 // When HTTP response code is '500'
+                 else if(statusCode == 500){
+                     Toast.makeText(getApplicationContext(), "Something went wrong at server end", Toast.LENGTH_LONG).show();
+                 } 
+                 // When HTTP response code other than 404, 500
+                 else{
+                     Toast.makeText(getApplicationContext(), "Unexpected Error occcured! [Most common Error: Device might not be connected to Internet or remote server is not up and running]", Toast.LENGTH_LONG).show();
+                 }
+             }
+         });
+	}
+	
+	
 	private void readData() {
 		
 
@@ -264,6 +313,7 @@ public class ShowStoryActivity extends Activity {
 		protected void onPostExecute(Void result) {
 		
 			super.onPostExecute(result);
+			Log.e("ALIST", alist.toString());
 			readData();
 		}
 
@@ -271,8 +321,9 @@ public class ShowStoryActivity extends Activity {
 		protected Void doInBackground(Void... params) {
 			HttpClient httpclient = new DefaultHttpClient();
 			List<NameValuePair> pairs = new ArrayList<NameValuePair>();
-			pairs.add(new BasicNameValuePair("email", Utility.userName));
-			String url = Utility.SERVER_NAME + "GetStory?" + URLEncodedUtils.format(pairs, "utf-8");
+			pairs.add(new BasicNameValuePair("storyId", story_id));
+			pairs.add(new BasicNameValuePair("userId","0"));  // for getting all comments of a story
+			String url = Utility.SERVER_NAME + "GetComment?" + URLEncodedUtils.format(pairs, "utf-8");
 			HttpGet httpget = new HttpGet(url);
 			//Log.w("submit", "aa" + url);
 			try {
@@ -285,20 +336,25 @@ public class ShowStoryActivity extends Activity {
 				result.append(line);
 				}
 
-				//Log.w("submit", result.toString());
+				Log.w("COMMENTLER", result.toString());
 				JSONArray jsonarray = new JSONArray(result.toString());
 
 
 			    for(int i=0; i<jsonarray.length(); i++){
 			        JSONObject obj = jsonarray.getJSONObject(i);
 
-			        String name = obj.getString("content");
-			        Log.w("submit", name);
-			        HashMap<String, String> map = new HashMap<String, String>();
-					map.put(KEY_ID, "a" + i);
-					map.put(KEY_TITLE, name);
-					map.put(KEY_DURATION, "info"+i);
+
+					String content = obj.getString("Comment");				
+					String info = obj.getString("UserMail");
+					int id = obj.getInt("StoryID");
+					HashMap<String, String> map = new HashMap<String, String>();
+					
+					map.put(KEY_ID, "" + id);
+					map.put(KEY_TITLE, content);
+					map.put(KEY_INFO, info);
 					alist.add(map);
+					
+					
 			    }   
 			
 

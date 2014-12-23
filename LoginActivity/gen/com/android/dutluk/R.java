@@ -422,14 +422,14 @@ containing a value of this type.
         public static final int world=0x7f02002d;
     }
     public static final class id {
-        public static final int addStory=0x7f070051;
-        public static final int advancedSearch=0x7f070054;
+        public static final int addStory=0x7f070053;
+        public static final int advancedSearch=0x7f070056;
         public static final int biographyProfile=0x7f070036;
         public static final int birthDateProfile=0x7f070030;
         public static final int book_now=0x7f070010;
         public static final int btnAddStory=0x7f07001b;
-        public static final int btnComments=0x7f07004c;
-        public static final int btnIRememberThat=0x7f07004b;
+        public static final int btnComments=0x7f07004e;
+        public static final int btnIRememberThat=0x7f07004d;
         public static final int btnLinkToForgotPwdLogin=0x7f070029;
         public static final int btnLinkToRegisterScreenLogin=0x7f07002a;
         public static final int btnLogin=0x7f070028;
@@ -439,14 +439,15 @@ containing a value of this type.
         public static final int btnSearch=0x7f070046;
         public static final int btnShowMyStoriesProfile=0x7f070039;
         public static final int btnSubmit=0x7f07003c;
-        public static final int btnSubscribePlace=0x7f07004e;
-        public static final int btnSubscribeWriter=0x7f07004d;
+        public static final int btnSubscribePlace=0x7f070050;
+        public static final int btnSubscribeWriter=0x7f07004f;
+        public static final int buttonLayout=0x7f07004c;
         public static final int buyButton=0x7f07000a;
         public static final int buy_now=0x7f07000f;
         public static final int buy_with_google=0x7f07000e;
         public static final int classic=0x7f070011;
         public static final int commentContent=0x7f070023;
-        public static final int commentList=0x7f070049;
+        public static final int commentList=0x7f07004b;
         public static final int commentOwner=0x7f070024;
         public static final int emailForgotpwd=0x7f07001c;
         public static final int emailLogin=0x7f070025;
@@ -458,7 +459,6 @@ containing a value of this type.
         public static final int errorProfile=0x7f070037;
         public static final int errorRegister=0x7f070040;
         public static final int errorSearch=0x7f070045;
-        public static final int errorShowStory=0x7f07004a;
         public static final int ettitle=0x7f07002d;
         public static final int genderProfile=0x7f070031;
         public static final int gmap=0x7f07002b;
@@ -469,14 +469,14 @@ containing a value of this type.
         public static final int imageButtonAddStory=0x7f070018;
         public static final int imageLayout=0x7f070017;
         public static final int imageViewAddStory=0x7f070019;
-        public static final int imageViewShowStory=0x7f070047;
+        public static final int imageViewShowStory=0x7f070048;
         public static final int info=0x7f070022;
         public static final int lblRateMe=0x7f07003a;
         public static final int levelProfile=0x7f070035;
-        public static final int listView1=0x7f07004f;
+        public static final int listView1=0x7f070051;
         public static final int list_image=0x7f070020;
         public static final int mainlo=0x7f07002c;
-        public static final int map=0x7f070052;
+        public static final int map=0x7f070054;
         public static final int match_parent=0x7f07000c;
         public static final int monochrome=0x7f070013;
         public static final int more=0x7f07002e;
@@ -484,7 +484,7 @@ containing a value of this type.
         public static final int nameRegister=0x7f07003d;
         public static final int none=0x7f070000;
         public static final int normal=0x7f070001;
-        public static final int ownProfile=0x7f070053;
+        public static final int ownProfile=0x7f070055;
         public static final int passwordLogin=0x7f070026;
         public static final int passwordRegister=0x7f07003f;
         public static final int phoneProfile=0x7f070033;
@@ -492,19 +492,21 @@ containing a value of this type.
         public static final int ratingBar=0x7f07003b;
         public static final int sandbox=0x7f070008;
         public static final int satellite=0x7f070002;
-        public static final int search=0x7f070050;
+        public static final int search=0x7f070052;
         public static final int searchPlaceTags=0x7f070043;
         public static final int searchStoryTags=0x7f070044;
         public static final int searchUserTags=0x7f070042;
         public static final int selectionDetails=0x7f07000b;
         public static final int storyAddStory=0x7f070014;
-        public static final int storyShowStory=0x7f070048;
+        public static final int storyShowStory=0x7f07004a;
+        public static final int storyShowStoryLayout=0x7f070049;
         public static final int storyTagsAddStory=0x7f070015;
         public static final int strict_sandbox=0x7f070009;
         public static final int terrain=0x7f070003;
         public static final int thumbnail=0x7f07001f;
         public static final int timeAddStory=0x7f070016;
         public static final int title=0x7f070021;
+        public static final int title_activity_showStory=0x7f070047;
         public static final int wrap_content=0x7f07000d;
         public static final int xpProfile=0x7f070034;
     }
