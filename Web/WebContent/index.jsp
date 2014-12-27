@@ -193,11 +193,13 @@
   		<div class="row">
 	
 			<div class="col-md-8 nopadding">
-				<div id="map-container">
-					<div id="pac-container">
-					<input id="pac-input" class="controls" type="text" placeholder="Search on map">
+				<div class="map">
+					<div id="map-container">
+						<div id="pac-container">
+						<input id="pac-input" class="controls" type="text" placeholder="Search on map">
+						</div>
+						<div id="map-canvas"></div>
 					</div>
-					<div id="map-canvas"></div>
 				</div>
 			</div>
 			<div class="col-md-4 nopadding">
@@ -210,9 +212,12 @@
 						{
 							Story s = subs.get(i);
 							Place place = db.findPlacebyStoryId(s.getStoryId());
-							
+							if(i+1<10 && i+1 <subs.size()) {
 							%>
 							<div class="newsFeedItem clearfix">
+							<%} else {%>
+							<div class="newsFeedItemBorderless clearfix">
+							<%} %>
 							<a href='story.jsp?storyId=<%=s.getStoryId() %>' class="newsFeedClickable">
 							<% 
 							if(s.getSubscription()==0)

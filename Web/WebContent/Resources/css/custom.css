@@ -170,9 +170,20 @@ body {
 	border-bottom: 1px dotted #CCC;
 }
 
+.newsFeedItemBorderless {
+}
+
 .nfb {
 	font-weight: bold;
 }
 .nfcreated {
 	padding-top:10px;
 }
+
+.map{
+	background-color: #F8F8F8;
+	border: 1px solid rgb(218, 218, 218);
+	border-radius: 2px;
+	padding: 6px;
+}
+
