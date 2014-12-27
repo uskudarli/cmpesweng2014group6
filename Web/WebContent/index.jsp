@@ -1,3 +1,8 @@
+<%@page import="java.util.ArrayList"%>
+<%@page import="java.text.SimpleDateFormat"%>
+<%@page import="Dutluk.*"%>
+<%@page import="java.util.List"%>
+<%@page import="java.io.File"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-9"
 	pageEncoding="ISO-8859-9"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -164,12 +169,24 @@
 	
 	google.maps.event.addDomListener(window, 'load', initialize);
 
-
+	
 </script>
 
 		
 </head>
   <body>
+  	<%
+  	HttpSession newSession = request.getSession();
+  	Boolean loggedIn = false;
+  	List<Story> subs = new ArrayList<Story>();
+  	DatabaseService db = new DatabaseService();
+	if(newSession != null && newSession.getAttribute("email") != null)
+	{
+		loggedIn = true;
+  		User user = db.findUserByEmail(newSession.getAttribute("email").toString());
+  		subs = db.getSubscriptions(user.getUserID());
+	}
+  	%>
   	<jsp:include page="header.jsp"/>
   	<div class="indexBody">
   	
@@ -183,8 +200,76 @@
 					<div id="map-canvas"></div>
 				</div>
 			</div>
-			<div class="col-md-4 newsFeed nopadding">
-				<div id="newsFeedContainer">newsfeed</div>
+			<div class="col-md-4 nopadding">
+				<div class="newsFeed">
+				
+					<%if(loggedIn) {
+						%><div id="newsFeedContainer">
+						<%
+						for(int i=0; i<10 && i<subs.size(); i++)
+						{
+							Story s = subs.get(i);
+							Place place = db.findPlacebyStoryId(s.getStoryId());
+							
+							%>
+							<div class="newsFeedItem clearfix">
+							<a href='story.jsp?storyId=<%=s.getStoryId() %>' class="newsFeedClickable">
+							<% 
+							if(s.getSubscription()==0)
+							{
+								User subscribed = db.findUserByUserId(s.getUserId());
+								String picUrl = null;
+								if(subscribed.getPicID() == 0)
+								{
+									picUrl = "http://titan.cmpe.boun.edu.tr:8085/pictures/0.jpg";
+								}else
+								{
+									picUrl = "http://titan.cmpe.boun.edu.tr:8085/image"+File.separator+db.pathByPicId(subscribed.getPicID());
+								}
+							%>
+								<div class="newsFeedImage">
+									<img src=<%out.print(picUrl); %> width=75 height=75/>
+								</div>
+								<div class="newsFeedInfo">
+									<div>
+									<span class="nfb">
+										<%=subscribed.getName() %>
+									</span>
+									shared a story in timeline of <%=place.getName() %>.
+									</div>
+									<div class="nfcreated"><% out.print(new SimpleDateFormat("dd/MM/yyyy HH:mm").format(s.getCreatedOn()).toString()); %></div>
+								</div>
+							
+						
+							<%}else{ 
+								String path = db.findPicturePathOfStory(s.getStoryId());
+								String picUrl = "http://titan.cmpe.boun.edu.tr:8085/pictures/0.jpg";
+								if(path != null) {
+									picUrl = "http://titan.cmpe.boun.edu.tr:8085/image"+File.separator+path;
+								}
+								
+							%>
+									<div class="newsFeedImage">
+										<img src=<%out.print(picUrl); %> width=75 height=75/>
+									</div>
+									<div class="newsFeedInfo">
+									<div>
+										A story has been shared in timeline of 
+										<span class="nfb">
+										<%=place.getName() %>
+										</span>
+									</div>
+									<div class="nfcreated"><% out.print(new SimpleDateFormat("dd/MM/yyyy HH:mm").format(s.getCreatedOn()).toString()); %></div>
+									</div>
+								
+							<%}%>
+							</a>
+							</div>
+						<%}
+						%></div><%
+					} %>
+				
+				</div>
 			</div>
 	  </div>
 	  <div class="row">

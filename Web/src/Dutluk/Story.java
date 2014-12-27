@@ -19,10 +19,11 @@ public class Story {
         private String approximateDate;
         private boolean dateisAbsolute;
         private int placeId;
+        private int subscription;
 
         public Story()
         {
-        	
+        	subscription = 0;
         }
         public Story(int id, int userid, String content, int themeid, int isDeleted, int report, int avgrate, Date created, Date updated, Date absolute, String approximate)
         {
@@ -152,6 +153,12 @@ public class Story {
 
 		public void setPlaceId(int placeId) {
 			this.placeId = placeId;
+		}
+		public int getSubscription() {
+			return subscription;
+		}
+		public void setSubscription(int subscription) {
+			this.subscription = subscription;
 		}
 
 }

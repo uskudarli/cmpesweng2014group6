@@ -7,7 +7,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathFactory;
@@ -53,7 +60,6 @@ public class DatabaseService{
 			JDBC_DRIVER = (String) xpath.evaluate("//config//jdbc//driver",inputSource);
 			USER = (String) xpath.evaluate("//config//jdbc//username",inputSource);
 			PASS = (String) xpath.evaluate("//config//jdbc//password",inputSource);
-
 		}catch(Exception e){
 			System.err.println("CONFIGNOTFOUND: " + e.getMessage());
 		}
@@ -629,6 +635,89 @@ public class DatabaseService{
 		}
 		return place;
 	}
+	
+	public String findPicturePathOfStory(int id)
+	{
+		String path = null;
+		try
+		{
+			conn = getConnection();
+			pstmt = conn.prepareStatement("SELECT Path FROM Pictures,PicturesInStories WHERE StoryID= ? AND  Pictures.PicID=PicturesInStories.PicID LIMIT 1");	
+			pstmt.setInt(1, id);
+			ResultSet rs = pstmt.executeQuery();
+
+			while(rs.next())
+			{
+				path = rs.getString(1);
+			}
+			return path;
+
+		}catch(SQLException se){
+			//Handle errors for JDBC
+			se.printStackTrace();
+		}catch(Exception e){
+			//Handle errors for Class.forName
+			e.printStackTrace();
+		}finally{
+			//finally block used to close resources
+			try{
+				if(stmt!=null)
+					stmt.close();
+			}catch(SQLException se2){
+			}// nothing we can do
+			try{
+				if(conn!=null)
+					conn.close();
+			}catch(SQLException se){
+				se.printStackTrace();
+			}//end finally try
+		}
+		return path;
+	}
+	
+	public Place findPlacebyStoryId(int id)
+	{
+		Place place = new Place();
+		try
+		{
+			conn = getConnection();
+			pstmt = conn.prepareStatement("SELECT * FROM Places, StoriesInPlaces WHERE Places.PlaceID=StoriesInPlaces.PlaceID AND StoriesInPlaces.StoryID = ?");	
+			pstmt.setInt(1, id);
+			ResultSet rs = pstmt.executeQuery();
+
+			while(rs.next())
+			{
+				place.setPlaceID(id);
+				place.setCreatedOn(rs.getDate("CreationDate"));
+				place.setUpdatedOn(rs.getDate("LastUpdate"));
+				place.setName(rs.getString("Name"));
+				place.setLongtitude(rs.getDouble("Longtitude"));
+				place.setLatitude(rs.getDouble("Latitude"));
+			}
+			return place;
+
+		}catch(SQLException se){
+			//Handle errors for JDBC
+			se.printStackTrace();
+		}catch(Exception e){
+			//Handle errors for Class.forName
+			e.printStackTrace();
+		}finally{
+			//finally block used to close resources
+			try{
+				if(stmt!=null)
+					stmt.close();
+			}catch(SQLException se2){
+			}// nothing we can do
+			try{
+				if(conn!=null)
+					conn.close();
+			}catch(SQLException se){
+				se.printStackTrace();
+			}//end finally try
+		}
+		return place;
+	}
 
 	public Story findStorybyStoryId(int id)
 	{
@@ -643,7 +732,7 @@ public class DatabaseService{
 			while(rs.next())
 			{
 				story.setStoryId(id);
-				story.setCreatedOn(rs.getDate("CreationDate"));
+				story.setCreatedOn(rs.getTimestamp("CreationDate"));
 				story.setUpdatedOn(rs.getDate("LastUpdate"));
 				story.setUserId(rs.getInt("UserID"));
 				story.setThemeId(rs.getInt("ThemeID"));
@@ -1870,5 +1959,64 @@ public class DatabaseService{
 			}//end finally try
 		}
 		return rate;
+	}
+	
+	
+	public List<Story> getSubscriptions(int userId)
+	{
+		List<Story> stories = new ArrayList<Story>();
+		try{
+			conn = getConnection();
+			pstmt = conn.prepareStatement("SELECT * FROM Stories, SubscriptionsToUsers WHERE SubscriptionsToUsers.FollowerID = ? AND Stories.UserID = SubscriptionsToUsers.FollowedID ORDER BY Stories.CreationDate DESC LIMIT 10");
+			pstmt.setInt(1, userId);
+			ResultSet rs = pstmt.executeQuery();
+			while(rs.next())
+			{
+				Story temp = findStorybyStoryId(rs.getInt("StoryID"));
+				temp.setSubscription(0);
+				stories.add(temp);
+			}
+			conn = getConnection();
+			pstmt = conn.prepareStatement("SELECT * FROM Stories, SubscriptionsToPlaces, StoriesInPlaces WHERE SubscriptionsToPlaces.FollowerID = ? AND Stories.StoryID = StoriesInPlaces.StoryID AND StoriesInPlaces.PlaceID = SubscriptionsToPlaces.FollowedID ORDER BY Stories.CreationDate DESC LIMIT 10");
+			pstmt.setInt(1, userId);
+			rs = pstmt.executeQuery();
+			while(rs.next())
+			{
+				Story temp = findStorybyStoryId(rs.getInt("StoryID"));
+				temp.setSubscription(rs.getInt("FollowedId"));
+				stories.add(temp);
+			}
+			Set<Story> setItems = new LinkedHashSet<Story>(stories);
+			stories.clear();
+			stories.addAll(setItems);
+			Collections.sort(stories, new Comparator<Story>(){
+			     public int compare(Story o1, Story o2){
+			         if(o1.getStoryId() == o2.getStoryId())
+			             return 0;
+			         return o1.getStoryId() < o2.getStoryId() ? 1 : -1;
+			     }
+			});
+			return stories;
+		}catch(SQLException | ClassNotFoundException se){
+			//Handle errors for JDBC
+			se.printStackTrace();
+		}catch(Exception e){
+			//Handle errors for Class.forName
+			e.printStackTrace();
+		}finally{
+			//finally block used to close resources
+			try{
+				if(stmt!=null)
+					stmt.close();
+			}catch(SQLException se2){
+			}// nothing we can do
+			try{
+				if(conn!=null)
+					conn.close();
+			}catch(SQLException se){
+				se.printStackTrace();
+			}//end finally try
+		}
+		return stories;
 	}
 }

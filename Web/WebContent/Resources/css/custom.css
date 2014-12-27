@@ -137,7 +137,42 @@ body {
   font-weight: 300;
 }
 
+.newsFeed {
+	background-color: #F8F8F8;
+	border: 1px solid rgb(218, 218, 218);
+	border-radius: 2px;
+	margin-left:10px;
+	padding: 6px;
+}
+
 #newsFeedContainer {
-	background-color: #f3aac4;
-	margin: 0px 0 0 10px;
+	background-color: white;
+	padding:10px;
+}
+
+.newsFeedImage {
+	float:left;
+	width:75px;
+	height:75px;
+}
+
+.newsFeedInfo {
+	float:left;
+	word-wrap:break-word;
+	color: black;
+	width: 300px;
+	padding-left:10px;
+}
+
+.newsFeedItem {
+	margin-bottom:10px;
+	padding-bottom: 10px;
+	border-bottom: 1px dotted #CCC;
+}
+
+.nfb {
+	font-weight: bold;
+}
+.nfcreated {
+	padding-top:10px;
 }
