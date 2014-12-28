@@ -81,10 +81,10 @@ public class TimelineActivity extends Activity {
 		Intent comingIntent = getIntent();
 		type = comingIntent.getStringExtra("type");
 
-		if(type.equals("myStories")){
+		if(type.equals("myStories")){		
 			type_send = ""+0;
 		}
-		if(type.equals("placesStories")){
+		if(type.equals("placesStories")){  
 			type_send = comingIntent.getStringExtra("placeID");
 		}
 		if(type.equals("subsStories")){
@@ -103,12 +103,6 @@ public class TimelineActivity extends Activity {
 
 	}
 
-	private boolean isNetworkAvailable() {
-		ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-		NetworkInfo activeNetworkInfo = connectivityManager
-				.getActiveNetworkInfo();
-		return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-	}
 
 	private void readData() {
 
@@ -122,10 +116,9 @@ public class TimelineActivity extends Activity {
 					long arg3) {
 
 				try {
-					if(type_send.equals("0") || type_send.equals("1"))
+
 						startShowStoryActivity(""+ storyIDs.get(arg2));
-					else 
-						navigateToTimelineActivityForPlaces(""+storyIDs.get(arg2));
+
 				} catch (Exception e) {
 					// TODO: handle exception
 					String data = e.getMessage();
@@ -226,6 +219,7 @@ public class TimelineActivity extends Activity {
 		Intent showStoryIntent = new Intent(getApplicationContext(),ShowStoryActivity.class);
 		Bundle b = new Bundle();
 		b.putString("story_id",story_id);
+		b.putString("type", type);
 		showStoryIntent.putExtras(b);
 		// Clears History of Activity
 		showStoryIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -424,15 +418,7 @@ public class TimelineActivity extends Activity {
 		startActivity(searchIntent);
 		
 	}
-	public void navigateToTimelineActivityForPlaces(String placeID){
-		Intent timelineIntent = new Intent(getApplicationContext(),TimelineActivity.class);
-		Bundle b = new Bundle();
-		b.putString("type","placesStories");
-		b.putString("placeID",placeID);
-		timelineIntent.putExtras(b);
-		timelineIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		startActivity(timelineIntent);
-	}
+	
 
 
 }

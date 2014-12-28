@@ -51,6 +51,7 @@ public class MapActivity extends FragmentActivity implements LocationListener {
 
 	String story ="";
 	String tagsForStory = "";
+	String themeId ="";
 	String time="";
 	String image = "";
 	 String latitude = "";
@@ -69,6 +70,7 @@ public class MapActivity extends FragmentActivity implements LocationListener {
 	        Intent addStoryIntent = getIntent();
 	        story = addStoryIntent.getStringExtra("story");
 	        tagsForStory = addStoryIntent.getStringExtra("tagsForStory");
+	        themeId = addStoryIntent.getStringExtra("themeId");
 	        time = addStoryIntent.getStringExtra("time");
 	        image = addStoryIntent.getStringExtra("image");
 	        
@@ -229,6 +231,7 @@ public class MapActivity extends FragmentActivity implements LocationListener {
 		//params.put("image", image);
 		params.put("story", story);
 		params.put("storyTag", tagsForStory);
+		params.put("themeId", themeId);
 		params.put("time", time);
 		params.put("lat", latitude);
 		params.put("lng", longitude);				

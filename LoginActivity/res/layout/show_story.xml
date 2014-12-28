@@ -53,7 +53,36 @@
                 android:layout_height="wrap_content"
                 android:textSize="18sp" />
         </LinearLayout>
+            <!-- Theme Part -->
 
+        <LinearLayout
+             android:id="@+id/themeShowStoryLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" 
+            android:layout_below="@+id/storyShowStoryLayout" >
+
+            <TextView
+               android:id="@+id/themeShowStory"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18sp" />
+        </LinearLayout>
+   <!-- Rate Part -->
+
+        <LinearLayout
+             android:id="@+id/rateShowStoryLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" 
+            android:layout_below="@+id/themeShowStoryLayout" >
+
+            <TextView
+               android:id="@+id/rateShowStory"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18sp" />
+        </LinearLayout>
       
 
         <ListView
@@ -89,7 +118,7 @@
                 android:layout_marginTop="20dip"
                 android:background="#ff6347"
                 android:onClick="iRememberThatAction"
-                android:text="@string/btnIRememberThat"
+                android:text="@string/btnRememberThat"
                 android:textColor="#fff"
                 android:textSize="12sp" />
             <!-- Comments button -->

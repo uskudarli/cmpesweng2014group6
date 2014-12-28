@@ -77,7 +77,7 @@ public class ShowStoryActivity extends Activity {
 	Menu m;
 
 	ListView lv;
-	ArrayList<HashMap<String, String>> alist = new ArrayList<HashMap<String, String>>();
+	ArrayList<HashMap<String, String>> commentList = new ArrayList<HashMap<String, String>>();
 
 	ProgressDialog dialog;
 	Boolean isInput = true;
@@ -87,10 +87,13 @@ public class ShowStoryActivity extends Activity {
 
 	ImageView imageV;
 	TextView storyTV;
+	TextView themeTV;
+	TextView rateTV;
 
 	
 	String story_id = "" ;
-
+	String type = "";
+	String type_send = "";
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,10 +111,23 @@ public class ShowStoryActivity extends Activity {
    
      	imageV = (ImageView)findViewById(R.id.imageViewAddStory);
      	storyTV =  (TextView)findViewById(R.id.storyShowStory);
+     	themeTV =  (TextView)findViewById(R.id.themeShowStory);
+     	rateTV =  (TextView)findViewById(R.id.rateShowStory);
      	
         
         Intent comingIntent = getIntent();
-       
+    
+		type = comingIntent.getStringExtra("type");
+
+		if(type.equals("myStories")){		
+			type_send = ""+0;
+		}
+		if(type.equals("placesStories")){  
+			type_send = comingIntent.getStringExtra("placeID");
+		}
+		if(type.equals("subsStories")){
+			type_send = ""+1;
+		}
         story_id = comingIntent.getStringExtra("story_id");
         
         RequestParams params = new RequestParams();
@@ -181,6 +197,9 @@ public class ShowStoryActivity extends Activity {
 	// düzelt:)
 	public void setDefaultValues(JSONObject obj) throws JSONException{
 		storyTV.setText(obj.getString("content"));
+		themeTV.setText(obj.getString("themeId"));
+		rateTV.setText(obj.getString("avgRate"));
+		
 		// image için de yaz bir þeyler
 	}
 	// düzelt:) 
@@ -231,7 +250,7 @@ public class ShowStoryActivity extends Activity {
                 	 	 // JSON Object
                          JSONObject obj = new JSONObject(response);
                          // When the JSON response has status boolean value assigned with true
-                        	alist.clear();
+                        	commentList.clear();
                          	new MyTask().execute();
                         	 // Display successfully registered message using Toast
                         	 Toast.makeText(getApplicationContext(), "You can successfully add comment!", Toast.LENGTH_LONG).show();
@@ -269,7 +288,7 @@ public class ShowStoryActivity extends Activity {
 	private void readData() {
 		
 
-		TimelineAdapter adapter = new TimelineAdapter(this, alist);
+		TimelineAdapter adapter = new TimelineAdapter(this, commentList);
 		lv.setAdapter(adapter);
 		
 		lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -313,7 +332,7 @@ public class ShowStoryActivity extends Activity {
 		protected void onPostExecute(Void result) {
 		
 			super.onPostExecute(result);
-			Log.e("ALIST", alist.toString());
+			Log.e("commentList", commentList.toString());
 			readData();
 		}
 
@@ -352,7 +371,7 @@ public class ShowStoryActivity extends Activity {
 					map.put(KEY_ID, "" + id);
 					map.put(KEY_TITLE, content);
 					map.put(KEY_INFO, info);
-					alist.add(map);
+					commentList.add(map);
 					
 					
 			    }   
