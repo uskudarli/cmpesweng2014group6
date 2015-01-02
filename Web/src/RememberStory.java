@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import Dutluk.DatabaseService;
+import Dutluk.Story;
 import Dutluk.User;
 
 /**
@@ -44,16 +45,21 @@ public class RememberStory extends HttpServlet {
 		DatabaseService db = new DatabaseService();
 		User user = db.findUserByEmail(userMail);
 		String storyId = request.getSession().getAttribute("StoryID").toString();
+		Story story = db.findStorybyStoryId(Integer.parseInt(storyId));
 		if(action.equals("remember"))
 		{
 			//System.out.print(storyId);
 			//System.out.print(user.getUserID());
 			db.remember(user.getUserID(), Integer.parseInt(storyId));
+			//gamification
+			//Remembering story = +1 points for story owner
+			db.gamification(story.getUserId(), 1, -1, 0);
 			
 		}
 		else
 		{
 			db.dontRemember(user.getUserID(), Integer.parseInt(storyId));
+			db.gamification(story.getUserId(), -1, -1, 0);
 		}
 		String redirect = "story.jsp?storyId="+storyId;
 		response.sendRedirect(redirect);

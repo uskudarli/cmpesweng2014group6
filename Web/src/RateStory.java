@@ -1,6 +1,7 @@
 
 
 import java.io.IOException;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -8,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import Dutluk.DatabaseService;
+import Dutluk.Story;
 
 /**
  * Servlet implementation class RateStory
@@ -39,6 +41,10 @@ public class RateStory extends HttpServlet {
 		
 		DatabaseService db = new DatabaseService();
 		db.insertRate(Integer.parseInt(storyId), userId, rate);
+		Story story = db.findStorybyStoryId(Integer.parseInt(storyId));
+		//gamification
+		//Rating a story = +1 points for story owner
+		db.gamification(story.getUserId(), 1, -1, 0);
         request.getRequestDispatcher("story.jsp?storyId="+storyId).forward(request, response);
 	}
 

@@ -2020,4 +2020,64 @@ public class DatabaseService{
 		}
 		return stories;
 	}
+	public int calculateLevel(int xp)
+	{
+		int level = (int) Math.sqrt(xp);
+		level = level-2;
+		return level;
+	}
+	
+	public void setXPandLevel(int userid, int point)
+	{
+		if(userid != -1 && point != 0)
+		{
+			try{
+				conn = getConnection();
+				pstmt = conn.prepareStatement("SELECT * FROM Users WHERE UserID = ?");
+				pstmt.setInt(1, userid);
+				ResultSet rs = pstmt.executeQuery();
+				int xp = 0;
+				if(rs.next())
+				{
+					xp = rs.getInt("ExperiencePoint");
+				}
+				xp += point;
+				int level = 0;
+				if(xp >= 9)
+				{
+					level = calculateLevel(xp);
+				}
+				pstmt = conn.prepareStatement("UPDATE Users SET ExperiencePoint = ?, LastUpdate=NOW(), Level = ? WHERE UserID = ?");
+				pstmt.setInt(1, xp);
+				pstmt.setInt(2, level);
+				pstmt.setInt(3, userid);
+				pstmt.executeUpdate();
+			}catch(SQLException | ClassNotFoundException se){
+				//Handle errors for JDBC
+				se.printStackTrace();
+			}catch(Exception e){
+				//Handle errors for Class.forName
+				e.printStackTrace();
+			}finally{
+				//finally block used to close resources
+				try{
+					if(stmt!=null)
+						stmt.close();
+				}catch(SQLException se2){
+				}// nothing we can do
+				try{
+					if(conn!=null)
+						conn.close();
+				}catch(SQLException se){
+					se.printStackTrace();
+				}//end finally try
+			}
+		}
+	}
+	
+	public void gamification(int userid1, int point1, int userid2, int point2)
+	{
+		setXPandLevel(userid1, point1);
+		setXPandLevel(userid2, point2);
+	}
 }

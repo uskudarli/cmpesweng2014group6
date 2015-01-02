@@ -197,6 +197,9 @@ public class AddStory extends HttpServlet {
         		
         		if((storyId != 0) && (placeId != 0))
         		{
+        			//gamification
+        			//Adding new story = +10 points
+        			db.gamification(user.getUserID(), 10, -1, 0);
         			//add tags to database and get added tags ids
         			if(tags != null && !tags.equals(""))
             		{

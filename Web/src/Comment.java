@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import Dutluk.DatabaseService;
+import Dutluk.Story;
 
 /**
  * Servlet implementation class Comment
@@ -44,9 +45,16 @@ public class Comment extends HttpServlet {
 		String comment = request.getParameter("comment").toString();
 		
 		DatabaseService db = new DatabaseService();
+		Story story = db.findStorybyStoryId(Integer.parseInt(storyId));
+		
 		boolean result = db.insertComment(Integer.parseInt(storyId), Integer.parseInt(userId), comment);
-		if(result)
+		if(result){
 			request.setAttribute("success", "true");
+			if(story.getUserId() != Integer.parseInt(userId))
+				//gamification
+				//Adding new comment = +1 points to commenter, +2 points to story owner
+				db.gamification(Integer.parseInt(userId), 1, story.getUserId(), 2);
+		}
 		else 
 			request.setAttribute("error","true");
 	
