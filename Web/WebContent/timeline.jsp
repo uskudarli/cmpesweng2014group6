@@ -82,6 +82,16 @@
 		<input type="hidden" name="placeId" value=<%=placeId %> />
 		<%
 			
+		
+		//get number of subscribers
+		int numofSubscribers=0;
+		ResultSet rsx = null;
+		Connection connection = db.getConnection();
+        Statement statement = connection.createStatement() ;        
+        rsx =statement.executeQuery("SELECT COUNT(*) FROM `SubscriptionsToPlaces` WHERE FollowedID= '"+placeId+"' AND IsActive=1;");
+        if(rsx.next()) numofSubscribers=rsx.getInt(1);
+		
+	
 			Boolean isFollowing = db.isFollowingPlace(originalUser.getUserID(), place.getPlaceID());
 			if(isFollowing)
 			{
@@ -98,6 +108,7 @@
 				<%
 			}
 		%>
+		<%= numofSubscribers %> people subscribed.
 		
 	</form>
 	<%
@@ -118,13 +129,11 @@
 		</tr>
 		
 		<%
-	
+		
 	try{
 		int storyId = 0;
 		String userId = "";
 		ResultSet rs = null;
-		Connection connection = db.getConnection();
-        Statement statement = connection.createStatement() ;
         rs =statement.executeQuery("SELECT * FROM StoriesInPlaces WHERE PlaceID = '"+placeId+"'");
         
         while(rs.next())
@@ -157,6 +166,7 @@
         	}
         	
         }
+   
         statement.close();
         connection.close();
 	}catch(Exception e)
