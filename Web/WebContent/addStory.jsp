@@ -2,6 +2,7 @@
 <%@page import="Dutluk.*"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-9"
 	pageEncoding="ISO-8859-9"%>
+	
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -55,7 +56,7 @@
 							<%
 							}else {
 								%>
-								value="<%out.print(name);%>"/>
+								value="<%out.print(name);%>" disabled/>
 							<%}%>
 							<label>Story: </label><textarea class="form-control" id="editStory" name="editStory" style="height: 200px;"></textarea>
 							<label>When did it happen?: </label><input class="form-control" id="editBirthdate" name="editStime" type=text 
