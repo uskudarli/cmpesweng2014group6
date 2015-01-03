@@ -69,8 +69,9 @@
 		int placeID=0;
         String picPath="";
         String[] tags = new String[10];
-        int rememberCount=0;
+        int rememberCount=0,numofVotes=0;
         double averageRate=0.0;
+        
 
 		Place place = null;
 		try{
@@ -111,10 +112,13 @@
 			if(rs.next())
 				rememberCount=rs.getInt(1);
 		
-		//Get average rate
-			rs = statement.executeQuery("SELECT ROUND(AVG(Rate),2) FROM Rate WHERE StoryID='"+storyID+"';");
-			if(rs.next())
-				averageRate = rs.getDouble(1);
+		//Get average rate and number of voters
+			rs = statement.executeQuery("SELECT COUNT(*), ROUND(AVG(Rate),2) FROM Rate WHERE StoryID='"+storyID+"';");
+			if(rs.next()){
+				numofVotes = rs.getInt(1);
+				averageRate = rs.getDouble(2);
+			}
+			
 			statement.close();
 			connection.close();
         
@@ -156,9 +160,9 @@
 				<br>
 				
 				<%
-			if(currentUser.getUserID() != story.getUserId()){
+			if(currentUser.getUserID() != story.getUserId()){ //why?
 				if(averageRate>0)
-					out.println("Average Rate is "+averageRate);
+					out.println("Average Rate is "+averageRate+" by "+numofVotes+" people");
 				else
 					out.println("Be the first one to rate!");
 				%>
