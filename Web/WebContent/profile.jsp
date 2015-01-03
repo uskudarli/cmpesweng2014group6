@@ -34,6 +34,21 @@
 	<jsp:include page="header.jsp" />
 	<jsp:include page="footer.jsp" />
 
+
+	<% //get number of subscribers
+	ResultSet rs = null;
+	Connection connection = db.getConnection();
+    Statement statement = connection.createStatement() ;
+    int numofSubscribers = 0;
+    
+	rs = statement.executeQuery("SELECT COUNT(*) FROM SubscriptionsToUsers WHERE FollowedID='"+originalUser.getUserID()+"' AND IsActive=1;");
+	if(rs.next()){
+		numofSubscribers = rs.getInt(1);
+	}
+	statement.close();
+	connection.close();
+	%>
+
 	<div class="container">
 		<div class="row">
 			<%@ page import="java.sql.*, Dutluk.DatabaseService"%>
@@ -45,7 +60,9 @@
 					<%= originalUser.getLevel()%>
 					writer,
 					<%= originalUser.getExperiencePoint()%>
-					points <br> 
+					points,
+					<%= numofSubscribers %> 
+					subscribers<br> 
 					
 					
 					<% if(originalUser.getPicID() == 0) { %>
@@ -137,6 +154,25 @@
 	<%} 
 	else   //to see someone else's profile
 	{
+		
+		
+	    //get number of subscribers
+		ResultSet rs = null;
+		Connection connection = db.getConnection();
+	    Statement statement = connection.createStatement() ;
+	    int numofSubscribers = 0;
+	    
+		rs = statement.executeQuery("SELECT COUNT(*) FROM SubscriptionsToUsers WHERE FollowedID='"+userId+"' AND IsActive=1;");
+		if(rs.next()){
+			numofSubscribers = rs.getInt(1);
+		}
+		statement.close();
+		connection.close();
+		
+		
+		
+		
+		
 	%>
 	<%@ page import="Dutluk.*"%>
 	<%@ page import="java.sql.*, Dutluk.DatabaseService"%>
@@ -179,10 +215,12 @@
 						
 					</form>
 					<br>level
-					<%= user.getLevel()%>
+					<%= originalUser.getLevel()%>
 					writer,
-					<%= user.getExperiencePoint()%>
-					points <br> 
+					<%= originalUser.getExperiencePoint()%>
+					points,
+					<%= numofSubscribers %> 
+					subscribers<br> 
 
 					<% if(user.getPicID() == 0) { %>
 					<img src="http://titan.cmpe.boun.edu.tr:8085/pictures/0.jpg"
