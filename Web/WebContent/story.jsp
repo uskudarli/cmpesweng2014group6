@@ -160,7 +160,7 @@
 				<br>
 				
 				<%
-			if(currentUser.getUserID() != story.getUserId()){ //why?
+			if(currentUser.getUserID() != story.getUserId()){ //if someone else's story
 				if(averageRate>0)
 					out.println("Average Rate is "+averageRate+" by "+numofVotes+" people");
 				else
@@ -218,7 +218,24 @@
 	
 		<%
 					}
+				}else{ //if logged in user's story
+					
+					if(averageRate>0)
+						out.println("Average Rate is "+averageRate+" by "+numofVotes+" people");
+					else
+						out.println("Nobody rated this story yet.");
+					%>
+					<br><br>
+			<%
+			
+			    if(rememberCount>0)
+			    	out.println(rememberCount+" people remembers!");
+			    else
+			    	out.println("Nobody remembered this story yet.");
+			
 				}
+				
+				
 					%>
 		</div>
 			</div>
