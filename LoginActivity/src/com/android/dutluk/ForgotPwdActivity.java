@@ -18,6 +18,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
 
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
@@ -144,8 +145,6 @@ public class ForgotPwdActivity extends Activity {
 	public void navigatetoLoginActivity(){
 		Intent loginIntent = new Intent(getApplicationContext(),LoginActivity.class);
 		Utility.myUserName = mail;
-		Utility.IDFromName(mail);
-		Utility.myUserID = Utility.userIDFromName;
 		loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(loginIntent);
 		Utility.isReseted = true;

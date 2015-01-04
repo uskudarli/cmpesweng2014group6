@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
@@ -153,8 +154,6 @@ public class RegisterActivity extends Activity {
 	public void navigatetoLoginActivity(){
 		Intent loginIntent = new Intent(getApplicationContext(),LoginActivity.class);
 		Utility.myUserName = email;
-		Utility.IDFromName(email);
-		Utility.myUserID = Utility.userIDFromName;
 		// Clears History of Activity
 		loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(loginIntent);

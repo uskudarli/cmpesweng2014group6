@@ -65,7 +65,7 @@
             android:id="@+id/btnLinkToForgotPwdLogin"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:background="#fff"
+            android:background="@null"
             android:onClick="navigateToForgotPasswordActivity"
             android:text="@string/btnForgotPwdLogin"
             android:textColor="#10BCC9" />

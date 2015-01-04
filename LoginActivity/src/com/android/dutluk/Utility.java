@@ -106,7 +106,7 @@ public class Utility {
 			}
 		});
 	}
-	public static void IDFromName(String mail) {
+	public static void IDFromName(final String mail) {
 		RequestParams params = new RequestParams();
 		params.put("email", mail);
 		AsyncHttpClient client = new AsyncHttpClient();		 
@@ -125,6 +125,12 @@ public class Utility {
 					// When the JSON response has status boolean value assigned with true
 					String jsonStr =  obj.getString("UserId");
 					userIDFromName = jsonStr;
+					Log.e("Utility-userIDFromName-mail", userIDFromName + "aa" + mail);
+					if(mail.equals(myUserName)){
+						myUserID = jsonStr;
+						Log.e("Utility-myUserID-myUserName", myUserID + "aa" + myUserName);
+					}
+					
 
 				} catch (JSONException e) {
 

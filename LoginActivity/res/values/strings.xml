@@ -21,12 +21,16 @@
     <string name="email">E-mail</string>
     <string name="password">Password</string>
     <string name="name">Name</string>
+     <string name="owner">Owner</string>
+          <string name="theme">Theme</string>
+               <string name="avgRate">Rate</string>
     <string name="birthDate">Birth Date</string>
     <string name="gender">Gender</string>
     <string name="phone">Phone</string>
     <string name="XP">XP</string>
     <string name="level">Level</string>
     <string name="biography">Biography</string>
+    <string name="rateStory">Rate Story</string>
     
     <!-- Button strings -->
     <string name="btnRegister">Register</string>
@@ -43,10 +47,11 @@
 	<string name="btnSubscribePlace">Unsubscribe Place</string>
 	<string name="btnSearch">Search</string>
 	<string name="btnShowMyStories">Show My Stories</string>
+	<string name="btnHomeMap">Home</string>
 	
 	<!-- Hint strings -->
 	<string name="changeName">Change Name</string>
-	<string name="changeBirthDate">Change Birth Date</string>
+	<string name="changeBirthDate">Change Birthday</string>
 	<string name="changeGender">Change Gender</string>
 	<string name="changePhone">Change Phone</string>
 	<string name="changeBiography">Change Biography</string>

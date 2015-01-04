@@ -71,6 +71,8 @@ public class TimelineActivity extends Activity {
 	String type = "";
 	String type_send = "";
 	ArrayList<Integer> storyIDs = new ArrayList<Integer>();
+	ArrayList<Integer> placeIDList = new ArrayList<Integer>();
+	ArrayList<String> placeNameList = new ArrayList<String>();
 	ArrayList<String> ownerList = new ArrayList<String>();
 	
 	ArrayList<Integer> placeIDs = new ArrayList<Integer>();
@@ -121,11 +123,10 @@ public class TimelineActivity extends Activity {
 
 				try {
 
-						startShowStoryActivity(""+ storyIDs.get(arg2), ownerList.get(arg2));
+						startShowStoryActivity(""+ storyIDs.get(arg2), ownerList.get(arg2),""+placeIDList.get(arg2),placeNameList.get(arg2));
 
 				} catch (Exception e) {
-					// TODO: handle exception
-					String data = e.getMessage();
+					Log.e("SEARCH EXCEPTION", e.getMessage());
 				}
 
 			}
@@ -164,11 +165,12 @@ public class TimelineActivity extends Activity {
 			storyList.clear();
 			storyIDs.clear();
 			ownerList.clear();
+			placeIDList.clear();
+			placeNameList.clear();
 			List<NameValuePair> pairs = new ArrayList<NameValuePair>();
 			pairs.add(new BasicNameValuePair("email", Utility.myUserName));
 			pairs.add(new BasicNameValuePair("type", type_send));
-			String url = Utility.SERVER_NAME + "GetStory?" + URLEncodedUtils.format(pairs, "utf-8");
-			Log.e("url",url);
+			String url = Utility.SERVER_NAME + "GetStory?" + URLEncodedUtils.format(pairs, "utf-8");		
 			HttpGet httpget = new HttpGet(url);
 		
 			try {
@@ -196,10 +198,13 @@ public class TimelineActivity extends Activity {
 						story = content.substring(0,50)+ "...";
 					String owner = obj.getString("mail");
 					int story_id = obj.getInt("storyId");
-				
+					String placeName = obj.getString("placeName");
+					int place_id = obj.getInt("placeId");
 					HashMap<String, String> map = new HashMap<String, String>();
 					storyIDs.add(story_id);
 					ownerList.add(owner);
+					placeNameList.add(placeName);
+					placeIDList.add(place_id);
 					map.put(KEY_ID,""+ story_id);
 					map.put(KEY_TITLE, story);
 					map.put(KEY_INFO, owner);
@@ -223,13 +228,15 @@ public class TimelineActivity extends Activity {
 		}
 
 	}
-	public void  startShowStoryActivity(String story_id, String owner) {
+	public void  startShowStoryActivity(String story_id, String owner, String place_id, String placeName) {
 
 		Intent showStoryIntent = new Intent(getApplicationContext(),ShowStoryActivity.class);
 		Bundle b = new Bundle();
 		b.putString("story_id",story_id);
 		b.putString("owner", owner);
 		b.putString("type", type);
+		b.putString("place_id",place_id);
+		b.putString("placeName", placeName);
 		showStoryIntent.putExtras(b);
 		// Clears History of Activity
 		showStoryIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -257,7 +264,9 @@ public class TimelineActivity extends Activity {
 				searchList.clear();
 				storyIDs.clear();
 				ownerList.clear();
-				placeIDs.clear();
+				placeIDs.clear(); // for place search
+				placeIDList.clear(); // for story search
+				placeNameList.clear(); // for story search
 				if(type_send.equals("0") || type_send.equals("1") ){
 					
 					client.post(Utility.SERVER_NAME + "Search?func=story&term=" + query, new AsyncHttpResponseHandler() {
@@ -275,9 +284,13 @@ public class TimelineActivity extends Activity {
 									
 									String owner = obj.getString("mail");
 									int story_id = obj.getInt("storyId");
+									String placeName = obj.getString("placeName");
+									int place_id = obj.getInt("placeId");
 									HashMap<String, String> map = new HashMap<String, String>();
 									storyIDs.add(story_id);
 									ownerList.add(owner);
+									placeNameList.add(placeName);
+									placeIDList.add(place_id);
 									map.put(KEY_ID, "" + story_id);
 									map.put(KEY_TITLE, story_content);
 									map.put(KEY_INFO, owner);
@@ -382,14 +395,14 @@ public class TimelineActivity extends Activity {
 
 				try {
 					if(type_send.equals("0") || type_send.equals("1") )
-						startShowStoryActivity(""+ storyIDs.get(arg2), ownerList.get(arg2));
+						startShowStoryActivity(""+ storyIDs.get(arg2), ownerList.get(arg2),""+placeIDList.get(arg2),placeNameList.get(arg2));
 					else 
 						navigateToTimelineActivityForPlaces(""+ placeIDs.get(arg2));
 						
 
 				} catch (Exception e) {
-					// TODO: handle exception
-					String data = e.getMessage();
+					
+					Log.e("SEARCH EXCEPTION", e.getMessage());
 				}
 
 			}

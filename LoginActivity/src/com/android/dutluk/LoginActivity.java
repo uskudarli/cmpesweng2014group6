@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
@@ -77,8 +78,6 @@ public class LoginActivity extends Activity {
 		if(Utility.myUserName.equals("")){
 			mail = emailET.getText().toString();
 			Utility.myUserName = mail;
-			Utility.IDFromName(mail);
-			Utility.myUserID = Utility.userIDFromName;
 		}
 		
 		// Get Password Edit View Value

@@ -84,6 +84,7 @@ public class HomeMapActivity extends FragmentActivity {
 				.findFragmentById(R.id.gmap)).getMap();
 		map.setMyLocationEnabled(true);
 		
+		Utility.IDFromName(Utility.myUserName);
 		
 		RequestParams params = new RequestParams();
 		invokeWS(params);

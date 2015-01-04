@@ -1,13 +1,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
     <item
         android:id="@+id/addStory"
-		android:title=""
+		android:title="@string/btnAddStory"
         android:orderInCategory="2"
         android:icon="@drawable/ic_action_new"
 		android:showAsAction="always"/>
      <item
         android:id="@+id/ownProfile"
-        android:title=""
+        android:title="@string/btnHomeMap"
         android:orderInCategory="4"
         android:icon="@drawable/ic_action_edit"
         android:showAsAction="always|collapseActionView"/>

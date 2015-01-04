@@ -52,11 +52,14 @@ import android.view.View.OnClickListener;
 
 
 
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 
 
 import android.widget.ListView;
@@ -68,7 +71,7 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 
-public class ShowStoryActivity extends Activity {
+public class ShowStoryActivity extends Activity implements OnItemSelectedListener{
 
 	ProgressDialog prgDialog;
 
@@ -92,6 +95,7 @@ public class ShowStoryActivity extends Activity {
 
 	ImageView imageV;
 	TextView storyTV;
+	Button placeButton;
 	TextView themeTV;
 	TextView rateTV;
 	Button ownerButton;
@@ -105,9 +109,17 @@ public class ShowStoryActivity extends Activity {
 	String type_send = "";
 	String owner = "";
 	String storyOwnerID = "";
+	String place_id = "";
+	String placeName = "";
 	boolean isFollowingPlace = false;
 	boolean isFollowingUser = false;
 	boolean isRemembered = false;
+	boolean isRated = false;
+
+
+	private Spinner rateSpinner;
+	ArrayList<String> rateList = new ArrayList<String>();
+	String givenRate = "";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -128,6 +140,7 @@ public class ShowStoryActivity extends Activity {
 
 		imageV = (ImageView)findViewById(R.id.imageViewAddStory);
 		storyTV =  (TextView)findViewById(R.id.storyShowStory);
+		placeButton =  (Button)findViewById(R.id.placeShowStory);
 		themeTV =  (TextView)findViewById(R.id.themeShowStory);
 		rateTV =  (TextView)findViewById(R.id.rateShowStory);
 		ownerButton = (Button) findViewById(R.id.ownerShowStory);
@@ -151,7 +164,8 @@ public class ShowStoryActivity extends Activity {
 			type_send = ""+1;
 		}
 		story_id = comingIntent.getStringExtra("story_id");
-
+		place_id = comingIntent.getStringExtra("place_id");
+		placeName = comingIntent.getStringExtra("placeName");
 		RequestParams params = new RequestParams();
 		params.put("storyId", story_id);
 		invokeWSforGetStory(params);
@@ -161,46 +175,64 @@ public class ShowStoryActivity extends Activity {
 		owner = comingIntent.getStringExtra("owner");
 		Utility.IDFromName(owner);
 		storyOwnerID = Utility.userIDFromName;
-		
-		checkForSubscribePlace();		
-		if(owner.equals(Utility.myUserName)){
-			Log.e("storyOwner-Utility.UserName",owner+"-"+ Utility.myUserName);
-			rememberThatButton.setVisibility(View.INVISIBLE);
-			subscribeWriterButton.setVisibility(View.INVISIBLE);
-		}
-		else{
-			checkForSubscribeWriter();
-			checkForRememberThat();
-		}
-	
-		
-		changeFollowingPlace();
+
+
+
+		checkForSubscribePlace();
+
 		subscribePlaceButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				subscribePlaceAction();
 			}
 		});
-		
-		changeFollowingWriter();
-		subscribeWriterButton.setOnClickListener(new OnClickListener() {		
-			@Override
-			public void onClick(View v) {			
-				subscribeWriterAction();
-			}
 
-		});
-		
-		changeRemember();
-		rememberThatButton.setOnClickListener(new OnClickListener() {
 
-			@Override
-			public void onClick(View v) {
-				rememberThatAction();
-			}
+		if(owner.equals(Utility.myUserName)){
+			Log.e("storyOwner-Utility.myUserName",owner+"-"+ Utility.myUserName);
+			subscribeWriterButton.setVisibility(View.INVISIBLE);
+			rememberThatButton.setVisibility(View.INVISIBLE);
 
-		});
-		
+		}
+		else{
+			checkForSubscribeWriter();
+			subscribeWriterButton.setOnClickListener(new OnClickListener() {		
+				@Override
+				public void onClick(View v) {			
+					subscribeWriterAction();
+				}
+
+			});
+
+			checkForRememberThat();
+			rememberThatButton.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					rememberThatAction();
+				}
+
+			});
+
+		}
+
+		rateSpinner = (Spinner)findViewById(R.id.spinnerRate);
+		ArrayAdapter<String>adapter = new ArrayAdapter<String>(ShowStoryActivity.this,
+				android.R.layout.simple_spinner_item,rateList);
+
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+		rateList.add("Rate Story");
+		rateList.add("1");
+		rateList.add("2");
+		rateList.add("3");
+		rateList.add("4");
+		rateList.add("5");
+
+
+		rateSpinner.setAdapter(adapter);
+		rateSpinner.setSelection(0);
+		rateSpinner.setOnItemSelectedListener(this);
 
 		lv = (ListView) findViewById(R.id.commentList);
 
@@ -209,12 +241,200 @@ public class ShowStoryActivity extends Activity {
 
 
 	}
-	
+	public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
 
+		if(position != 0) {
+			givenRate = rateList.get(position);
+			Log.e("GIVENRATE", "a " + givenRate );
+			checkForRate();
+		}
+	}
+
+	@Override
+	public void onNothingSelected(AdapterView<?> arg0) {
+		// TODO Auto-generated method stub
+
+	}
+	public void getThemeName(String theme_id){
+		RequestParams params = new RequestParams();
+		params.put("themeId", theme_id);
+
+		Log.e("themeId", theme_id +  " aaaaaaaa " );
+
+		//http://titan.cmpe.boun.edu.tr:8085/dutluk_android_api/GetThemeName?themeId=2(GET)
+
+		// Show Progress Dialog 
+		prgDialog.show();
+		// Make RESTful web service call using AsyncHttpClient object
+		AsyncHttpClient client = new AsyncHttpClient();
+		client.get(Utility.SERVER_NAME+ "GetThemeName?",params ,new AsyncHttpResponseHandler() {
+			// When the response returned by REST has Http response code '200'
+			@Override
+			public void onSuccess(String response) {
+				// Hide Progress Dialog
+				prgDialog.hide();
+				try {
+					// JSON Object
+					JSONObject obj = new JSONObject(response);
+					// When the JSON response has status boolean value assigned with true
+
+					String temp_theme = obj.getString("Name");
+					Log.e("getThemeName.success", "a" + temp_theme);
+					themeTV.setText(temp_theme);
+
+
+
+
+
+				} catch (JSONException e) {
+
+					Log.e("getThemeName.json", "Error Occured [Server's JSON response might be invalid]!");
+					e.printStackTrace();
+
+				}
+			}
+			// When the response returned by REST has HTTP response code other than '200'
+			@Override
+			public void onFailure(int statusCode, Throwable error,
+					String content) {
+				// Hide Progress Dialog
+				prgDialog.hide();
+				// When HTTP response code is '404'
+				if(statusCode == 404){
+					Log.e("getThemeName.404", "Requested resource not found");
+				} 
+				// When HTTP response code is '500'
+				else if(statusCode == 500){
+					Log.e("getThemeName.500", "Something went wrong at server end");
+				} 
+				// When HTTP response code other than 404, 500
+				else{
+					Log.e("getThemeName.other", "Unexpected Error occcured! [Most common Error: Device might not be connected to Internet or remote server is not up and running]");
+				}
+			}
+		});
+	}
+	public void checkForRate(){
+		RequestParams params = new RequestParams();
+		params.put("StoryID", story_id);
+		params.put("mail", Utility.myUserName);
+		params.put("rate",givenRate);
+		Log.e("storyID-mail", story_id +  " aaaaaaaa " + Utility.myUserName + " aaa " + givenRate);
+
+		//http://titan.cmpe.boun.edu.tr:8085/dutluk_android_api/RateStory?mail=burcin@burcin.com&StoryID=101&rate=5
+
+		// Show Progress Dialog 
+		prgDialog.show();
+		// Make RESTful web service call using AsyncHttpClient object
+		AsyncHttpClient client = new AsyncHttpClient();
+		client.post(Utility.SERVER_NAME+ "RateStory?",params ,new AsyncHttpResponseHandler() {
+			// When the response returned by REST has Http response code '200'
+			@Override
+			public void onSuccess(String response) {
+				// Hide Progress Dialog
+				prgDialog.hide();
+				try {
+					// JSON Object
+					JSONObject obj = new JSONObject(response);
+					// When the JSON response has status boolean value assigned with true
+
+					isRated = obj.getBoolean("result");
+					Log.e("checkForRate.success", "a" + isRated);
+
+					changeRate();
+
+
+
+
+				} catch (JSONException e) {
+
+					Log.e("checkForRate.json", "Error Occured [Server's JSON response might be invalid]!");
+					e.printStackTrace();
+
+				}
+			}
+			// When the response returned by REST has HTTP response code other than '200'
+			@Override
+			public void onFailure(int statusCode, Throwable error,
+					String content) {
+				// Hide Progress Dialog
+				prgDialog.hide();
+				// When HTTP response code is '404'
+				if(statusCode == 404){
+					Log.e("checkForRate.404", "Requested resource not found");
+				} 
+				// When HTTP response code is '500'
+				else if(statusCode == 500){
+					Log.e("checkForRate.500", "Something went wrong at server end");
+				} 
+				// When HTTP response code other than 404, 500
+				else{
+					Log.e("checkForRate.other", "Unexpected Error occcured! [Most common Error: Device might not be connected to Internet or remote server is not up and running]");
+				}
+			}
+		});
+	}
+	public void changeRate(){
+		//http://titan.cmpe.boun.edu.tr:8085/dutluk_android_api/GetStoryRate?storyId=101(GET)
+		RequestParams params = new RequestParams();
+		params.put("storyId", story_id);
+		Log.e("storyID", story_id +  " aaaaaaaa ");
+
+
+		// Show Progress Dialog 
+		prgDialog.show();
+		// Make RESTful web service call using AsyncHttpClient object
+		AsyncHttpClient client = new AsyncHttpClient();
+		client.post(Utility.SERVER_NAME+ "GetStoryRate?",params ,new AsyncHttpResponseHandler() {
+			// When the response returned by REST has Http response code '200'
+			@Override
+			public void onSuccess(String response) {
+				// Hide Progress Dialog
+				prgDialog.hide();
+				try {
+					// JSON Object
+					JSONObject obj = new JSONObject(response);
+					// When the JSON response has status boolean value assigned with true
+					String temp_rate = obj.getString("message");
+					rateTV.setText(temp_rate);
+					Log.e("changeRate.success", "a" + temp_rate);
+
+
+
+				} catch (JSONException e) {
+
+					Log.e("changeRate.json", "Error Occured [Server's JSON response might be invalid]!");
+					e.printStackTrace();
+
+				}
+			}
+			// When the response returned by REST has HTTP response code other than '200'
+			@Override
+			public void onFailure(int statusCode, Throwable error,
+					String content) {
+				// Hide Progress Dialog
+				prgDialog.hide();
+				// When HTTP response code is '404'
+				if(statusCode == 404){
+					Log.e("changeRate.404", "Requested resource not found");
+				} 
+				// When HTTP response code is '500'
+				else if(statusCode == 500){
+					Log.e("changeRate.500", "Something went wrong at server end");
+				} 
+				// When HTTP response code other than 404, 500
+				else{
+					Log.e("changeRate.other", "Unexpected Error occcured! [Most common Error: Device might not be connected to Internet or remote server is not up and running]");
+				}
+			}
+		});
+
+	}
 	public void checkForRememberThat(){
 		RequestParams params = new RequestParams();
 		params.put("storyId", story_id);
 		params.put("userId", Utility.myUserID);
+		Log.e("storyID-myUserID", story_id +  " aaaaaaaa " + Utility.myUserID);
 
 		//http://titan.cmpe.boun.edu.tr:8085/dutluk_android_api/IsRemembered?storyId=101&userId=122
 		// Show Progress Dialog 
@@ -231,11 +451,11 @@ public class ShowStoryActivity extends Activity {
 					// JSON Object
 					JSONObject obj = new JSONObject(response);
 					// When the JSON response has status boolean value assigned with true
-					
+
 					isRemembered = obj.getBoolean("result");
 					Log.e("checkForRememberThat.success", "a" + isRemembered);
-					
-					
+					changeRemember();
+
 
 				} catch (JSONException e) {
 
@@ -276,19 +496,19 @@ public class ShowStoryActivity extends Activity {
 		RequestParams params = new RequestParams();
 		params.put("email", Utility.myUserName);
 		params.put("StoryId", story_id);
-		
+
 		if(isRemembered){
 			//http://titan.cmpe.boun.edu.tr:8085/dutluk_android_api/RememberStory?email=burcin@burcin.com&func=unremember&StoryId=102(POST)
 			params.put("func", "unremember");
-			Log.e("rememberThatAction", "unsubscribeUser");
+			Log.e("rememberThatAction", "unremember");
 		}
 		else {
 			//http://titan.cmpe.boun.edu.tr:8085/dutluk_android_api/RememberStory?email=burcin@burcin.com&func=remember&StoryId=102(POST)
 			params.put("func", "remember");	
-			Log.e("rememberThatAction", "subscribeUser");
+			Log.e("rememberThatAction", "remember");
 		}
-		
-		
+
+
 		prgDialog.show();
 		// Make RESTful web service call using AsyncHttpClient object
 		AsyncHttpClient client = new AsyncHttpClient();
@@ -296,19 +516,19 @@ public class ShowStoryActivity extends Activity {
 			// When the response returned by REST has Http response code '200'
 			@Override
 			public void onSuccess(String response) {
-				
+
 				// Hide Progress Dialog
 				prgDialog.hide();
 				try {
 					// JSON Object
 					JSONObject obj = new JSONObject(response);
 					// When the JSON response has status boolean value assigned with true
-					
+
 					String msg = obj.getString("message");
 					Log.e("rememberThatAction.success", msg);
 					isRemembered = !isRemembered;
 					changeRemember();
-					
+
 
 				} catch (JSONException e) {
 
@@ -329,6 +549,7 @@ public class ShowStoryActivity extends Activity {
 				} 
 				// When HTTP response code is '500'
 				else if(statusCode == 500){
+
 					Log.e("rememberThatAction.500", "Something went wrong at server end");
 				} 
 				// When HTTP response code other than 404, 500
@@ -342,7 +563,7 @@ public class ShowStoryActivity extends Activity {
 		RequestParams params = new RequestParams();
 		params.put("followerId", Utility.myUserID);
 		params.put("followedId", storyOwnerID);
-
+		Log.e("myUserID-storyOwnerID", Utility.myUserID +  " aaaaaaaa " +  storyOwnerID);
 		//http://titan.cmpe.boun.edu.tr:8085/dutluk_android_api/isFollowingUser?followerId=112&followedId=122
 		// Show Progress Dialog 
 		prgDialog.show();
@@ -358,11 +579,11 @@ public class ShowStoryActivity extends Activity {
 					// JSON Object
 					JSONObject obj = new JSONObject(response);
 					// When the JSON response has status boolean value assigned with true
-					
+
 					isFollowingUser = obj.getBoolean("result");
 					Log.e("checkForSubscribeWriter.success", "a" + isFollowingUser);
-					
-					
+					changeFollowingWriter();
+
 
 				} catch (JSONException e) {
 
@@ -402,7 +623,7 @@ public class ShowStoryActivity extends Activity {
 		RequestParams params = new RequestParams();
 		params.put("email", Utility.myUserName);
 		params.put("userId", storyOwnerID);
-		
+
 		if(isFollowingUser){
 			//http://titan.cmpe.boun.edu.tr:8085/dutluk_android_api/Subscribe?email=burcin@burcin.com&func=unsubscribe&userId=101(POST)
 			params.put("func", "unsubscribe");
@@ -413,8 +634,8 @@ public class ShowStoryActivity extends Activity {
 			params.put("func", "subscribe");	
 			Log.e("subscribeWriterAction", "subscribeUser");
 		}
-		
-		
+
+
 		prgDialog.show();
 		// Make RESTful web service call using AsyncHttpClient object
 		AsyncHttpClient client = new AsyncHttpClient();
@@ -422,14 +643,14 @@ public class ShowStoryActivity extends Activity {
 			// When the response returned by REST has Http response code '200'
 			@Override
 			public void onSuccess(String response) {
-				
+
 				// Hide Progress Dialog
 				prgDialog.hide();
 				try {
 					// JSON Object
 					JSONObject obj = new JSONObject(response);
 					// When the JSON response has status boolean value assigned with true
-					
+
 					String msg = obj.getString("message");
 					Log.e("subscribeWriterAction.success", msg);
 					isFollowingUser = !isFollowingUser;
@@ -463,12 +684,12 @@ public class ShowStoryActivity extends Activity {
 			}
 		});
 	}
-	
+
 	public void checkForSubscribePlace(){
 		RequestParams params = new RequestParams();
 		params.put("userId", Utility.myUserID);
-		params.put("placeId", "?");
-
+		params.put("placeId", place_id);
+		Log.e("myUserID-placeId", Utility.myUserID +  " aaaaaaaa " +  place_id);
 		//http://titan.cmpe.boun.edu.tr:8085/dutluk_android_api/isFollowingPlace?userId=112&placeId=122
 		// Show Progress Dialog 
 		prgDialog.show();
@@ -484,11 +705,11 @@ public class ShowStoryActivity extends Activity {
 					// JSON Object
 					JSONObject obj = new JSONObject(response);
 					// When the JSON response has status boolean value assigned with true
-					
+
 					isFollowingPlace = obj.getBoolean("result");
 					Log.e("checkForSubscribePlace.success", "a" + isFollowingPlace);
-					
-					
+					changeFollowingPlace();
+
 
 				} catch (JSONException e) {
 
@@ -527,8 +748,8 @@ public class ShowStoryActivity extends Activity {
 	public void subscribePlaceAction(){
 		RequestParams params = new RequestParams();
 		params.put("email", Utility.myUserName);
-		params.put("placeId", "?");
-		
+		params.put("placeId",place_id);
+
 		if(isFollowingPlace){
 			//http://titan.cmpe.boun.edu.tr:8085/dutluk_android_api/Subscribe?email=burcin@burcin.com&func=unsubscribePlace&placeId=101(post)		
 			params.put("func", "unsubscribePlace");
@@ -539,8 +760,8 @@ public class ShowStoryActivity extends Activity {
 			params.put("func", "subscribePlace");	
 			Log.e("subscribePlaceAction", "subscribePlace");
 		}
-		
-		
+
+
 		prgDialog.show();
 		// Make RESTful web service call using AsyncHttpClient object
 		AsyncHttpClient client = new AsyncHttpClient();
@@ -548,14 +769,14 @@ public class ShowStoryActivity extends Activity {
 			// When the response returned by REST has Http response code '200'
 			@Override
 			public void onSuccess(String response) {
-				
+
 				// Hide Progress Dialog
 				prgDialog.hide();
 				try {
 					// JSON Object
 					JSONObject obj = new JSONObject(response);
 					// When the JSON response has status boolean value assigned with true
-					
+
 					String msg = obj.getString("message");
 					Log.e("subscribePlaceAction.success", msg);
 					isFollowingPlace = !isFollowingPlace;
@@ -589,7 +810,7 @@ public class ShowStoryActivity extends Activity {
 			}
 		});
 	}
-	
+
 
 
 
@@ -644,10 +865,11 @@ public class ShowStoryActivity extends Activity {
 	}
 	// düzelt:)
 	public void setDefaultValues(JSONObject obj) throws JSONException{
-
 		ownerButton.setText(owner);
+		placeButton.setText(placeName);
 		storyTV.setText(obj.getString("content"));
-		themeTV.setText(obj.getString("themeId"));
+		getThemeName(obj.getString("themeId"));
+
 		rateTV.setText(obj.getString("avgRate"));
 
 		// image için de yaz bir þeyler
@@ -681,7 +903,22 @@ public class ShowStoryActivity extends Activity {
 
 	}
 	public void seeOwnerProfile(View view){ 
-		// BURASI DOLCAK
+		if(!owner.equals(Utility.myUserName)){
+			startOtherProfileActivity(storyOwnerID);
+		}
+	}
+	public void seePlaceProfile(View view){ 
+		navigateToTimelineActivityForPlaces(place_id);
+
+	}
+	public void navigateToTimelineActivityForPlaces(String placeID){
+		Intent timelineIntent = new Intent(getApplicationContext(),TimelineActivity.class);
+		Bundle b = new Bundle();
+		b.putString("type","placesStories");
+		b.putString("placeID",placeID);
+		timelineIntent.putExtras(b);
+		timelineIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		startActivity(timelineIntent);
 	}
 	public void invokeWSforAddComment(RequestParams params){
 		// Show Progress Dialog 
@@ -775,8 +1012,8 @@ public class ShowStoryActivity extends Activity {
 					long arg3) {
 
 				try {
-					String other_user_id = 0 + "";
-					startOtherProfileActivity(other_user_id);
+
+					//startOtherProfileActivity(storyOwnerID);
 
 				} catch (Exception e) {
 
@@ -887,7 +1124,7 @@ public class ShowStoryActivity extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 
 		inflater = getMenuInflater();
-		inflater.inflate(R.menu.timeline_menu, menu);
+		inflater.inflate(R.menu.showstory_menu, menu);
 
 		return super.onCreateOptionsMenu(menu);
 
