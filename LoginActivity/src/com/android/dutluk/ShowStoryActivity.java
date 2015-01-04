@@ -46,16 +46,21 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 
 
+
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 import com.loopj.android.http.AsyncHttpClient;
@@ -89,35 +94,52 @@ public class ShowStoryActivity extends Activity {
 	TextView storyTV;
 	TextView themeTV;
 	TextView rateTV;
+	Button ownerButton;
+	Button rememberThatButton;
+	Button commentsButton;
+	Button subscribeWriterButton;
+	Button subscribePlaceButton;
 
-	
 	String story_id = "" ;
 	String type = "";
 	String type_send = "";
-	
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.show_story);
-        
+	String owner = "";
+	String storyOwnerID = "";
+	boolean isFollowingPlace = false;
+	boolean isFollowingUser = false;
+	boolean isRemembered = false;
 
-     	// Instantiate Progress Dialog object
- 		prgDialog = new ProgressDialog(this);
- 		// Set Progress Dialog Text
-	    prgDialog.setMessage("Please wait...");
-	    // Set Cancelable as False
-	    prgDialog.setCancelable(false);
-         
-   
-     	imageV = (ImageView)findViewById(R.id.imageViewAddStory);
-     	storyTV =  (TextView)findViewById(R.id.storyShowStory);
-     	themeTV =  (TextView)findViewById(R.id.themeShowStory);
-     	rateTV =  (TextView)findViewById(R.id.rateShowStory);
-     	
-        
-        Intent comingIntent = getIntent();
-    
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.show_story);
+
+		actionBar = getActionBar();
+		actionBar.setBackgroundDrawable(new ColorDrawable(Color.rgb(0, 0, 0)));
+		actionBar.setDisplayShowHomeEnabled(true);
+		actionBar.setDisplayShowTitleEnabled(true);
+		// Instantiate Progress Dialog object
+		prgDialog = new ProgressDialog(this);
+		// Set Progress Dialog Text
+		prgDialog.setMessage("Please wait...");
+		// Set Cancelable as False
+		prgDialog.setCancelable(false);
+
+
+		imageV = (ImageView)findViewById(R.id.imageViewAddStory);
+		storyTV =  (TextView)findViewById(R.id.storyShowStory);
+		themeTV =  (TextView)findViewById(R.id.themeShowStory);
+		rateTV =  (TextView)findViewById(R.id.rateShowStory);
+		ownerButton = (Button) findViewById(R.id.ownerShowStory);
+		rememberThatButton = (Button) findViewById(R.id.btnIRememberThat);
+		commentsButton = (Button) findViewById(R.id.btnComments);
+		subscribeWriterButton = (Button) findViewById(R.id.btnSubscribeWriter);
+		subscribePlaceButton = (Button) findViewById(R.id.btnSubscribePlace);
+
+		Intent comingIntent = getIntent();
+
 		type = comingIntent.getStringExtra("type");
+
 
 		if(type.equals("myStories")){		
 			type_send = ""+0;
@@ -128,182 +150,637 @@ public class ShowStoryActivity extends Activity {
 		if(type.equals("subsStories")){
 			type_send = ""+1;
 		}
-        story_id = comingIntent.getStringExtra("story_id");
-        
-        RequestParams params = new RequestParams();
+		story_id = comingIntent.getStringExtra("story_id");
+
+		RequestParams params = new RequestParams();
 		params.put("storyId", story_id);
-        invokeWSforGetStory(params);
-        
-		lv = (ListView) findViewById(R.id.commentList);
+		invokeWSforGetStory(params);
+
+
+
+		owner = comingIntent.getStringExtra("owner");
+		Utility.IDFromName(owner);
+		storyOwnerID = Utility.userIDFromName;
 		
-		actionBar = getActionBar();
-		actionBar.setBackgroundDrawable(new ColorDrawable(Color.rgb(16, 188, 201)));
-		actionBar.setDisplayShowHomeEnabled(true);
-		actionBar.setDisplayShowTitleEnabled(true);
+		checkForSubscribePlace();		
+		if(owner.equals(Utility.myUserName)){
+			Log.e("storyOwner-Utility.UserName",owner+"-"+ Utility.myUserName);
+			rememberThatButton.setVisibility(View.INVISIBLE);
+			subscribeWriterButton.setVisibility(View.INVISIBLE);
+		}
+		else{
+			checkForSubscribeWriter();
+			checkForRememberThat();
+		}
+	
+		
+		changeFollowingPlace();
+		subscribePlaceButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				subscribePlaceAction();
+			}
+		});
+		
+		changeFollowingWriter();
+		subscribeWriterButton.setOnClickListener(new OnClickListener() {		
+			@Override
+			public void onClick(View v) {			
+				subscribeWriterAction();
+			}
+
+		});
+		
+		changeRemember();
+		rememberThatButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				rememberThatAction();
+			}
+
+		});
+		
+
+		lv = (ListView) findViewById(R.id.commentList);
+
+
 		new MyTask().execute();
-        
-        
-    }
- 
+
+
+	}
+	
+
+	public void checkForRememberThat(){
+		RequestParams params = new RequestParams();
+		params.put("storyId", story_id);
+		params.put("userId", Utility.myUserID);
+
+		//http://titan.cmpe.boun.edu.tr:8085/dutluk_android_api/IsRemembered?storyId=101&userId=122
+		// Show Progress Dialog 
+		prgDialog.show();
+		// Make RESTful web service call using AsyncHttpClient object
+		AsyncHttpClient client = new AsyncHttpClient();
+		client.post(Utility.SERVER_NAME+ "IsRemembered?",params ,new AsyncHttpResponseHandler() {
+			// When the response returned by REST has Http response code '200'
+			@Override
+			public void onSuccess(String response) {
+				// Hide Progress Dialog
+				prgDialog.hide();
+				try {
+					// JSON Object
+					JSONObject obj = new JSONObject(response);
+					// When the JSON response has status boolean value assigned with true
+					
+					isRemembered = obj.getBoolean("result");
+					Log.e("checkForRememberThat.success", "a" + isRemembered);
+					
+					
+
+				} catch (JSONException e) {
+
+					Log.e("checkForRememberThat.json", "Error Occured [Server's JSON response might be invalid]!");
+					e.printStackTrace();
+
+				}
+			}
+			// When the response returned by REST has HTTP response code other than '200'
+			@Override
+			public void onFailure(int statusCode, Throwable error,
+					String content) {
+				// Hide Progress Dialog
+				prgDialog.hide();
+				// When HTTP response code is '404'
+				if(statusCode == 404){
+					Log.e("checkForRememberThat.404", "Requested resource not found");
+				} 
+				// When HTTP response code is '500'
+				else if(statusCode == 500){
+					Log.e("checkForRememberThat.500", "Something went wrong at server end");
+				} 
+				// When HTTP response code other than 404, 500
+				else{
+					Log.e("checkForRememberThat.other", "Unexpected Error occcured! [Most common Error: Device might not be connected to Internet or remote server is not up and running]");
+				}
+			}
+		});
+	}
+	public void changeRemember(){
+		if(isRemembered)
+			rememberThatButton.setText("Not Remember That");
+		else 
+			rememberThatButton.setText("Remember That");
+	}
+	public void rememberThatAction(){
+
+		RequestParams params = new RequestParams();
+		params.put("email", Utility.myUserName);
+		params.put("StoryId", story_id);
+		
+		if(isRemembered){
+			//http://titan.cmpe.boun.edu.tr:8085/dutluk_android_api/RememberStory?email=burcin@burcin.com&func=unremember&StoryId=102(POST)
+			params.put("func", "unremember");
+			Log.e("rememberThatAction", "unsubscribeUser");
+		}
+		else {
+			//http://titan.cmpe.boun.edu.tr:8085/dutluk_android_api/RememberStory?email=burcin@burcin.com&func=remember&StoryId=102(POST)
+			params.put("func", "remember");	
+			Log.e("rememberThatAction", "subscribeUser");
+		}
+		
+		
+		prgDialog.show();
+		// Make RESTful web service call using AsyncHttpClient object
+		AsyncHttpClient client = new AsyncHttpClient();
+		client.post(Utility.SERVER_NAME + "RememberStory?",params ,new AsyncHttpResponseHandler() {
+			// When the response returned by REST has Http response code '200'
+			@Override
+			public void onSuccess(String response) {
+				
+				// Hide Progress Dialog
+				prgDialog.hide();
+				try {
+					// JSON Object
+					JSONObject obj = new JSONObject(response);
+					// When the JSON response has status boolean value assigned with true
+					
+					String msg = obj.getString("message");
+					Log.e("rememberThatAction.success", msg);
+					isRemembered = !isRemembered;
+					changeRemember();
+					
+
+				} catch (JSONException e) {
+
+					Log.e("rememberThatAction.json", "Error Occured [Server's JSON response might be invalid]!");
+					e.printStackTrace();
+
+				}
+			}
+			// When the response returned by REST has HTTP response code other than '200'
+			@Override
+			public void onFailure(int statusCode, Throwable error,
+					String content) {
+				// Hide Progress Dialog
+				prgDialog.hide();
+				// When HTTP response code is '404'
+				if(statusCode == 404){
+					Log.e("rememberThatAction.404", "Requested resource not found");
+				} 
+				// When HTTP response code is '500'
+				else if(statusCode == 500){
+					Log.e("rememberThatAction.500", "Something went wrong at server end");
+				} 
+				// When HTTP response code other than 404, 500
+				else{
+					Log.e("rememberThatAction.other", "Unexpected Error occcured! [Most common Error: Device might not be connected to Internet or remote server is not up and running]");
+				}
+			}
+		});
+	}
+	public void checkForSubscribeWriter(){
+		RequestParams params = new RequestParams();
+		params.put("followerId", Utility.myUserID);
+		params.put("followedId", storyOwnerID);
+
+		//http://titan.cmpe.boun.edu.tr:8085/dutluk_android_api/isFollowingUser?followerId=112&followedId=122
+		// Show Progress Dialog 
+		prgDialog.show();
+		// Make RESTful web service call using AsyncHttpClient object
+		AsyncHttpClient client = new AsyncHttpClient();
+		client.get(Utility.SERVER_NAME+ "isFollowingUser?",params ,new AsyncHttpResponseHandler() {
+			// When the response returned by REST has Http response code '200'
+			@Override
+			public void onSuccess(String response) {
+				// Hide Progress Dialog
+				prgDialog.hide();
+				try {
+					// JSON Object
+					JSONObject obj = new JSONObject(response);
+					// When the JSON response has status boolean value assigned with true
+					
+					isFollowingUser = obj.getBoolean("result");
+					Log.e("checkForSubscribeWriter.success", "a" + isFollowingUser);
+					
+					
+
+				} catch (JSONException e) {
+
+					Log.e("checkForSubscribeWriter.json", "Error Occured [Server's JSON response might be invalid]!");
+					e.printStackTrace();
+
+				}
+			}
+			// When the response returned by REST has HTTP response code other than '200'
+			@Override
+			public void onFailure(int statusCode, Throwable error,
+					String content) {
+				// Hide Progress Dialog
+				prgDialog.hide();
+				// When HTTP response code is '404'
+				if(statusCode == 404){
+					Log.e("checkForSubscribeWriter.404", "Requested resource not found");
+				} 
+				// When HTTP response code is '500'
+				else if(statusCode == 500){
+					Log.e("checkForSubscribeWriter.500", "Something went wrong at server end");
+				} 
+				// When HTTP response code other than 404, 500
+				else{
+					Log.e("checkForSubscribeWriter.other", "Unexpected Error occcured! [Most common Error: Device might not be connected to Internet or remote server is not up and running]");
+				}
+			}
+		});
+	}
+	public void changeFollowingWriter(){
+		if(isFollowingUser)
+			subscribeWriterButton.setText("Unsubscribe Writer");
+		else 
+			subscribeWriterButton.setText("Subscribe Writer");
+	}
+	public void subscribeWriterAction(){
+		RequestParams params = new RequestParams();
+		params.put("email", Utility.myUserName);
+		params.put("userId", storyOwnerID);
+		
+		if(isFollowingUser){
+			//http://titan.cmpe.boun.edu.tr:8085/dutluk_android_api/Subscribe?email=burcin@burcin.com&func=unsubscribe&userId=101(POST)
+			params.put("func", "unsubscribe");
+			Log.e("subscribeWriterAction", "unsubscribeUser");
+		}
+		else {
+			//http://titan.cmpe.boun.edu.tr:8085/dutluk_android_api/Subscribe?email=burcin@burcin.com&func=subscribe&userId=101(POST)
+			params.put("func", "subscribe");	
+			Log.e("subscribeWriterAction", "subscribeUser");
+		}
+		
+		
+		prgDialog.show();
+		// Make RESTful web service call using AsyncHttpClient object
+		AsyncHttpClient client = new AsyncHttpClient();
+		client.post(Utility.SERVER_NAME + "Subscribe?",params ,new AsyncHttpResponseHandler() {
+			// When the response returned by REST has Http response code '200'
+			@Override
+			public void onSuccess(String response) {
+				
+				// Hide Progress Dialog
+				prgDialog.hide();
+				try {
+					// JSON Object
+					JSONObject obj = new JSONObject(response);
+					// When the JSON response has status boolean value assigned with true
+					
+					String msg = obj.getString("message");
+					Log.e("subscribeWriterAction.success", msg);
+					isFollowingUser = !isFollowingUser;
+					changeFollowingWriter();
+
+				} catch (JSONException e) {
+
+					Log.e("subscribeWriterAction.json", "Error Occured [Server's JSON response might be invalid]!");
+					e.printStackTrace();
+
+				}
+			}
+			// When the response returned by REST has HTTP response code other than '200'
+			@Override
+			public void onFailure(int statusCode, Throwable error,
+					String content) {
+				// Hide Progress Dialog
+				prgDialog.hide();
+				// When HTTP response code is '404'
+				if(statusCode == 404){
+					Log.e("subscribeWriterAction.404", "Requested resource not found");
+				} 
+				// When HTTP response code is '500'
+				else if(statusCode == 500){
+					Log.e("subscribeWriterAction.500", "Something went wrong at server end");
+				} 
+				// When HTTP response code other than 404, 500
+				else{
+					Log.e("subscribeWriterAction.other", "Unexpected Error occcured! [Most common Error: Device might not be connected to Internet or remote server is not up and running]");
+				}
+			}
+		});
+	}
+	
+	public void checkForSubscribePlace(){
+		RequestParams params = new RequestParams();
+		params.put("userId", Utility.myUserID);
+		params.put("placeId", "?");
+
+		//http://titan.cmpe.boun.edu.tr:8085/dutluk_android_api/isFollowingPlace?userId=112&placeId=122
+		// Show Progress Dialog 
+		prgDialog.show();
+		// Make RESTful web service call using AsyncHttpClient object
+		AsyncHttpClient client = new AsyncHttpClient();
+		client.get(Utility.SERVER_NAME+ "isFollowingPlace?",params ,new AsyncHttpResponseHandler() {
+			// When the response returned by REST has Http response code '200'
+			@Override
+			public void onSuccess(String response) {
+				// Hide Progress Dialog
+				prgDialog.hide();
+				try {
+					// JSON Object
+					JSONObject obj = new JSONObject(response);
+					// When the JSON response has status boolean value assigned with true
+					
+					isFollowingPlace = obj.getBoolean("result");
+					Log.e("checkForSubscribePlace.success", "a" + isFollowingPlace);
+					
+					
+
+				} catch (JSONException e) {
+
+					Log.e("checkForSubscribePlace.json", "Error Occured [Server's JSON response might be invalid]!");
+					e.printStackTrace();
+
+				}
+			}
+			// When the response returned by REST has HTTP response code other than '200'
+			@Override
+			public void onFailure(int statusCode, Throwable error,
+					String content) {
+				// Hide Progress Dialog
+				prgDialog.hide();
+				// When HTTP response code is '404'
+				if(statusCode == 404){
+					Log.e("checkForSubscribePlace.404", "Requested resource not found");
+				} 
+				// When HTTP response code is '500'
+				else if(statusCode == 500){
+					Log.e("checkForSubscribePlace.500", "Something went wrong at server end");
+				} 
+				// When HTTP response code other than 404, 500
+				else{
+					Log.e("checkForSubscribePlace.other", "Unexpected Error occcured! [Most common Error: Device might not be connected to Internet or remote server is not up and running]");
+				}
+			}
+		});
+	}
+	public void changeFollowingPlace(){
+		if(isFollowingPlace)
+			subscribePlaceButton.setText("Unsubscribe Place");
+		else 
+			subscribePlaceButton.setText("Subscribe Place");
+	}
+	public void subscribePlaceAction(){
+		RequestParams params = new RequestParams();
+		params.put("email", Utility.myUserName);
+		params.put("placeId", "?");
+		
+		if(isFollowingPlace){
+			//http://titan.cmpe.boun.edu.tr:8085/dutluk_android_api/Subscribe?email=burcin@burcin.com&func=unsubscribePlace&placeId=101(post)		
+			params.put("func", "unsubscribePlace");
+			Log.e("subscribePlaceAction", "unsubscribePlace");
+		}
+		else {
+			//http://titan.cmpe.boun.edu.tr:8085/dutluk_android_api/Subscribe?email=burcin@burcin.com&func=subscribePlace&placeId=101(POST)
+			params.put("func", "subscribePlace");	
+			Log.e("subscribePlaceAction", "subscribePlace");
+		}
+		
+		
+		prgDialog.show();
+		// Make RESTful web service call using AsyncHttpClient object
+		AsyncHttpClient client = new AsyncHttpClient();
+		client.post(Utility.SERVER_NAME+ "Subscribe?",params ,new AsyncHttpResponseHandler() {
+			// When the response returned by REST has Http response code '200'
+			@Override
+			public void onSuccess(String response) {
+				
+				// Hide Progress Dialog
+				prgDialog.hide();
+				try {
+					// JSON Object
+					JSONObject obj = new JSONObject(response);
+					// When the JSON response has status boolean value assigned with true
+					
+					String msg = obj.getString("message");
+					Log.e("subscribePlaceAction.success", msg);
+					isFollowingPlace = !isFollowingPlace;
+					changeFollowingPlace();
+
+				} catch (JSONException e) {
+
+					Log.e("subscribePlaceAction.json", "Error Occured [Server's JSON response might be invalid]!");
+					e.printStackTrace();
+
+				}
+			}
+			// When the response returned by REST has HTTP response code other than '200'
+			@Override
+			public void onFailure(int statusCode, Throwable error,
+					String content) {
+				// Hide Progress Dialog
+				prgDialog.hide();
+				// When HTTP response code is '404'
+				if(statusCode == 404){
+					Log.e("subscribePlaceAction.404", "Requested resource not found");
+				} 
+				// When HTTP response code is '500'
+				else if(statusCode == 500){
+					Log.e("subscribePlaceAction.500", "Something went wrong at server end");
+				} 
+				// When HTTP response code other than 404, 500
+				else{
+					Log.e("subscribePlaceAction.other", "Unexpected Error occcured! [Most common Error: Device might not be connected to Internet or remote server is not up and running]");
+				}
+			}
+		});
+	}
+	
+
+
+
 	public void invokeWSforGetStory(RequestParams params){
 		// Show Progress Dialog 
 		prgDialog.show();
 		// Make RESTful web service call using AsyncHttpClient object
 		AsyncHttpClient client = new AsyncHttpClient();
-        client.get(Utility.SERVER_NAME+ "GetOneStory?",params ,new AsyncHttpResponseHandler() {
-        	// When the response returned by REST has Http response code '200'
-             @Override
-             public void onSuccess(String response) {
-            	// Hide Progress Dialog
-            	 prgDialog.hide();
-                 try {
-                	 	 // JSON Object
-                         JSONObject obj = new JSONObject(response);
-                         // When the JSON response has status boolean value assigned with true
-                        	
-                        	 // Set Default Values for Edit View controls
-                        	 setDefaultValues(obj);
-                        	 // Display successfully registered message using Toast
-                        	 Toast.makeText(getApplicationContext(), "You can successfully see story!", Toast.LENGTH_LONG).show();
+		client.get(Utility.SERVER_NAME+ "GetOneStory?",params ,new AsyncHttpResponseHandler() {
+			// When the response returned by REST has Http response code '200'
+			@Override
+			public void onSuccess(String response) {
+				// Hide Progress Dialog
+				prgDialog.hide();
+				try {
+					// JSON Object
+					JSONObject obj = new JSONObject(response);
+					// When the JSON response has status boolean value assigned with true
 
-                 } catch (JSONException e) {
-                    
-                     Toast.makeText(getApplicationContext(), "Error Occured [Server's JSON response might be invalid]!", Toast.LENGTH_LONG).show();
-                     e.printStackTrace();
-                     
-                 }
-             }
-             // When the response returned by REST has HTTP response code other than '200'
-             @Override
-             public void onFailure(int statusCode, Throwable error,
-                 String content) {
-                 // Hide Progress Dialog
-                 prgDialog.hide();
-                 // When HTTP response code is '404'
-                 if(statusCode == 404){
-                     Toast.makeText(getApplicationContext(), "Requested resource not found", Toast.LENGTH_LONG).show();
-                 } 
-                 // When HTTP response code is '500'
-                 else if(statusCode == 500){
-                     Toast.makeText(getApplicationContext(), "Something went wrong at server end", Toast.LENGTH_LONG).show();
-                 } 
-                 // When HTTP response code other than 404, 500
-                 else{
-                     Toast.makeText(getApplicationContext(), "Unexpected Error occcured! [Most common Error: Device might not be connected to Internet or remote server is not up and running]", Toast.LENGTH_LONG).show();
-                 }
-             }
-         });
+					// Set Default Values for Edit View controls
+					setDefaultValues(obj);
+					// Display successfully registered message using Toast
+					Log.e("invokeWSforGetStory.success", "You can successfully see story!");
+
+				} catch (JSONException e) {
+
+					Log.e("invokeWSforGetStory.json", "Error Occured [Server's JSON response might be invalid]!");
+					e.printStackTrace();
+
+				}
+			}
+			// When the response returned by REST has HTTP response code other than '200'
+			@Override
+			public void onFailure(int statusCode, Throwable error,
+					String content) {
+				// Hide Progress Dialog
+				prgDialog.hide();
+				// When HTTP response code is '404'
+				if(statusCode == 404){
+					Log.e("invokeWSforGetStory.404",  "Requested resource not found");
+				} 
+				// When HTTP response code is '500'
+				else if(statusCode == 500){
+					Log.e("invokeWSforGetStory.500","Something went wrong at server end");
+				} 
+				// When HTTP response code other than 404, 500
+				else{
+					Log.e("invokeWSforGetStory.other", "Unexpected Error occcured! [Most common Error: Device might not be connected to Internet or remote server is not up and running]");
+				}
+			}
+		});
 	}
 	// düzelt:)
 	public void setDefaultValues(JSONObject obj) throws JSONException{
+
+		ownerButton.setText(owner);
 		storyTV.setText(obj.getString("content"));
 		themeTV.setText(obj.getString("themeId"));
 		rateTV.setText(obj.getString("avgRate"));
-		
+
 		// image için de yaz bir þeyler
 	}
-	// düzelt:) 
-	public void iRememberThatAction(View view){
-//		Intent iRememberThatIntent = new Intent(getApplicationContext(),IRememberThatActivity.class);
-//		iRememberThatIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//		startActivity(iRememberThatIntent);
-	}
-	// düzelt:) 
+
+
+
 	public void commentsAction(View view){
-		 final AlertDialog.Builder alert = new AlertDialog.Builder(this);
-		    final EditText input = new EditText(this);
-		    alert.setTitle("Add Comment"); 
-		    alert.setView(input);
-		    alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-		        public void onClick(DialogInterface dialog, int whichButton) {
-		            String value = input.getText().toString().trim();
-		            RequestParams params = new RequestParams();
-		    		params.put("mail", Utility.userName);
-		    		params.put("storyId", story_id);
-		    		params.put("comment", value);
-		            invokeWSforAddComment(params);
-		            //Toast.makeText(getApplicationContext(), value, Toast.LENGTH_SHORT).show();
-		        }
-		    });
+		final AlertDialog.Builder alert = new AlertDialog.Builder(this);
+		final EditText input = new EditText(this);
+		alert.setTitle("Add Comment"); 
+		alert.setView(input);
+		alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) {
+				String value = input.getText().toString().trim();
+				RequestParams params = new RequestParams();
+				params.put("mail", Utility.myUserName);
+				params.put("storyId", story_id);
+				params.put("comment", value);
+				invokeWSforAddComment(params);
+				//Toast.makeText(getApplicationContext(), value, Toast.LENGTH_SHORT).show();
+			}
+		});
 
-		    alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-		        public void onClick(DialogInterface dialog, int whichButton) {
-		            dialog.cancel();
-		        }
-		    });
-		    alert.show();   
+		alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) {
+				dialog.cancel();
+			}
+		});
+		alert.show();   
 
 	}
-	
+	public void seeOwnerProfile(View view){ 
+		// BURASI DOLCAK
+	}
 	public void invokeWSforAddComment(RequestParams params){
 		// Show Progress Dialog 
 		prgDialog.show();
 		// Make RESTful web service call using AsyncHttpClient object
 		AsyncHttpClient client = new AsyncHttpClient();
-        client.post(Utility.SERVER_NAME+ "AddComment?",params ,new AsyncHttpResponseHandler() {
-        	// When the response returned by REST has Http response code '200'
-             @Override
-             public void onSuccess(String response) {
-            	// Hide Progress Dialog
-            	 prgDialog.hide();
-                 try {
-                	 	 // JSON Object
-                         JSONObject obj = new JSONObject(response);
-                         // When the JSON response has status boolean value assigned with true
-                        	commentList.clear();
-                         	new MyTask().execute();
-                        	 // Display successfully registered message using Toast
-                        	 Toast.makeText(getApplicationContext(), "You can successfully add comment!", Toast.LENGTH_LONG).show();
+		client.post(Utility.SERVER_NAME+ "AddComment?",params ,new AsyncHttpResponseHandler() {
+			// When the response returned by REST has Http response code '200'
+			@Override
+			public void onSuccess(String response) {
+				// Hide Progress Dialog
+				prgDialog.hide();
+				try {
+					// JSON Object
+					JSONObject obj = new JSONObject(response);
+					// When the JSON response has status boolean value assigned with true
+					commentList.clear();
+					new MyTask().execute();
+					// Display successfully registered message using Toast
+					Log.e("invokeWSforAddComment.success", "You can successfully add comment!");
 
-                 } catch (JSONException e) {
-                    
-                     Toast.makeText(getApplicationContext(), "Error Occured [Server's JSON response might be invalid]!", Toast.LENGTH_LONG).show();
-                     e.printStackTrace();
-                     
-                 }
-             }
-             // When the response returned by REST has HTTP response code other than '200'
-             @Override
-             public void onFailure(int statusCode, Throwable error,
-                 String content) {
-                 // Hide Progress Dialog
-                 prgDialog.hide();
-                 // When HTTP response code is '404'
-                 if(statusCode == 404){
-                     Toast.makeText(getApplicationContext(), "Requested resource not found", Toast.LENGTH_LONG).show();
-                 } 
-                 // When HTTP response code is '500'
-                 else if(statusCode == 500){
-                     Toast.makeText(getApplicationContext(), "Something went wrong at server end", Toast.LENGTH_LONG).show();
-                 } 
-                 // When HTTP response code other than 404, 500
-                 else{
-                     Toast.makeText(getApplicationContext(), "Unexpected Error occcured! [Most common Error: Device might not be connected to Internet or remote server is not up and running]", Toast.LENGTH_LONG).show();
-                 }
-             }
-         });
+				} catch (JSONException e) {
+
+					Log.e("invokeWSforAddComment.json", "Error Occured [Server's JSON response might be invalid]!");
+					e.printStackTrace();
+
+				}
+			}
+			// When the response returned by REST has HTTP response code other than '200'
+			@Override
+			public void onFailure(int statusCode, Throwable error,
+					String content) {
+				// Hide Progress Dialog
+				prgDialog.hide();
+				// When HTTP response code is '404'
+				if(statusCode == 404){
+					Log.e("invokeWSforAddComment.404", "Requested resource not found");
+				} 
+				// When HTTP response code is '500'
+				else if(statusCode == 500){
+					Log.e("invokeWSforAddComment.500", "Something went wrong at server end");
+				} 
+				// When HTTP response code other than 404, 500
+				else{
+					Log.e("invokeWSforAddComment.other", "Unexpected Error occcured! [Most common Error: Device might not be connected to Internet or remote server is not up and running]");
+				}
+			}
+		});
 	}
-	
-	
-	private void readData() {
-		
 
-		TimelineAdapter adapter = new TimelineAdapter(this, commentList);
+
+	private void readComments() {
+
+
+
+		if(commentList.size() > 1) {
+			LayoutParams lp = (LayoutParams) lv.getLayoutParams();
+			lp.height = 120;
+			lv.setLayoutParams(lp);
+		}
+		TimelineAdapter adapter = new TimelineAdapter(this, commentList, "comment");
+
 		lv.setAdapter(adapter);
-		
+		lv.setOnTouchListener(new ListView.OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				int action = event.getAction();
+				switch (action) {
+				case MotionEvent.ACTION_DOWN:
+					// Disallow ScrollView to intercept touch events.
+					v.getParent().requestDisallowInterceptTouchEvent(true);
+					break;
+
+				case MotionEvent.ACTION_UP:
+					// Allow ScrollView to intercept touch events.
+					v.getParent().requestDisallowInterceptTouchEvent(false);
+					break;
+				}
+
+				// Handle ListView touch events.
+				v.onTouchEvent(event);
+				return true;
+			}
+
+
+		});
 		lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
-				
+
 				try {
 					String other_user_id = 0 + "";
 					startOtherProfileActivity(other_user_id);
 
 				} catch (Exception e) {
-					
-					String data = e.getMessage();
+
+					e.printStackTrace();
 				}
 
 			}
@@ -314,8 +791,8 @@ public class ShowStoryActivity extends Activity {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
 					final int arg2, long arg3) {
-						return isInput;
-		
+				return isInput;
+
 			}
 		});
 
@@ -324,16 +801,16 @@ public class ShowStoryActivity extends Activity {
 
 		@Override
 		protected void onPreExecute() {
-		
+
 			super.onPreExecute();
 		}
 
 		@Override
 		protected void onPostExecute(Void result) {
-		
+
 			super.onPostExecute(result);
-			Log.e("commentList", commentList.toString());
-			readData();
+			Log.e("COMMENT LIST IN POST", commentList.toString());
+			readComments();
 		}
 
 		@Override
@@ -344,57 +821,57 @@ public class ShowStoryActivity extends Activity {
 			pairs.add(new BasicNameValuePair("userId","0"));  // for getting all comments of a story
 			String url = Utility.SERVER_NAME + "GetComment?" + URLEncodedUtils.format(pairs, "utf-8");
 			HttpGet httpget = new HttpGet(url);
-			//Log.w("submit", "aa" + url);
+
 			try {
 				HttpResponse getResponse = httpclient.execute(httpget);
 				BufferedReader rd = new BufferedReader(new InputStreamReader(
-				getResponse.getEntity().getContent()));
+						getResponse.getEntity().getContent()));
 				StringBuffer result = new StringBuffer();
 				String line = "";
 				while ((line = rd.readLine()) != null) {
-				result.append(line);
+					result.append(line);
 				}
 
-				Log.w("COMMENTLER", result.toString());
+				Log.e("COMMENTS ON GET", result.toString());
 				JSONArray jsonarray = new JSONArray(result.toString());
 
 
-			    for(int i=0; i<jsonarray.length(); i++){
-			        JSONObject obj = jsonarray.getJSONObject(i);
+				for(int i=0; i<jsonarray.length(); i++){
+					JSONObject obj = jsonarray.getJSONObject(i);
 
 
 					String content = obj.getString("Comment");				
 					String info = obj.getString("UserMail");
 					int id = obj.getInt("StoryID");
 					HashMap<String, String> map = new HashMap<String, String>();
-					
+
 					map.put(KEY_ID, "" + id);
 					map.put(KEY_TITLE, content);
 					map.put(KEY_INFO, info);
 					commentList.add(map);
-					
-					
-			    }   
-			
 
 
-				} catch (ClientProtocolException e) {
-			
+				}   
+
+
+
+			} catch (ClientProtocolException e) {
+
 				e.printStackTrace();
-				} catch (IOException e) {
-				
+			} catch (IOException e) {
+
 				e.printStackTrace();
-				} catch (JSONException e) {
-			
+			} catch (JSONException e) {
+
 				e.printStackTrace();
-				}
-				return null;
+			}
+			return null;
 
 		}
 
 	}
 	public void  startOtherProfileActivity(String other_user_id) {
-		
+
 		Intent otherProfileIntent = new Intent(getApplicationContext(),OtherUserProfileActivity.class);
 		Bundle b = new Bundle();
 		b.putString("other_user_id",other_user_id);
@@ -402,33 +879,22 @@ public class ShowStoryActivity extends Activity {
 		otherProfileIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(otherProfileIntent);
 	}
-	
-	// düzelt:) 
-	public void subscribeWriterAction(View view){
-//		Intent subscribeWriterIntent = new Intent(getApplicationContext(),SubscribeWriterActivity.class);
-//		subscribeWriterIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//		startActivity(subscribeWriterIntent);
-	}
-	// düzelt:) 
-	public void subscribePlaceAction(View view){
-//		Intent subscribePlaceIntent = new Intent(getApplicationContext(),SubscibePlaceActivity.class);
-//		subscribePlaceIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//		startActivity(subscribePlaceIntent);
-	}
-	
+
+
+
 	@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		
+
 		inflater = getMenuInflater();
-		inflater.inflate(R.menu.main, menu);
+		inflater.inflate(R.menu.timeline_menu, menu);
 
 		return super.onCreateOptionsMenu(menu);
 
 	}
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		
+
 		switch (item.getItemId()) {
 		case R.id.addStory:
 			navigateToAddStoryActivity();
@@ -450,32 +916,32 @@ public class ShowStoryActivity extends Activity {
 		Intent searchIntent = new Intent(getApplicationContext(),AdvancedSearchActivity.class);
 		searchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(searchIntent);
-		
+
 	}
 	public void navigateToAddStoryActivity() {
 		Intent addStoryIntent = new Intent(getApplicationContext(),AddStoryActivity.class);
 		addStoryIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(addStoryIntent);
-		
+
 	}
 	public void navigateToHomeMapActivity() {
 		Intent homeMapIntent = new Intent(getApplicationContext(),HomeMapActivity.class);
 		homeMapIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(homeMapIntent);
-		
+
 	}
-	
+
 	public void navigateToProfileActivity() {
 		Intent profileIntent = new Intent(getApplicationContext(),ProfileActivity.class);
 		profileIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(profileIntent);
-		
+
 	}
 	public void navigateToAdvancedSearchActivity() {
 		Intent searchIntent = new Intent(getApplicationContext(),AdvancedSearchActivity.class);
 		searchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(searchIntent);
-		
+
 	}
 
 

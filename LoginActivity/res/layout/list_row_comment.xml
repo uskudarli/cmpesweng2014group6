@@ -9,7 +9,7 @@
     <!-- Comment content -->
 
     <TextView
-        android:id="@+id/commentContent"
+        android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="#040404"
@@ -20,7 +20,7 @@
     <!-- Comment Owner Name -->
 
     <TextView
-        android:id="@+id/commentOwner"
+        android:id="@+id/info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/title"

@@ -4,9 +4,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.os.Bundle;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -18,9 +21,9 @@ import com.loopj.android.http.RequestParams;
 
 
 public class ProfileActivity extends Activity {
-
+	ActionBar actionBar;
 	ProgressDialog prgDialog;
-	TextView errorMsg;
+
 	
 	EditText nameET;
 	EditText birthDateET;
@@ -35,8 +38,11 @@ public class ProfileActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.profile);
-        
-        errorMsg = (TextView)findViewById(R.id.errorProfile);
+        actionBar = getActionBar();
+		actionBar.setBackgroundDrawable(new ColorDrawable(Color.rgb(0, 0, 0)));
+		actionBar.setDisplayShowHomeEnabled(true);
+		actionBar.setDisplayShowTitleEnabled(true);
+
      	// Instantiate Progress Dialog object
  		prgDialog = new ProgressDialog(this);
  		// Set Progress Dialog Text
@@ -54,7 +60,7 @@ public class ProfileActivity extends Activity {
      	bioET = (EditText)findViewById(R.id.biographyProfile);
      	
      	RequestParams params = new RequestParams();
-		params.put("email", Utility.userName);
+		params.put("email", Utility.myUserName);
 		invokeWSforGET(params);
 
     }
@@ -141,7 +147,7 @@ public class ProfileActivity extends Activity {
 		String bio = bioET.getText().toString();
 
 		RequestParams params = new RequestParams();
-		params.put("email", Utility.userName);
+		params.put("email", Utility.myUserName);
 		params.put("name", name);
 		//params.put("birthDate", birthDate);
 		//params.put("gender", gender);
@@ -179,7 +185,7 @@ public class ProfileActivity extends Activity {
                          } 
                          // Else display error message
                          else{
-                        	 errorMsg.setText(obj.getString("message"));
+                        	
                         	 Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
                          }
                  } catch (JSONException e) {

@@ -12,10 +12,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
+
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -26,6 +23,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.MediaStore.MediaColumns;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -36,6 +34,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 
 import android.util.Log;
 import android.view.View;
@@ -55,9 +55,8 @@ import android.widget.Toast;
 
 
 public class AddStoryActivity extends Activity implements OnItemSelectedListener {
-
+	ActionBar actionBar;
 	ProgressDialog prgDialog;
-	TextView errorMsg;
 
 	ImageView imageV;
 	EditText storyET;
@@ -87,8 +86,11 @@ public class AddStoryActivity extends Activity implements OnItemSelectedListener
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.add_story);
-
-		errorMsg = (TextView)findViewById(R.id.errorAddStory);
+		actionBar = getActionBar();
+		actionBar.setBackgroundDrawable(new ColorDrawable(Color.rgb(0,0,0)));
+		actionBar.setDisplayShowHomeEnabled(true);
+		actionBar.setDisplayShowTitleEnabled(true);
+		
 		// Instantiate Progress Dialog object
 		prgDialog = new ProgressDialog(this);
 		// Set Progress Dialog Text

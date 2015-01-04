@@ -9,6 +9,8 @@ import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
@@ -46,7 +48,7 @@ import com.loopj.android.http.RequestParams;
 
 public class HomeMapActivity extends FragmentActivity {
 
-	
+
 	ProgressDialog prgDialog;
 	static final String KEY_ID = "id";
 	static final String KEY_TITLE = "title";
@@ -68,6 +70,10 @@ public class HomeMapActivity extends FragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.map);
+		actionBar = getActionBar();
+		actionBar.setBackgroundDrawable(new ColorDrawable(Color.rgb(0,0,0)));
+		actionBar.setDisplayShowHomeEnabled(true);
+		actionBar.setDisplayShowTitleEnabled(true);
 		// Instantiate Progress Dialog object
  		prgDialog = new ProgressDialog(this);
  		// Set Progress Dialog Text
@@ -97,7 +103,7 @@ public class HomeMapActivity extends FragmentActivity {
 
 			@Override
 			public void onSuccess(String response) {
-				Log.e("submit", response);
+				Log.e("PLACE LIST", response);
 				prgDialog.hide();
 				int size = 0;
 				final int size_f ;
@@ -121,17 +127,6 @@ public class HomeMapActivity extends FragmentActivity {
 						list.add(latitude);
 						list.add(longitude);
 						
-//						LatLng temp = new LatLng(Double.parseDouble(latitude), Double.parseDouble(longitude));
-//						map.addMarker(new MarkerOptions()
-//						.title(name)
-//						.position(temp));
-//						map.setOnInfoWindowClickListener(
-//								  new OnInfoWindowClickListener(){
-//								    public void onInfoWindowClick(Marker marker){
-//								    	navigateToTimelineActivityForPlaces();
-//								    }
-//								  }
-//								);
 						listForMarkers.add(list);
 					}
 					
@@ -212,7 +207,7 @@ public class HomeMapActivity extends FragmentActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 
 		inflater = getMenuInflater();
-		inflater.inflate(R.menu.main_without_search, menu);
+		inflater.inflate(R.menu.homemap_menu, menu);
 	
 		return super.onCreateOptionsMenu(menu);
 
@@ -226,9 +221,6 @@ public class HomeMapActivity extends FragmentActivity {
 		switch (item.getItemId()) {
 		case R.id.addStory:
 			navigateToAddStoryActivity();
-			break;
-		case R.id.map:
-			navigateToHomeMapActivity();
 			break;
 		case R.id.ownProfile:
 			navigateToProfileActivity();
@@ -245,12 +237,6 @@ public class HomeMapActivity extends FragmentActivity {
 		Intent addStoryIntent = new Intent(getApplicationContext(),AddStoryActivity.class);
 		addStoryIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(addStoryIntent);
-		
-	}
-	public void navigateToHomeMapActivity() {
-		Intent homeMapIntent = new Intent(getApplicationContext(),HomeMapActivity.class);
-		homeMapIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		startActivity(homeMapIntent);
 		
 	}
 	public void navigateToProfileActivity() {

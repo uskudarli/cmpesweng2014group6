@@ -3,13 +3,16 @@ package com.android.dutluk;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
+
 import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
@@ -17,9 +20,9 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 public class RegisterActivity extends Activity {
-
+	ActionBar actionBar;
 	ProgressDialog prgDialog;
-	TextView errorMsg;
+
 
 	EditText nameET;
 	EditText emailET;
@@ -33,8 +36,11 @@ public class RegisterActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.register);
-	
-		errorMsg = (TextView)findViewById(R.id.errorRegister);
+		actionBar = getActionBar();
+		actionBar.setBackgroundDrawable(new ColorDrawable(Color.rgb(0, 0, 0)));
+		actionBar.setDisplayShowHomeEnabled(true);
+		actionBar.setDisplayShowTitleEnabled(true);
+
 		// Instantiate Progress Dialog object
 		prgDialog = new ProgressDialog(this);
 		// Set Progress Dialog Text
@@ -106,7 +112,7 @@ public class RegisterActivity extends Activity {
                          } 
                          // Else display error message
                          else{
-                        	 errorMsg.setText(obj.getString("message"));
+                        	
                         	 Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
                          }
                  } catch (JSONException e) {
@@ -146,7 +152,9 @@ public class RegisterActivity extends Activity {
 	
 	public void navigatetoLoginActivity(){
 		Intent loginIntent = new Intent(getApplicationContext(),LoginActivity.class);
-		Utility.userName = email;
+		Utility.myUserName = email;
+		Utility.IDFromName(email);
+		Utility.myUserID = Utility.userIDFromName;
 		// Clears History of Activity
 		loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(loginIntent);

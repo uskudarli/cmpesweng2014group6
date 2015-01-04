@@ -3,13 +3,18 @@ package com.android.dutluk;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
+
 import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
@@ -17,9 +22,9 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 public class LoginActivity extends Activity {
-
+	ActionBar actionBar;
 	ProgressDialog prgDialog;
-	TextView errorMsg;
+
 
 	EditText emailET;
 	EditText pwdET;
@@ -31,8 +36,14 @@ public class LoginActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.login);
-	
-		errorMsg = (TextView)findViewById(R.id.errorLogin);
+		if(Utility.isReseted){
+			Utility.isReseted = false;
+			showPopUp();
+		}
+		actionBar = getActionBar();
+		actionBar.setBackgroundDrawable(new ColorDrawable(Color.rgb(0, 0, 0)));
+		actionBar.setDisplayShowHomeEnabled(true);
+		actionBar.setDisplayShowTitleEnabled(true);
 		// Instantiate Progress Dialog object
 		prgDialog = new ProgressDialog(this);
 		// Set Progress Dialog Text
@@ -44,18 +55,30 @@ public class LoginActivity extends Activity {
 		pwdET = (EditText)findViewById(R.id.passwordLogin);
 
 
-        if (!Utility.userName.equals("")){
-        	emailET.setText(Utility.userName);
+        if (!Utility.myUserName.equals("")){
+        	emailET.setText(Utility.myUserName);
         }
       
 	}
-	
+	public void showPopUp() {
+		final AlertDialog.Builder alert = new AlertDialog.Builder(this);	
+		alert.setTitle("The new password is sent to your e-mail address."); 
+		alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) {
+				
+				return;
+			}
+		});
+		alert.show();   
+	}
 	public void loginUser(View view){
 		// Get Email Edit View Value
 		
-		if(Utility.userName.equals("")){
+		if(Utility.myUserName.equals("")){
 			mail = emailET.getText().toString();
-			Utility.userName = mail;
+			Utility.myUserName = mail;
+			Utility.IDFromName(mail);
+			Utility.myUserID = Utility.userIDFromName;
 		}
 		
 		// Get Password Edit View Value
@@ -108,7 +131,7 @@ public class LoginActivity extends Activity {
                          } 
                          // Else display error message
                          else{
-                        	 errorMsg.setText(obj.getString("message"));
+                        
                         	 Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
                          }
                  } catch (JSONException e) {

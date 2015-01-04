@@ -37,13 +37,10 @@
 	<string name="btnForgotPwdLogin">Forgot Password?</string>
 	<string name="btnResetPwd">Reset Password</string>
 	<string name="btnAddStory">Add Story</string>
-	<string name="btnRememberThat">Remember That</string>
-	<string name="btnNotRememberThat">Not Remember That</string>
+	<string name="btnRememberThat">Not Remember That</string>
 	<string name="btnComments">Add Comment</string>
-	<string name="btnSubscribeWriter">Subscribe Writer</string>
-	<string name="btnUnsubscribeWriter">Unsubscribe Writer</string>
-	<string name="btnSubscribePlace">Subscribe Place</string>
-	<string name="btnUnsubscribePlace">Unsubscribe Place</string>
+	<string name="btnSubscribeWriter">Unsubscribe Writer</string>
+	<string name="btnSubscribePlace">Unsubscribe Place</string>
 	<string name="btnSearch">Search</string>
 	<string name="btnShowMyStories">Show My Stories</string>
 	

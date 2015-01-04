@@ -168,15 +168,7 @@
 	            android:textSize="20sp" />      
 		</LinearLayout>
 		
-		<!-- Error message -->
-        <TextView
-            android:id="@+id/errorProfile"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="10dip"
-            android:textColor="#e30000"
-            android:textStyle="bold" />
+	
         
 		<!-- Save button -->
         <Button
@@ -184,17 +176,17 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dip"
-            android:background="#ff6347"
+            android:background="#10BCC9"
             android:onClick="saveUser"
             android:text="@string/btnSave"
             android:textColor="#fff" />
-        	<!-- Save button -->
+        	<!-- Show My Stories button -->
         <Button
             android:id="@+id/btnShowMyStoriesProfile"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dip"
-            android:background="#ff6347"
+            android:background="#10BCC9"
             android:onClick="navigateToTimelineActivityForMe"
             android:text="@string/btnShowMyStories"
             android:textColor="#fff" />

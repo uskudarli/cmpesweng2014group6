@@ -130,16 +130,7 @@
                 android:onClick="goImageSelector"
                 android:src="@drawable/paperclip" />
         </RelativeLayout>
-        <!-- Error message -->
 
-        <TextView
-            android:id="@+id/errorAddStory"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="10dip"
-            android:textColor="#e30000"
-            android:textStyle="bold" />
 
         <!-- Add Story button -->
 
@@ -148,7 +139,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dip"
-            android:background="#ff6347"
+            android:background="#10BCC9"
             android:onClick="navigatetoMapActivity"
             android:text="@string/btnAddStory"
             android:textColor="#fff" />

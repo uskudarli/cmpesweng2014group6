@@ -20,7 +20,8 @@
             android:id="@+id/list_image"
             android:layout_width="50dip"
             android:layout_height="50dip"
-            android:src="@drawable/background" />
+            android:src="@drawable/ic_launcher"
+            android:contentDescription="@string/hello_world" />
     </LinearLayout>
 
     <!-- Title of Story -->

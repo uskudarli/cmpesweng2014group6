@@ -7,8 +7,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 
 import android.os.Bundle;
 
@@ -17,7 +20,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.MultiAutoCompleteTextView;
-import android.widget.TextView;
+
 import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
@@ -25,9 +28,9 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 public class AdvancedSearchActivity extends Activity {
-
+	ActionBar actionBar;
 	ProgressDialog prgDialog;
-	TextView errorMsg;
+
 
 	EditText userET;
 	EditText placeET;
@@ -50,8 +53,11 @@ public class AdvancedSearchActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.search);
-	
-		errorMsg = (TextView)findViewById(R.id.errorSearch);
+		actionBar = getActionBar();
+		actionBar.setBackgroundDrawable(new ColorDrawable(Color.rgb(0,0,0)));
+		actionBar.setDisplayShowHomeEnabled(true);
+		actionBar.setDisplayShowTitleEnabled(true);
+
 		// Instantiate Progress Dialog object
 		prgDialog = new ProgressDialog(this);
 		// Set Progress Dialog Text
@@ -149,7 +155,7 @@ public class AdvancedSearchActivity extends Activity {
                          } 
                          // Else display error message
                          else{
-                        	 errorMsg.setText(obj.getString("message"));
+                        
                         	 Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
                          }
                  } catch (JSONException e) {
@@ -212,7 +218,7 @@ public class AdvancedSearchActivity extends Activity {
                          } 
                          // Else display error message
                          else{
-                        	 errorMsg.setText(obj.getString("message"));
+                        	
                         	 Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
                          }
                  } catch (JSONException e) {
@@ -274,7 +280,7 @@ public class AdvancedSearchActivity extends Activity {
                          } 
                          // Else display error message
                          else{
-                        	 errorMsg.setText(obj.getString("message"));
+                        	 
                         	 Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
                          }
                  } catch (JSONException e) {

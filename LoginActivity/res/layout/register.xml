@@ -59,15 +59,7 @@
             android:hint="@string/enterPassword"
             android:inputType="textPassword" />
 
-        <!-- Error message -->
-        <TextView
-            android:id="@+id/errorRegister"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="10dip"
-            android:textColor="#e30000"
-            android:textStyle="bold" />
+    
 
         <!-- Register button -->
         <Button
@@ -75,7 +67,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dip"
-            android:background="#ff6347"
+            android:background="#10BCC9"
             android:onClick="registerUser"
             android:text="@string/btnRegister"
             android:textColor="#fff" />

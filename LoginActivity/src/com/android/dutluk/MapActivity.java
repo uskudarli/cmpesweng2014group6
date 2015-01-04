@@ -1,10 +1,13 @@
 package com.android.dutluk;
 
 
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -42,7 +45,7 @@ import com.loopj.android.http.RequestParams;
 
 
 public class MapActivity extends FragmentActivity implements LocationListener {
-	
+	ActionBar actionBar;
 	ProgressDialog prgDialog;
 
 	GoogleMap map;
@@ -61,6 +64,10 @@ public class MapActivity extends FragmentActivity implements LocationListener {
 	    protected void onCreate(Bundle savedInstanceState) {
 	        super.onCreate(savedInstanceState);
 	        setContentView(R.layout.map);
+	        actionBar = getActionBar();
+			actionBar.setBackgroundDrawable(new ColorDrawable(Color.rgb(0, 0, 0)));
+			actionBar.setDisplayShowHomeEnabled(true);
+			actionBar.setDisplayShowTitleEnabled(true);
 	        // Instantiate Progress Dialog object
 	 		prgDialog = new ProgressDialog(this);
 	 		// Set Progress Dialog Text
@@ -135,7 +142,7 @@ public class MapActivity extends FragmentActivity implements LocationListener {
 
 			@Override
 			public void onSuccess(String response) {
-				Log.e("submit", response);
+				Log.e("PLACE LIST", response);
 				prgDialog.hide();
 				try {
 					JSONArray jsonarray = new JSONArray(response);
@@ -226,7 +233,7 @@ public class MapActivity extends FragmentActivity implements LocationListener {
   
 	public void saveStory(){
 		RequestParams params = new RequestParams();
-		params.put("mail",Utility.userName);
+		params.put("mail",Utility.myUserName);
 		// düzelt:)
 		//params.put("image", image);
 		params.put("story", story);

@@ -27,13 +27,12 @@ import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
+
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
+
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -62,7 +61,8 @@ public class TimelineActivity extends Activity {
 	Menu m;
 
 	ListView lv;
-	ArrayList<HashMap<String, String>> alist = new ArrayList<HashMap<String, String>>();
+	ArrayList<HashMap<String, String>> storyList = new ArrayList<HashMap<String, String>>();
+	ArrayList<HashMap<String, String>> searchList = new ArrayList<HashMap<String, String>>();
 
 	ProgressDialog dialog;
 	Boolean isInput = true;
@@ -71,6 +71,10 @@ public class TimelineActivity extends Activity {
 	String type = "";
 	String type_send = "";
 	ArrayList<Integer> storyIDs = new ArrayList<Integer>();
+	ArrayList<String> ownerList = new ArrayList<String>();
+	
+	ArrayList<Integer> placeIDs = new ArrayList<Integer>();
+	
 
 
 	@Override
@@ -96,7 +100,7 @@ public class TimelineActivity extends Activity {
 
 
 		actionBar = getActionBar();
-		actionBar.setBackgroundDrawable(new ColorDrawable(Color.rgb(16, 188, 201)));
+		actionBar.setBackgroundDrawable(new ColorDrawable(Color.rgb(0, 0, 0)));
 		actionBar.setDisplayShowHomeEnabled(true);
 		actionBar.setDisplayShowTitleEnabled(true);
 		new MyTask().execute();
@@ -104,10 +108,10 @@ public class TimelineActivity extends Activity {
 	}
 
 
-	private void readData() {
+	private void readStoryList() {
 
 
-		TimelineAdapter adapter = new TimelineAdapter(this, alist);
+		TimelineAdapter adapter = new TimelineAdapter(this, storyList, "story");
 		lv.setAdapter(adapter);
 		lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -117,7 +121,7 @@ public class TimelineActivity extends Activity {
 
 				try {
 
-						startShowStoryActivity(""+ storyIDs.get(arg2));
+						startShowStoryActivity(""+ storyIDs.get(arg2), ownerList.get(arg2));
 
 				} catch (Exception e) {
 					// TODO: handle exception
@@ -138,6 +142,7 @@ public class TimelineActivity extends Activity {
 		});
 
 	}
+	
 	private class MyTask extends AsyncTask<Void, Void, Void> {
 
 		@Override
@@ -150,21 +155,24 @@ public class TimelineActivity extends Activity {
 		protected void onPostExecute(Void result) {
 
 			super.onPostExecute(result);
-			readData();
+			readStoryList();
 		}
 
 		@Override
 		protected Void doInBackground(Void... params) {
 			HttpClient httpclient = new DefaultHttpClient();
+			storyList.clear();
+			storyIDs.clear();
+			ownerList.clear();
 			List<NameValuePair> pairs = new ArrayList<NameValuePair>();
-			pairs.add(new BasicNameValuePair("email", Utility.userName));
+			pairs.add(new BasicNameValuePair("email", Utility.myUserName));
 			pairs.add(new BasicNameValuePair("type", type_send));
 			String url = Utility.SERVER_NAME + "GetStory?" + URLEncodedUtils.format(pairs, "utf-8");
 			Log.e("url",url);
 			HttpGet httpget = new HttpGet(url);
-			//Log.w("submit", "aa" + url);
+		
 			try {
-				storyIDs.clear();
+				
 				HttpResponse getResponse = httpclient.execute(httpget);
 				BufferedReader rd = new BufferedReader(new InputStreamReader(
 						getResponse.getEntity().getContent()));
@@ -174,27 +182,28 @@ public class TimelineActivity extends Activity {
 					result.append(line);
 				}
 
-				Log.e("submit", result.toString());
+				Log.e("ALL STORIES", result.toString());
 				JSONArray jsonarray = new JSONArray(result.toString());
 
 
 				for(int i=0; i<jsonarray.length(); i++){
 					JSONObject obj = jsonarray.getJSONObject(i);
 					String content = obj.getString("content");
-					String name = "";
+					String story = "";
 					if(content.length()<50)
-						name = content;
+						story = content;
 					else 
-						name = content.substring(0,50)+ "...";
-					String info = obj.getString("mail");
-					int id = obj.getInt("storyId");
+						story = content.substring(0,50)+ "...";
+					String owner = obj.getString("mail");
+					int story_id = obj.getInt("storyId");
 				
 					HashMap<String, String> map = new HashMap<String, String>();
-					storyIDs.add(id);
-					map.put(KEY_ID,""+ id);
-					map.put(KEY_TITLE, name);
-					map.put(KEY_INFO, info);
-					alist.add(map);
+					storyIDs.add(story_id);
+					ownerList.add(owner);
+					map.put(KEY_ID,""+ story_id);
+					map.put(KEY_TITLE, story);
+					map.put(KEY_INFO, owner);
+					storyList.add(map);
 				}   
 
 
@@ -214,11 +223,12 @@ public class TimelineActivity extends Activity {
 		}
 
 	}
-	public void  startShowStoryActivity(String story_id) {
+	public void  startShowStoryActivity(String story_id, String owner) {
 
 		Intent showStoryIntent = new Intent(getApplicationContext(),ShowStoryActivity.class);
 		Bundle b = new Bundle();
 		b.putString("story_id",story_id);
+		b.putString("owner", owner);
 		b.putString("type", type);
 		showStoryIntent.putExtras(b);
 		// Clears History of Activity
@@ -230,7 +240,7 @@ public class TimelineActivity extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 
 		inflater = getMenuInflater();
-		inflater.inflate(R.menu.main, menu);
+		inflater.inflate(R.menu.timeline_menu, menu);
 		final android.widget.SearchView searchView = (android.widget.SearchView) menu
 				.findItem(R.id.search).getActionView();
 		searchView.setSubmitButtonEnabled(true);
@@ -238,43 +248,42 @@ public class TimelineActivity extends Activity {
 			searchView.setQueryHint("Search Story");
 		else 
 			searchView.setQueryHint("Search Place");	
-		searchView
-		.setOnQueryTextListener(new android.widget.SearchView.OnQueryTextListener() {
+		searchView.setOnQueryTextListener(new android.widget.SearchView.OnQueryTextListener() {
 
 			@Override
 			public boolean onQueryTextSubmit(String query) {
 
 				AsyncHttpClient client = new AsyncHttpClient();
-				alist.clear();
+				searchList.clear();
+				storyIDs.clear();
+				ownerList.clear();
+				placeIDs.clear();
 				if(type_send.equals("0") || type_send.equals("1") ){
 					
 					client.post(Utility.SERVER_NAME + "Search?func=story&term=" + query, new AsyncHttpResponseHandler() {
 						@Override
 						public void onSuccess(String response) {
-							storyIDs.clear();
+						
 							try {
 								JSONArray jsonarray = new JSONArray(response);
-
+								Log.e("SEARCH_RESULT", response.toString());
 
 								for(int i=0; i<jsonarray.length(); i++){
 									JSONObject obj = jsonarray.getJSONObject(i);
 
-									String content = obj.getString("Name");
-									String name = "";
-									if(content.length()<50)
-										name = content;
-									else 
-										name = content.substring(0,50)+ "...";
-									String info = obj.getString("mail");
-									int id = obj.getInt("storyId");
+									String story_content = obj.getString("content");
+									
+									String owner = obj.getString("mail");
+									int story_id = obj.getInt("storyId");
 									HashMap<String, String> map = new HashMap<String, String>();
-									storyIDs.add(id);
-									map.put(KEY_ID, "" + id);
-									map.put(KEY_TITLE, name);
-									map.put(KEY_INFO, info);
-									alist.add(map);
+									storyIDs.add(story_id);
+									ownerList.add(owner);
+									map.put(KEY_ID, "" + story_id);
+									map.put(KEY_TITLE, story_content);
+									map.put(KEY_INFO, owner);
+									searchList.add(map);
 								}   
-								readData();
+								readSearchList();
 
 							} catch (JSONException e) {
 
@@ -289,30 +298,27 @@ public class TimelineActivity extends Activity {
 						@Override
 						public void onSuccess(String response) {
 							try {
-								storyIDs.clear();
+						
 								JSONArray jsonarray = new JSONArray(response);
-								Log.e("response",response);
+								Log.e("SEARCH_RESULT", response.toString());
 
 								for(int i=0; i<jsonarray.length(); i++){
 									JSONObject obj = jsonarray.getJSONObject(i);
 
-									String content = obj.getString("Name");
-									String name = "";
-									if(content.length()<50)
-										name = content;
-									else 
-										name = content.substring(0,50)+ "...";
+									String place_name = obj.getString("Name");
+								
 									String lat = obj.getString("Latitude");
 									String longi = obj.getString("Longtitude");
-									int id = obj.getInt("PlaceID");
+									int place_id = obj.getInt("PlaceID");
 									HashMap<String, String> map = new HashMap<String, String>();
-									storyIDs.add(id);
-									map.put(KEY_ID, "" + id);
-									map.put(KEY_TITLE, name);
+								
+									placeIDs.add(place_id);
+									map.put(KEY_ID, "" + place_id);
+									map.put(KEY_TITLE, place_name);
 									map.put(KEY_INFO, "Lat: " + lat + "  Long: " + longi);
-									alist.add(map);
+									searchList.add(map);
 								}   
-								readData();
+								readSearchList();
 
 							} catch (JSONException e) {
 
@@ -363,7 +369,43 @@ public class TimelineActivity extends Activity {
 		return super.onCreateOptionsMenu(menu);
 
 	}
+	private void readSearchList() {
 
+
+		TimelineAdapter adapter = new TimelineAdapter(this, searchList , "search");
+		lv.setAdapter(adapter);
+		lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+					long arg3) {
+
+				try {
+					if(type_send.equals("0") || type_send.equals("1") )
+						startShowStoryActivity(""+ storyIDs.get(arg2), ownerList.get(arg2));
+					else 
+						navigateToTimelineActivityForPlaces(""+ placeIDs.get(arg2));
+						
+
+				} catch (Exception e) {
+					// TODO: handle exception
+					String data = e.getMessage();
+				}
+
+			}
+		});
+		lv.setLongClickable(true);
+		lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+
+			@Override
+			public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
+					final int arg2, long arg3) {
+				return isInput;
+
+			}
+		});
+
+	}
 
 
 	@Override
@@ -417,6 +459,15 @@ public class TimelineActivity extends Activity {
 		searchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(searchIntent);
 		
+	}
+	public void navigateToTimelineActivityForPlaces(String placeID){
+		Intent timelineIntent = new Intent(getApplicationContext(),TimelineActivity.class);
+		Bundle b = new Bundle();
+		b.putString("type","placesStories");
+		b.putString("placeID",placeID);
+		timelineIntent.putExtras(b);
+		timelineIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		startActivity(timelineIntent);
 	}
 	
 
