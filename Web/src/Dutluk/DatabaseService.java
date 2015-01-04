@@ -2040,7 +2040,7 @@ public class DatabaseService{
 		List<Story> stories = new ArrayList<Story>();
 		try{
 			conn = getConnection();
-			pstmt = conn.prepareStatement("SELECT * FROM Stories, SubscriptionsToUsers WHERE SubscriptionsToUsers.FollowerID = ? AND Stories.UserID = SubscriptionsToUsers.FollowedID ORDER BY Stories.CreationDate DESC LIMIT 10");
+			pstmt = conn.prepareStatement("SELECT * FROM Stories, SubscriptionsToUsers WHERE SubscriptionsToUsers.FollowerID = ? AND Stories.UserID = SubscriptionsToUsers.FollowedID AND SubscriptionsToUsers.IsActive=1 ORDER BY Stories.CreationDate DESC LIMIT 10");
 			pstmt.setInt(1, userId);
 			ResultSet rs = pstmt.executeQuery();
 			while(rs.next())
@@ -2050,7 +2050,7 @@ public class DatabaseService{
 				stories.add(temp);
 			}
 			conn = getConnection();
-			pstmt = conn.prepareStatement("SELECT * FROM Stories, SubscriptionsToPlaces, StoriesInPlaces WHERE SubscriptionsToPlaces.FollowerID = ? AND Stories.StoryID = StoriesInPlaces.StoryID AND StoriesInPlaces.PlaceID = SubscriptionsToPlaces.FollowedID AND Stories.UserID <> ? ORDER BY Stories.CreationDate DESC LIMIT 10");
+			pstmt = conn.prepareStatement("SELECT * FROM Stories, SubscriptionsToPlaces, StoriesInPlaces WHERE SubscriptionsToPlaces.FollowerID = ? AND Stories.StoryID = StoriesInPlaces.StoryID AND StoriesInPlaces.PlaceID = SubscriptionsToPlaces.FollowedID AND Stories.UserID <> ? AND SubscriptionsToPlaces.IsActive=1 ORDER BY Stories.CreationDate DESC LIMIT 10");
 			pstmt.setInt(1, userId);
 			pstmt.setInt(2, userId);
 			rs = pstmt.executeQuery();
