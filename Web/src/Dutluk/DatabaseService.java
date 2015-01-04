@@ -1126,6 +1126,46 @@ public class DatabaseService{
 			}//end finally try
 		}
 	}
+	
+	public boolean isReported(int userId, int storyId)
+	{
+		try
+		{
+			conn = getConnection();
+			pstmt = conn.prepareStatement("SELECT * FROM Reports WHERE StoryID = ? AND UserID = ?");
+			pstmt.setInt(1, storyId);
+			pstmt.setInt(2, userId);
+			ResultSet rs = pstmt.executeQuery();
+			if(rs.next())
+			{
+				return true;
+			}
+			else
+				return false;
+
+		}catch(SQLException se){
+			//Handle errors for JDBC
+			se.printStackTrace();
+			return false;
+		}catch(Exception e){
+			//Handle errors for Class.forName
+			e.printStackTrace();
+			return false;
+		}finally{
+			//finally block used to close resources
+			try{
+				if(stmt!=null)
+					stmt.close();
+			}catch(SQLException se2){
+			}// nothing we can do
+			try{
+				if(conn!=null)
+					conn.close();
+			}catch(SQLException se){
+				se.printStackTrace();
+			}//end finally try
+		}
+	}
 
 	public void remember(int userId, int storyId)
 	{
@@ -1134,6 +1174,35 @@ public class DatabaseService{
 
 			conn = DriverManager.getConnection(DB_URL, USER, PASS);
 			pstmt = conn.prepareStatement("INSERT INTO IRememberThat (StoryID, UserID, CreationDate, LastUpdate) VALUES(?,?,NOW(),NOW())");
+			pstmt.setInt(1, storyId);
+			pstmt.setInt(2, userId);
+			pstmt.execute();
+		}catch(SQLException se)
+		{
+			se.printStackTrace();
+		}finally{
+			//finally block used to close resources
+			try{
+				if(stmt!=null)
+					stmt.close();
+			}catch(SQLException se2){
+			}// nothing we can do
+			try{
+				if(conn!=null)
+					conn.close();
+			}catch(SQLException se){
+				se.printStackTrace();
+			}//end finally try
+		}
+	}
+	
+	public void report(int userId, int storyId)
+	{
+		try
+		{
+
+			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			pstmt = conn.prepareStatement("INSERT INTO Reports (StoryID, UserID, CreationDate, LastUpdate) VALUES(?,?,NOW(),NOW())");
 			pstmt.setInt(1, storyId);
 			pstmt.setInt(2, userId);
 			pstmt.execute();
