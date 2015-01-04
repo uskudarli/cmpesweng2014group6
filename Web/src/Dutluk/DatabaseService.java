@@ -1206,6 +1206,11 @@ public class DatabaseService{
 			pstmt.setInt(1, storyId);
 			pstmt.setInt(2, userId);
 			pstmt.execute();
+			
+			pstmt = conn.prepareStatement("UPDATE Stories SET ReportCount=ReportCount+1 WHERE StoryID=?;");
+			pstmt.setInt(1, storyId);
+			pstmt.execute();
+			
 		}catch(SQLException se)
 		{
 			se.printStackTrace();
@@ -2029,7 +2034,6 @@ public class DatabaseService{
 		}
 		return rate;
 	}
-	
 	
 	public List<Story> getSubscriptions(int userId)
 	{
