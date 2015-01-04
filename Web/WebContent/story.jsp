@@ -196,6 +196,19 @@
 				</form>
 				<%
 			}
+			
+			Boolean isReported = db.isReported(currentUser.getUserID(), Integer.parseInt(storyId));
+			if(!isReported)
+			{
+				%>
+				<br><br>
+				<form id="reportForm" method="post" action="ReportStory"
+							class="form-horizontal">
+				<input type="hidden" name="funct" value="report"/> 
+				<button type="submit" class="btn btn-default">Report Story</button>
+				</form>
+				<%
+			}
 		%>
 		
 		
