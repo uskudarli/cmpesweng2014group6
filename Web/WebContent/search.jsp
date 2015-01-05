@@ -1,6 +1,7 @@
 <%@page import="Dutluk.*"%>
 <%@page import="Dutluk.DatabaseService"%>
 <%@page import="java.util.ArrayList"%>
+<%@page import="java.io.File"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-9"
 	pageEncoding="ISO-8859-9"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -23,50 +24,143 @@
 	%>
 	<jsp:include page="header.jsp" />
 	<jsp:include page="footer.jsp" />
-	<span>Search results for <%out.print(text); %>:</span>
-	<div class="container">
-		<div class="row">
-			<div class="col-sm-4">
-				<span>Stories</span><br><br>
+	
+	<div class="indexBody">
+	<div class="row">
+		<span>Search results for <%out.print(text); %>:</span>
+	</div>
+		<div class="row nopadding">
+			<div class="col-md-4 nopadding">
+			<div class="searchResults">
+				<div class="searchContainer">
+				<div class="searchItem clearfix">
+				Stories
+				</div>
 				<%
+				if(stories.size() == 0)
+					out.print("No results found in stories");
 				for(Story story:stories)
 				{
-					if(story.getContent().length() > 31)
-						out.print("Story Content: "+ story.getContent().substring(0, 30) + "...<br>");
-					else
-						out.print("Story Content: "+ story.getContent() + "<br>");
-					out.print("Created by: " + db.findUserByUserId(story.getUserId()).getName() + "<br>");
-					out.print("Created on: " + story.getCreatedOn() + "<br>");
-					String storypage = "story.jsp?storyId=" + story.getStoryId();
-					%>
-					<a class="btn btn-default" href=<%out.print(storypage); %>>Click to view details</a><br><br>
+					Place place = db.findPlacebyStoryId(story.getStoryId());
+					String path = db.findPicturePathOfStory(story.getStoryId());
+					String picUrl = "http://titan.cmpe.boun.edu.tr:8085/pictures/0.jpg";
+					if(path != null) {
+						picUrl = "http://titan.cmpe.boun.edu.tr:8085/image"+File.separator+path;
+					}
+				%>
+					<div class="searchItem clearfix">
+						<a href='story.jsp?storyId=<%=story.getStoryId() %>'>
+							
+								<div class="searchImage">
+									<img class="searchImageStyle" src=<%out.print(picUrl); %> />
+								</div>
+								<div class="searchContent">
+									<table>
+										<tr>
+											<td>Place:</td>
+											<td><%=place.getName() %></td>
+										</tr>
+										<tr>
+											<td>Content:</td>
+											<td><%
+											if(story.getContent().length() > 31)
+												out.print(story.getContent().substring(0, 30) + "...");
+											else
+												out.print(story.getContent());
+											%></td>
+										</tr>	
+									</table>
+								</div>
+						</a>
+					</div>
+					
 				<%}
 				%>
+				</div>
+				</div>
 			</div>
-			<div class="col-sm-4">
-				<span>Places</span><br><br>
+			<div class="col-md-4 nopadding">
+			<div class="searchResults">
+			<div class="searchContainer">
+				<div class="searchItem clearfix">
+				Places
+				</div>
 				<%
+				if(places.size() == 0)
+					out.print("No results found in places");
 				for(Place place:places)
 				{
-					out.print("Place Name: "+ place.getName() + "<br>");
-					out.print("Created on: " + place.getCreatedOn() + "<br>");
-					String timeline = "timeline.jsp?Id=" + place.getPlaceID();
-					%>
-					<a class="btn btn-default" href=<%out.print(timeline); %>>Click to view details</a><br><br>
-				<%}
+					ArrayList<String> paths = db.getPicturePathsOfaPlace(place.getPlaceID());
+					String picUrl = "http://titan.cmpe.boun.edu.tr:8085/pictures/0.jpg";
+					if(paths.size()>0)
+						picUrl = "http://titan.cmpe.boun.edu.tr:8085/image"+File.separator+paths.get(0);
+					
+					
 				%>
+				<div class="searchItem clearfix">
+					<a href='timeline.jsp?Id=<%=place.getPlaceID()%>'>
+						<div class="searchImage">
+							<img class="searchImageStyle" src=<%out.print(picUrl); %> />
+						</div>
+						<div class="searchContent">
+							<table>
+								<tr>
+									<td>Place:</td>
+									<td><%=place.getName() %></td>
+								</tr>
+								<tr>
+									<td>Created on:</td>
+									<td><%=place.getCreatedOn() %></td>
+								</tr>	
+							</table>
+						</div>
+					</a>
+				</div>
+				<%} %>
+				</div>
+				</div>
 			</div>
-			<div class="col-sm-4">
-				<span>Users</span><br><br>
+			<div class="col-md-4 nopadding">
+			<div class="searchResults">
+			<div class="searchContainer">
+				<div class="searchItem clearfix">
+				Users
+				</div>
 				<%
+				if(users.size() == 0)
+					out.print("No results found in users");
 				for(User u:users)
 				{
-					out.print("User Name: "+ u.getName() + "<br>");
+					String picUrl = null;
+					if(u.getPicID() == 0)
+					{
+						picUrl = "http://titan.cmpe.boun.edu.tr:8085/pictures/0.jpg";
+					}else
+					{
+						picUrl = "http://titan.cmpe.boun.edu.tr:8085/image"+File.separator+db.pathByPicId(u.getPicID());
+					}
 					String profile = "profile.jsp?id=" + u.getUserID();
 					%>
-					<a class="btn btn-default" href=<%out.print(profile); %>>Click to view details</a><br><br>
+					<div class="searchItem clearfix">
+						<a href=<%out.print(profile); %>>
+							<div class="searchImage">
+								<img class="searchImageStyle" src=<%out.print(picUrl); %> />
+							</div>
+							<div class="searchContent">
+								<table>
+									<tr>
+										<td>Name:</td>
+										<td><%=u.getName() %></td>
+									</tr>
+									
+								</table>
+							</div>
+						</a>
+					</div>
 				<%}
 				%>
+				</div>
+				</div>
 			</div>
 		</div>
 	</div>

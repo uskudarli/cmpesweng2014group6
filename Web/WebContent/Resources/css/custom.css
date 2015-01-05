@@ -187,3 +187,35 @@ body {
 	padding: 6px;
 }
 
+.searchItem {
+	padding-bottom: 10px;
+	border-bottom: 1px dotted #CCC;
+	padding-top: 10px;
+}
+
+.searchImageStyle {
+	width :100px;
+	height: 100px;
+}
+.searchImage {
+	width: 100px;
+	float:left;
+}
+
+.searchContent {
+	float:left;
+	width: 275px;
+	color: black;
+	padding-left:10px;
+}
+.searchResults {
+	background-color: #F8F8F8;
+	border: 1px solid rgb(218, 218, 218);
+	border-radius: 2px;
+	margin-left:10px;
+	padding: 6px;
+}
+.searchContainer {
+	background-color: white;
+	padding:10px;
+}
