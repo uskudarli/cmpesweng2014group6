@@ -215,9 +215,9 @@
 						
 					</form>
 					<br>level
-					<%= originalUser.getLevel()%>
+					<%= user.getLevel()%>
 					writer,
-					<%= originalUser.getExperiencePoint()%>
+					<%= user.getExperiencePoint()%>
 					points,
 					<%= numofSubscribers %> 
 					subscribers<br> 
