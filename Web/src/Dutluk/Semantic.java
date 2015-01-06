@@ -11,7 +11,7 @@ public class Semantic {
 	public static ArrayList<String> getSimilar(String query) throws IOException{
 		ArrayList<String> sim = new ArrayList<String>();
 
-		String requestURL = "https://www.googleapis.com/freebase/v1/search?lang=en&indent=true&key=AIzaSyDaFirSUUeGlNSg7bxGcyqdf9L8NzHKA10&query=" + query;
+		String requestURL = "https://www.googleapis.com/freebase/v1/search?lang=en&indent=true&key=AIzaSyDaFirSUUeGlNSg7bxGcyqdf9L8NzHKA10&query=\"" + query+"\"";
 		URL freebaseRequest = new URL(requestURL);
 		URLConnection connection = freebaseRequest.openConnection();  
 		connection.setDoOutput(true);  
@@ -23,11 +23,19 @@ public class Semantic {
 		String[] lines = response.toString().split(System.getProperty("line.separator"));
 		
 		//String pattern = "\"name\".*\"($1)\"";
-
-		for(int i=0;i<lines.length;i++){
+		int added=0;
+		
+		for(int i=0;i<lines.length&&added<5;i++){
 			if(lines[i].contains("       \"name\":")){
 				String x = lines[i].substring(17, lines[i].lastIndexOf('"'));
-				sim.add(x);
+				String arr[] = x.split(" ", 2);
+				String firstWord = arr[0];
+				if(!sim.contains(firstWord)){
+					sim.add(firstWord);
+					added++;
+
+				}
+				
 			}
 		}
 		

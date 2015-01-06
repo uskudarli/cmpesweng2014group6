@@ -163,6 +163,15 @@
 				</div>
 			</div>
 		</div>
+		<br>
+		Do you want to try: <br>
+		<%
+		ArrayList<String> semanticresults = Semantic.getSimilar(text);
+		for (String s : semanticresults){
+			out.print("<a href=\"search.jsp?text="+s+"\">"+s+" </a><br>");
+		}
+		
+		%>
 	</div>
 </body>
 </html>
