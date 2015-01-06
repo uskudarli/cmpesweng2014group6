@@ -100,6 +100,41 @@ public class DatabaseService{
 		}		
 		return stories;
 	}
+	
+	public ArrayList<Story> getRecommendedStories()
+	{
+		ArrayList<Story> stories = new ArrayList<Story>();
+		try{
+			conn = getConnection();
+			pstmt = conn.prepareStatement("SELECT * FROM Stories ORDER BY  Stories.AvgRate DESC LIMIT 5;");
+			ResultSet rs = pstmt.executeQuery();
+			while(rs.next())
+			{
+				stories.add(new Story(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getInt(4), 0, rs.getInt(6), rs.getInt(7), rs.getDate(8), rs.getDate(9), rs.getDate(10), rs.getString(11)));
+			}
+			return stories;
+		}catch(SQLException | ClassNotFoundException se){
+			//Handle errors for JDBC
+			se.printStackTrace();
+		}catch(Exception e){
+			//Handle errors for Class.forName
+			e.printStackTrace();
+		}finally{
+			//finally block used to close resources
+			try{
+				if(stmt!=null)
+					stmt.close();
+			}catch(SQLException se2){
+			}// nothing we can do
+			try{
+				if(conn!=null)
+					conn.close();
+			}catch(SQLException se){
+				se.printStackTrace();
+			}//end finally try
+		}		
+		return stories;
+	}
 
 	public ArrayList<Theme> getAllThemes()
 	{

@@ -191,7 +191,7 @@
   	<div class="indexBody">
   	
   		<div class="row">
-	
+	<br><br>
 			<div class="col-md-8 nopadding">
 				<div class="map">
 					<div id="map-container">
@@ -278,7 +278,36 @@
 			</div>
 	  </div>
 	  <div class="row">
-	  		Top stories recommendations...
+	  		<% 
+			ArrayList<Story> stories = db.getRecommendedStories();
+		%>
+		<table style="width: 100%" border="1">
+			<tr>
+				<th>Recommended Stories</th>
+			</tr>
+
+			<%
+						for(Story s:stories)
+						{
+						%>
+			<tr>
+				<td>
+					<a href='story.jsp?storyId=<%=s.getStoryId() %>'><%= s.getContent() %></a>
+				</td>
+				
+			</tr>
+			<%	
+						}
+						%>
+
+		</table>
+		<br>
+		<br>
+		<br>
+	</div>
+
+	  		
+	  		
 	  </div>
     </div>
   </body>
