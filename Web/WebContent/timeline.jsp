@@ -112,7 +112,7 @@
 		
 	</form>
 	<%
-		String addStoryDirect = "addStory.jsp?Lat=" + place.getLatitude() + "&Lon=" + place.getLongtitude() + "&Name=" + place.getName();
+		String addStoryDirect = "addStory.jsp?Lat=" + place.getLatitude() + "&Lon=" + place.getLongtitude() + "&Name=" + place.getName().replaceAll(" ","%20");
 	%>
 	<a class="btn btn-default" href=<%out.print(addStoryDirect); %> >Add new Story</a>
 	 
