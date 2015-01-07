@@ -10,6 +10,9 @@ public class Semantic {
 
 	public static ArrayList<String> getSimilar(String query) throws IOException{
 		ArrayList<String> sim = new ArrayList<String>();
+		
+		String ar[] = query.split(" ", 2);
+		query = ar[0];
 
 		String requestURL = "https://www.googleapis.com/freebase/v1/search?lang=en&indent=true&key=AIzaSyDaFirSUUeGlNSg7bxGcyqdf9L8NzHKA10&query=\"" + query+"\"";
 		URL freebaseRequest = new URL(requestURL);
