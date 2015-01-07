@@ -1,72 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    
-   	<!-- Unnecessary strings -->
-	<string name="hello_world">Hello world!</string>
-    
-	<!-- App based strings -->
+
+    <!-- Unnecessary strings -->
+    <string name="hello_world">Hello world!</string>
+
+    <!-- App based strings -->
     <string name="app_name">Dutluk</string>
     <string name="advancedSearch">Advanced Search</string>
-    
+
     <!-- Title strings -->
     <string name="title_activity_register">Register</string>
     <string name="title_activity_login">Login</string>
-	<string name="title_activity_profile">Profile</string> 
-	<string name="title_activity_forgotpwd">Forgot Password</string>
-	<string name="title_activity_addStory">Add Story</string>
-	<string name="title_activity_showStory">Show Story</string>
-	<string name="title_activity_search">Search</string>
-	
-	<!-- General strings -->
+    <string name="title_activity_profile">Profile</string>
+    <string name="title_activity_forgotpwd">Forgot Password</string>
+    <string name="title_activity_addStory">Add Story</string>
+    <string name="title_activity_showStory">Show Story</string>
+    <string name="title_activity_search">Search</string>
+    <string name="title_activity_recommendation">Recommendation</string>
+
+    <!-- General strings -->
     <string name="email">E-mail</string>
     <string name="password">Password</string>
     <string name="name">Name</string>
-     <string name="owner">Owner</string>
-          <string name="theme">Theme</string>
-               <string name="avgRate">Rate</string>
+    <string name="owner">Owner</string>
+    <string name="theme">Theme</string>
+    <string name="avgRate">Rate</string>
     <string name="birthDate">Birth Date</string>
     <string name="gender">Gender</string>
     <string name="phone">Phone</string>
+    <string name="subscriberCount">Followers</string>
     <string name="XP">XP</string>
     <string name="level">Level</string>
     <string name="biography">Biography</string>
     <string name="rateStory">Rate Story</string>
-    
+    <string name="searchResults">Search Results</string>
+     <string name="topRated">Top Rated Stories</string>
+     <string name="recomForYou">Recommended For You</string>
+ <string name="remembered">Remembered</string>
     <!-- Button strings -->
     <string name="btnRegister">Register</string>
     <string name="btnMap">Map</string>
-	<string name="btnLogin">Login</string>
-	<string name="btnProfile">Profile</string>
-	<string name="btnSave">Save</string>
-	<string name="btnForgotPwdLogin">Forgot Password?</string>
-	<string name="btnResetPwd">Reset Password</string>
-	<string name="btnAddStory">Add Story</string>
-	<string name="btnRememberThat">Not Remember That</string>
-	<string name="btnComments">Add Comment</string>
-	<string name="btnSubscribeWriter">Unsubscribe Writer</string>
-	<string name="btnSubscribePlace">Unsubscribe Place</string>
-	<string name="btnSearch">Search</string>
-	<string name="btnShowMyStories">Show My Stories</string>
-	<string name="btnHomeMap">Home</string>
-	
-	<!-- Hint strings -->
-	<string name="changeName">Change Name</string>
-	<string name="changeBirthDate">Change Birthday</string>
-	<string name="changeGender">Change Gender</string>
-	<string name="changePhone">Change Phone</string>
-	<string name="changeBiography">Change Biography</string>
-	<string name="enterName">Enter Name</string>
-	<string name="enterTags"> Enter Tags of Story</string>
-	<string name="enterEmail">Enter E-mail</string>
-	<string name="enterPassword">Enter Password</string>
-	<string name="enterTitle">Enter Title</string>
-	<string name="uploadImage">Upload Image</string>
-	<string name="enterStory">Enter Story</string>
-	<string name="pickPlace">Pick a Place</string>
-	<string name="pickTime">Enter custom time or pick it</string>
-	<string name="giveNameToPlace">Give Name to Place</string>
-	<string name="enterUserTags">Enter Name of User</string>
-	<string name="enterPlaceTags">Enter Tags of Place(separate with comma)</string>
-	<string name="enterStoryTags">Enter Tags of Story(separate with comma)</string>
-	
+    <string name="btnLogin">Login</string>
+    <string name="btnProfile">Profile</string>
+    <string name="btnSave">Save</string>
+    <string name="btnForgotPwdLogin">Forgot Password?</string>
+    <string name="btnResetPwd">Reset Password</string>
+    <string name="btnAddStory">Add Story</string>
+    <string name="btnRememberThat">Not Remember That</string>
+    <string name="btnComments">Add Comment</string>
+    <string name="btnSubscribeWriter">Unsubscribe Writer</string>
+    <string name="btnSubscribePlace">Unsubscribe Place</string>
+    <string name="btnSearch">Search</string>
+    <string name="btnShowMyStories">Show My Stories</string>
+     <string name="btnShowSubsStories">Show Subsribed Stories</string>
+    <string name="btnHomeMap">Home</string>
+     <string name="btnRecom">Recommendation</string>
+      <string name="btnLeader">Leaderboard</string>
+
+    <!-- Hint strings -->
+    <string name="changeName">Change Name</string>
+    <string name="changeBirthDate">Change Birthday</string>
+    <string name="changeGender">Change Gender</string>
+    <string name="changePhone">Change Phone</string>
+    <string name="changeBiography">Change Biography</string>
+    <string name="enterName">Enter Name</string>
+    <string name="enterTags"> Enter Tags of Story(separate with comma without space)</string>
+    <string name="enterEmail">Enter E-mail</string>
+    <string name="enterPassword">Enter Password</string>
+    <string name="enterTitle">Enter Title</string>
+    <string name="uploadImage">Upload Image</string>
+    <string name="enterStory">Enter Story</string>
+    <string name="pickPlace">Pick a Place</string>
+    <string name="pickTime">Enter custom time or pick it</string>
+    <string name="giveNameToPlace">Give Name to Place</string>
+    <string name="enterUserTags">Enter Name of User</string>
+    <string name="enterPlaceTags">Enter Tag of Place</string>
+    <string name="enterStoryTags">Enter Tag of Story</string>
+
 </resources>

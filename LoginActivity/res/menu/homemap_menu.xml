@@ -1,4 +1,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    
+      <item
+        android:id="@+id/search"
+        android:title=""
+        android:orderInCategory="1"
+        android:icon="@drawable/ic_action_search"
+        android:showAsAction="always|collapseActionView"
+        android:actionViewClass="android.widget.SearchView"
+         android:visible="false"/>
     <item
         android:id="@+id/addStory"
 		android:title="@string/btnAddStory"
@@ -7,9 +16,15 @@
 		android:showAsAction="always"/>
      <item
         android:id="@+id/ownProfile"
-        android:title="@string/btnHomeMap"
-        android:orderInCategory="4"
+        android:title="@string/btnProfile"
+        android:orderInCategory="3"
         android:icon="@drawable/ic_action_edit"
+        android:showAsAction="always|collapseActionView"/>
+      <item
+        android:id="@+id/recommendation"
+       	android:title="@string/btnRecom"
+        android:orderInCategory="4"
+        android:icon="@drawable/ic_drawer"
         android:showAsAction="always|collapseActionView"/>
     <item
         android:id="@+id/advancedSearch"

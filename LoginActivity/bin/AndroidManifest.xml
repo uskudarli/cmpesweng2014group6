@@ -50,10 +50,11 @@
         </activity>
         <activity android:name="com.android.dutluk.AdvancedSearchActivity" >
         </activity>
-
+		 <activity android:name="com.android.dutluk.RecommendationActivity" >
+        </activity>
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyBgJijqYLF0p71zkuCTWGJQGp1KKuxoByQ" />
+            android:value="AIzaSyDS9w0AMd3fCm4iDJ241Oz2z4ewMKOyow8" />
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />

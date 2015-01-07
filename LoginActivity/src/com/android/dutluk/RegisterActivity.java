@@ -107,18 +107,18 @@ public class RegisterActivity extends Activity {
                          if(obj.getBoolean("result")){
                         	 // Set Default Values for Edit View controls
                         	 setDefaultValues();
-                        	 // Display successfully registered message using Toast
-                        	 Toast.makeText(getApplicationContext(), "You are successfully registered!", Toast.LENGTH_LONG).show();
+                        	 // Display successfully registered message 
+                        	 Log.e("Register.success", "You are successfully registered!");
                         	 navigatetoLoginActivity();
                          } 
                          // Else display error message
                          else{
                         	
-                        	 Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
+                        	 Log.e("Register.error", obj.getString("message"));
                          }
                  } catch (JSONException e) {
                   
-                     Toast.makeText(getApplicationContext(), "Error Occured [Server's JSON response might be invalid]!", Toast.LENGTH_LONG).show();
+                	 Log.e("Register.json","Error Occured [Server's JSON response might be invalid]!");
                      e.printStackTrace();
                      
                  }
@@ -131,15 +131,15 @@ public class RegisterActivity extends Activity {
                  prgDialog.hide();
                  // When Http response code is '404'
                  if(statusCode == 404){
-                     Toast.makeText(getApplicationContext(), "Requested resource not found", Toast.LENGTH_LONG).show();
+                	 Log.e("Register.404","Requested resource not found");
                  } 
                  // When Http response code is '500'
                  else if(statusCode == 500){
-                     Toast.makeText(getApplicationContext(), "Something went wrong at server end", Toast.LENGTH_LONG).show();
+                	 Log.e("Register.500","Something went wrong at server end");
                  } 
                  // When Http response code other than 404, 500
                  else{
-                     Toast.makeText(getApplicationContext(), "Unexpected Error occcured! [Most common Error: Device might not be connected to Internet or remote server is not up and running]", Toast.LENGTH_LONG).show();
+                     Log.e("Register.other","Unexpected Error occcured! [Most common Error: Device might not be connected to Internet or remote server is not up and running]");
                  }
              }
          });

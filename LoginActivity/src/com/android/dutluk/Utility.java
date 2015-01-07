@@ -1,5 +1,6 @@
 package com.android.dutluk;
 
+import java.io.File;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,6 +27,8 @@ public class Utility {
 	public static String userNameFromID= "";
 	public static String userIDFromName= "";
 	public static boolean isReseted = false;
+	public static File uploadedImageAddStory;
+	public static String uploadedImageAddStoryPath;
 
 	public static final String SERVER_NAME = "http://titan.cmpe.boun.edu.tr:8085/dutluk_android_api/";
 
@@ -124,13 +127,16 @@ public class Utility {
 					Log.e("UTILITY.IDFromName", obj.toString());
 					// When the JSON response has status boolean value assigned with true
 					String jsonStr =  obj.getString("UserId");
-					userIDFromName = jsonStr;
+					
 					Log.e("Utility-userIDFromName-mail", userIDFromName + "aa" + mail);
 					if(mail.equals(myUserName)){
 						myUserID = jsonStr;
 						Log.e("Utility-myUserID-myUserName", myUserID + "aa" + myUserName);
 					}
-					
+					else {
+						userIDFromName = jsonStr;
+						Log.e("Utility-userIDFromName-myUserName", myUserID + "aa" + myUserName);
+					}
 
 				} catch (JSONException e) {
 

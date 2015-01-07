@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -58,6 +59,7 @@ public class LoginActivity extends Activity {
 
         if (!Utility.myUserName.equals("")){
         	emailET.setText(Utility.myUserName);
+        	mail = Utility.myUserName;
         }
       
 	}
@@ -124,18 +126,18 @@ public class LoginActivity extends Activity {
                          JSONObject obj = new JSONObject(response);
                          // When the JSON response has status boolean value assigned with true
                          if(obj.getBoolean("result")){
-                        	 Toast.makeText(getApplicationContext(), "You are successfully logged in!", Toast.LENGTH_LONG).show();
+                        	 Log.e("invokeWSLogin.success", "You are successfully logged in!");
                         	 // Navigate to Home screen
                         	 navigatetoHomeMapActivity();
                          } 
                          // Else display error message
                          else{
                         
-                        	 Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
+                        	 Log.e("invokeWSLogin.error" , obj.getString("message"));
                          }
                  } catch (JSONException e) {
                      
-                     Toast.makeText(getApplicationContext(), "Error Occured [Server's JSON response might be invalid]!", Toast.LENGTH_LONG).show();
+                	 Log.e("invokeWSLogin.json" ,"Error Occured [Server's JSON response might be invalid]!");
                      e.printStackTrace();
                      
                  }
@@ -148,15 +150,15 @@ public class LoginActivity extends Activity {
                  prgDialog.hide();
                  // When Http response code is '404'
                  if(statusCode == 404){
-                     Toast.makeText(getApplicationContext(), "Requested resource not found", Toast.LENGTH_LONG).show();
+                	 Log.e("invokeWSLogin.404" , "Requested resource not found");
                  } 
                  // When Http response code is '500'
                  else if(statusCode == 500){
-                     Toast.makeText(getApplicationContext(), "Something went wrong at server end", Toast.LENGTH_LONG).show();
+                	 Log.e("invokeWSLogin.500" , "Something went wrong at server end");
                  } 
                  // When Http response code other than 404, 500
                  else{
-                     Toast.makeText(getApplicationContext(), "Unexpected Error occcured! [Most common Error: Device might not be connected to Internet or remote server is not up and running]", Toast.LENGTH_LONG).show();
+                     Log.e("invokeWSLogin.other" ,"Unexpected Error occcured! [Most common Error: Device might not be connected to Internet or remote server is not up and running]");
                  }
              }
          });

@@ -3,7 +3,6 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
 
-
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -17,47 +16,62 @@
             android:layout_marginBottom="10dip"
             android:text="@string/title_activity_search"
             android:textSize="25sp"
-            android:textStyle="bold" />
+            android:textStyle="bold" 
+            />
         
 		<!-- User Search Label -->		
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/enterUserTags" />
+            android:text="@string/enterUserTags"
+                android:textSize="18sp"
+              android:textStyle="bold" />
         
 		<!-- User Search TextField -->
-        <AutoCompleteTextView 
+        <EditText 
             android:id="@+id/searchUserTags"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:inputType="textAutoComplete|textAutoCorrect"
-            android:layout_marginBottom="8dp"/>
+            android:layout_marginBottom="8dp"
+                android:textSize="18sp"
+/>
         
 		<!-- Place Search Label -->		
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/enterPlaceTags" />
+            android:text="@string/enterPlaceTags"
+                android:textSize="18sp"
+              android:textStyle="bold" />
         
 		<!-- Place Search TextField -->
-		<MultiAutoCompleteTextView  
+		<EditText 
             android:id="@+id/searchPlaceTags"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:completionThreshold="1"/>
+            android:inputType="textAutoComplete|textAutoCorrect"
+            android:completionThreshold="1"
+                android:textSize="18sp"
+/>
         
 		<!-- Story Search Label -->		
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/enterStoryTags" />
+            android:text="@string/enterStoryTags" 
+                android:textSize="18sp"
+              android:textStyle="bold"/>
         
 		<!-- Story Search TextField -->
-        <MultiAutoCompleteTextView  
+        <EditText  
             android:id="@+id/searchStoryTags"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:completionThreshold="1"/>
+            android:inputType="textAutoComplete|textAutoCorrect"
+            android:completionThreshold="1"
+                android:textSize="18sp"
+/>
   
 	
         
@@ -71,8 +85,27 @@
             android:onClick="searchAction"
             android:text="@string/btnSearch"
             android:textColor="#fff" />
+		<!-- Search Results Label -->		
+        <TextView
+                android:layout_marginTop="10dip"
+            android:padding="10dp"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/searchResults" 
+               android:textSize="20sp"
+            android:textStyle="bold"
+            />
 
+  		<ListView
+  		    android:id="@+id/listViewSearch"
+  		    android:layout_width="match_parent"
+  		    android:layout_height="match_parent"
+  		    android:divider="#b5b5b5"
+  		    android:dividerHeight="1dp"
+  		    android:listSelector="@drawable/list_selector"
+  		    android:longClickable="true" >
 
+        </ListView>
         
     </LinearLayout>
 

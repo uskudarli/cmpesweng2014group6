@@ -10,6 +10,7 @@
         android:padding="5dip" >
 
         <!-- View Title Label -->
+
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -17,51 +18,65 @@
             android:text="@string/title_activity_register"
             android:textSize="25sp"
             android:textStyle="bold" />
-        
+
         <!-- Name Label -->
+
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/name" />
-        
+            android:text="@string/name"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
         <!-- Name TextField -->
+
         <EditText
             android:id="@+id/nameRegister"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content" 
-            android:hint="@string/enterName"/>
+            android:layout_height="wrap_content"
+            android:hint="@string/enterName"
+            android:textSize="18sp" />
 
         <!-- Email Label -->
+
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/email" />
-        
+            android:text="@string/email"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
         <!-- Email TextField -->
+
         <EditText
             android:id="@+id/emailRegister"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:hint="@string/enterEmail"
-            android:inputType="textEmailAddress" />
+            android:inputType="textEmailAddress"
+            android:textSize="18sp" />
 
         <!-- Password Label -->
+
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/password" />
-        
+            android:text="@string/password"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
         <!-- Password TextField -->
+
         <EditText
             android:id="@+id/passwordRegister"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:hint="@string/enterPassword"
-            android:inputType="textPassword" />
-
-    
+            android:inputType="textPassword"
+            android:textSize="18sp" />
 
         <!-- Register button -->
+
         <Button
             android:id="@+id/btnRegister"
             android:layout_width="fill_parent"
@@ -71,7 +86,6 @@
             android:onClick="registerUser"
             android:text="@string/btnRegister"
             android:textColor="#fff" />
-
     </LinearLayout>
 
 </ScrollView>

@@ -4,6 +4,7 @@ package com.android.dutluk;
 
 import java.io.BufferedReader;
 
+
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -22,8 +23,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-
-
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -39,6 +38,7 @@ import android.app.ProgressDialog;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 
@@ -66,6 +66,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 
+import com.koushikdutta.ion.Ion;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -87,17 +88,19 @@ public class ShowStoryActivity extends Activity implements OnItemSelectedListene
 	ListView lv;
 	ArrayList<HashMap<String, String>> commentList = new ArrayList<HashMap<String, String>>();
 
-	ProgressDialog dialog;
+
 	Boolean isInput = true;
 
 	String searchedTerm;
 
 
-	ImageView imageV;
+	ImageView imageV ;
 	TextView storyTV;
 	Button placeButton;
 	TextView themeTV;
 	TextView rateTV;
+	TextView spinnerRateTV;
+	TextView rememTV ;
 	Button ownerButton;
 	Button rememberThatButton;
 	Button commentsButton;
@@ -105,8 +108,7 @@ public class ShowStoryActivity extends Activity implements OnItemSelectedListene
 	Button subscribePlaceButton;
 
 	String story_id = "" ;
-	String type = "";
-	String type_send = "";
+
 	String owner = "";
 	String storyOwnerID = "";
 	String place_id = "";
@@ -138,11 +140,13 @@ public class ShowStoryActivity extends Activity implements OnItemSelectedListene
 		prgDialog.setCancelable(false);
 
 
-		imageV = (ImageView)findViewById(R.id.imageViewAddStory);
+		imageV = (ImageView)findViewById(R.id.imageViewShowStory);
 		storyTV =  (TextView)findViewById(R.id.storyShowStory);
 		placeButton =  (Button)findViewById(R.id.placeShowStory);
 		themeTV =  (TextView)findViewById(R.id.themeShowStory);
 		rateTV =  (TextView)findViewById(R.id.rateShowStory);
+		spinnerRateTV = (TextView)findViewById(R.id.spinnerRateLabel);
+		rememTV =  (TextView)findViewById(R.id.rememberedShowStory);
 		ownerButton = (Button) findViewById(R.id.ownerShowStory);
 		rememberThatButton = (Button) findViewById(R.id.btnIRememberThat);
 		commentsButton = (Button) findViewById(R.id.btnComments);
@@ -151,35 +155,26 @@ public class ShowStoryActivity extends Activity implements OnItemSelectedListene
 
 		Intent comingIntent = getIntent();
 
-		type = comingIntent.getStringExtra("type");
 
 
-		if(type.equals("myStories")){		
-			type_send = ""+0;
-		}
-		if(type.equals("placesStories")){  
-			type_send = comingIntent.getStringExtra("placeID");
-		}
-		if(type.equals("subsStories")){
-			type_send = ""+1;
-		}
+
+	
 		story_id = comingIntent.getStringExtra("story_id");
 		place_id = comingIntent.getStringExtra("place_id");
 		placeName = comingIntent.getStringExtra("placeName");
 		RequestParams params = new RequestParams();
 		params.put("storyId", story_id);
 		invokeWSforGetStory(params);
-
-
+		GetStoryPicture();
 
 		owner = comingIntent.getStringExtra("owner");
-		Utility.IDFromName(owner);
-		storyOwnerID = Utility.userIDFromName;
 
+		storyOwnerID = comingIntent.getStringExtra("storyOwnerID");
 
+		Log.e("onCreate-owner-storyOwnerID", owner + "-" + storyOwnerID);
 
 		checkForSubscribePlace();
-
+		checkForRate();
 		subscribePlaceButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -192,6 +187,8 @@ public class ShowStoryActivity extends Activity implements OnItemSelectedListene
 			Log.e("storyOwner-Utility.myUserName",owner+"-"+ Utility.myUserName);
 			subscribeWriterButton.setVisibility(View.INVISIBLE);
 			rememberThatButton.setVisibility(View.INVISIBLE);
+			rateSpinner.setVisibility(View.INVISIBLE);
+			spinnerRateTV.setVisibility(View.INVISIBLE);
 
 		}
 		else{
@@ -232,7 +229,7 @@ public class ShowStoryActivity extends Activity implements OnItemSelectedListene
 
 		rateSpinner.setAdapter(adapter);
 		rateSpinner.setSelection(0);
-		rateSpinner.setOnItemSelectedListener(this);
+		
 
 		lv = (ListView) findViewById(R.id.commentList);
 
@@ -246,7 +243,7 @@ public class ShowStoryActivity extends Activity implements OnItemSelectedListene
 		if(position != 0) {
 			givenRate = rateList.get(position);
 			Log.e("GIVENRATE", "a " + givenRate );
-			checkForRate();
+			giveNewRate();
 		}
 	}
 
@@ -314,20 +311,94 @@ public class ShowStoryActivity extends Activity implements OnItemSelectedListene
 			}
 		});
 	}
-	public void checkForRate(){
+	public void GetStoryPicture(){
+		//http://titan.cmpe.boun.edu.tr:8085/dutluk_android_api/GetStoryPicture?storyId=200(GET)
 		RequestParams params = new RequestParams();
-		params.put("StoryID", story_id);
-		params.put("mail", Utility.myUserName);
-		params.put("rate",givenRate);
-		Log.e("storyID-mail", story_id +  " aaaaaaaa " + Utility.myUserName + " aaa " + givenRate);
+		params.put("storyId", story_id);
 
-		//http://titan.cmpe.boun.edu.tr:8085/dutluk_android_api/RateStory?mail=burcin@burcin.com&StoryID=101&rate=5
+		Log.e("storyId", story_id +  " aaaaaaaa " );
+
+
 
 		// Show Progress Dialog 
 		prgDialog.show();
 		// Make RESTful web service call using AsyncHttpClient object
 		AsyncHttpClient client = new AsyncHttpClient();
-		client.post(Utility.SERVER_NAME+ "RateStory?",params ,new AsyncHttpResponseHandler() {
+		client.get(Utility.SERVER_NAME+ "GetStoryPicture?",params ,new AsyncHttpResponseHandler() {
+			// When the response returned by REST has Http response code '200'
+			@Override
+			public void onSuccess(String response) {
+				// Hide Progress Dialog
+				prgDialog.hide();
+				try {
+					// JSON Object
+					JSONObject obj = new JSONObject(response);
+					boolean check = obj.getBoolean("result");
+					if (check){
+						String path =  obj.getString("message");
+						Log.e("PATH", path);
+//						Ion.with(imageV)
+//						.placeholder(R.drawable.ic_launcher)
+//						.error(R.drawable.ic_launcher)
+//						.load(path);
+
+						Ion.with(ShowStoryActivity.this)
+						.load(path)
+						.withBitmap()
+						.placeholder(R.drawable.ic_launcher)
+						.error(R.drawable.ic_launcher)						
+						.intoImageView(imageV);
+//						Bitmap bm;
+//						BitmapFactory.Options btmapOptions = new BitmapFactory.Options();
+//						bm = BitmapFactory.decodeFile(path, btmapOptions);
+//						imageV.setImageBitmap(bm);
+					}
+
+
+
+
+				} catch (JSONException e) {
+
+					Log.e("getThemeName.json", "Error Occured [Server's JSON response might be invalid]!");
+					e.printStackTrace();
+
+				}
+			}
+			// When the response returned by REST has HTTP response code other than '200'
+			@Override
+			public void onFailure(int statusCode, Throwable error,
+					String content) {
+				// Hide Progress Dialog
+				prgDialog.hide();
+				// When HTTP response code is '404'
+				if(statusCode == 404){
+					Log.e("getThemeName.404", "Requested resource not found");
+				} 
+				// When HTTP response code is '500'
+				else if(statusCode == 500){
+					Log.e("getThemeName.500", "Something went wrong at server end");
+				} 
+				// When HTTP response code other than 404, 500
+				else{
+					Log.e("getThemeName.other", "Unexpected Error occcured! [Most common Error: Device might not be connected to Internet or remote server is not up and running]");
+				}
+			}
+		});
+	}
+	
+	
+	public void checkForRate(){
+		RequestParams params = new RequestParams();
+		params.put("storyId", story_id);
+		params.put("userId", Utility.myUserID);
+		Log.e("storyID-myUserID", story_id +  " aaaaaaaa " + Utility.myUserID);
+
+		//http://titan.cmpe.boun.edu.tr:8085/dutluk_android_api/isRate?storyId=10&userId=154(GET)
+		// Show Progress Dialog 
+		prgDialog.show();
+		// Make RESTful web service call using AsyncHttpClient object
+		AsyncHttpClient client = new AsyncHttpClient();
+		client.get(Utility.SERVER_NAME+ "isRate?",params ,new AsyncHttpResponseHandler() {
 			// When the response returned by REST has Http response code '200'
 			@Override
 			public void onSuccess(String response) {
@@ -340,11 +411,14 @@ public class ShowStoryActivity extends Activity implements OnItemSelectedListene
 
 					isRated = obj.getBoolean("result");
 					Log.e("checkForRate.success", "a" + isRated);
-
-					changeRate();
-
-
-
+					if(isRated){
+						rateSpinner.setEnabled(false);
+					}
+					else {
+						rateSpinner.setOnItemSelectedListener(ShowStoryActivity.this);
+					}
+						
+						
 
 				} catch (JSONException e) {
 
@@ -374,7 +448,67 @@ public class ShowStoryActivity extends Activity implements OnItemSelectedListene
 			}
 		});
 	}
-	public void changeRate(){
+	public void giveNewRate(){
+		RequestParams params = new RequestParams();
+		params.put("StoryID", story_id);
+		params.put("mail", Utility.myUserName);
+		params.put("rate",givenRate);
+		Log.e("storyID-mail", story_id +  " aaaaaaaa " + Utility.myUserName + " aaa " + givenRate);
+
+		//http://titan.cmpe.boun.edu.tr:8085/dutluk_android_api/RateStory?mail=burcin@burcin.com&StoryID=101&rate=5
+
+		// Show Progress Dialog 
+		prgDialog.show();
+		// Make RESTful web service call using AsyncHttpClient object
+		AsyncHttpClient client = new AsyncHttpClient();
+		client.post(Utility.SERVER_NAME+ "RateStory?",params ,new AsyncHttpResponseHandler() {
+			// When the response returned by REST has Http response code '200'
+			@Override
+			public void onSuccess(String response) {
+				// Hide Progress Dialog
+				prgDialog.hide();
+				try {
+					// JSON Object
+					JSONObject obj = new JSONObject(response);
+					// When the JSON response has status boolean value assigned with true
+
+					isRated = obj.getBoolean("result");
+					Log.e("giveNewRate.success", "a" + isRated);
+
+					getRate();
+					rateSpinner.setEnabled(false);
+
+
+
+				} catch (JSONException e) {
+
+					Log.e("giveNewRate.json", "Error Occured [Server's JSON response might be invalid]!");
+					e.printStackTrace();
+
+				}
+			}
+			// When the response returned by REST has HTTP response code other than '200'
+			@Override
+			public void onFailure(int statusCode, Throwable error,
+					String content) {
+				// Hide Progress Dialog
+				prgDialog.hide();
+				// When HTTP response code is '404'
+				if(statusCode == 404){
+					Log.e("giveNewRate.404", "Requested resource not found");
+				} 
+				// When HTTP response code is '500'
+				else if(statusCode == 500){
+					Log.e("giveNewRate.500", "Something went wrong at server end");
+				} 
+				// When HTTP response code other than 404, 500
+				else{
+					Log.e("giveNewRate.other", "Unexpected Error occcured! [Most common Error: Device might not be connected to Internet or remote server is not up and running]");
+				}
+			}
+		});
+	}
+	public void getRate(){
 		//http://titan.cmpe.boun.edu.tr:8085/dutluk_android_api/GetStoryRate?storyId=101(GET)
 		RequestParams params = new RequestParams();
 		params.put("storyId", story_id);
@@ -395,15 +529,15 @@ public class ShowStoryActivity extends Activity implements OnItemSelectedListene
 					// JSON Object
 					JSONObject obj = new JSONObject(response);
 					// When the JSON response has status boolean value assigned with true
-					String temp_rate = obj.getString("message");
-					rateTV.setText(temp_rate);
-					Log.e("changeRate.success", "a" + temp_rate);
+					Double temp_rate = obj.getDouble("message");
+					rateTV.setText(temp_rate+ "");
+					Log.e("getRate.success", "a" + temp_rate);
 
 
 
 				} catch (JSONException e) {
 
-					Log.e("changeRate.json", "Error Occured [Server's JSON response might be invalid]!");
+					Log.e("getRate.json", "Error Occured [Server's JSON response might be invalid]!");
 					e.printStackTrace();
 
 				}
@@ -416,15 +550,15 @@ public class ShowStoryActivity extends Activity implements OnItemSelectedListene
 				prgDialog.hide();
 				// When HTTP response code is '404'
 				if(statusCode == 404){
-					Log.e("changeRate.404", "Requested resource not found");
+					Log.e("getRate.404", "Requested resource not found");
 				} 
 				// When HTTP response code is '500'
 				else if(statusCode == 500){
-					Log.e("changeRate.500", "Something went wrong at server end");
+					Log.e("getRate.500", "Something went wrong at server end");
 				} 
 				// When HTTP response code other than 404, 500
 				else{
-					Log.e("changeRate.other", "Unexpected Error occcured! [Most common Error: Device might not be connected to Internet or remote server is not up and running]");
+					Log.e("getRate.other", "Unexpected Error occcured! [Most common Error: Device might not be connected to Internet or remote server is not up and running]");
 				}
 			}
 		});
@@ -454,7 +588,7 @@ public class ShowStoryActivity extends Activity implements OnItemSelectedListene
 
 					isRemembered = obj.getBoolean("result");
 					Log.e("checkForRememberThat.success", "a" + isRemembered);
-					changeRemember();
+					changeRemember(false);
 
 
 				} catch (JSONException e) {
@@ -485,11 +619,26 @@ public class ShowStoryActivity extends Activity implements OnItemSelectedListene
 			}
 		});
 	}
-	public void changeRemember(){
-		if(isRemembered)
+	public void changeRemember(boolean change){
+		if(isRemembered) {
 			rememberThatButton.setText("Not Remember That");
-		else 
+		
+			if(change){
+				change = false;
+				rememCount = rememCount + 1;
+				rememTV.setText(rememCount+ "");
+			}
+		}
+		else {
 			rememberThatButton.setText("Remember That");
+			
+			if(change){
+				change = false;
+				rememCount = rememCount - 1;
+				rememTV.setText(rememCount+ "");
+			}
+		}
+		
 	}
 	public void rememberThatAction(){
 
@@ -527,7 +676,7 @@ public class ShowStoryActivity extends Activity implements OnItemSelectedListene
 					String msg = obj.getString("message");
 					Log.e("rememberThatAction.success", msg);
 					isRemembered = !isRemembered;
-					changeRemember();
+					changeRemember(true);
 
 
 				} catch (JSONException e) {
@@ -832,7 +981,9 @@ public class ShowStoryActivity extends Activity implements OnItemSelectedListene
 
 					// Set Default Values for Edit View controls
 					setDefaultValues(obj);
-					// Display successfully registered message using Toast
+					
+
+					// Display successfully registered message
 					Log.e("invokeWSforGetStory.success", "You can successfully see story!");
 
 				} catch (JSONException e) {
@@ -863,16 +1014,21 @@ public class ShowStoryActivity extends Activity implements OnItemSelectedListene
 			}
 		});
 	}
-	// düzelt:)
+int rememCount = -1;
 	public void setDefaultValues(JSONObject obj) throws JSONException{
+		
+		rememCount = obj.getInt("rememberNumber");
+		rememTV.setText(rememCount + "");
 		ownerButton.setText(owner);
 		placeButton.setText(placeName);
 		storyTV.setText(obj.getString("content"));
+
+
 		getThemeName(obj.getString("themeId"));
 
 		rateTV.setText(obj.getString("avgRate"));
-
-		// image için de yaz bir þeyler
+		
+	
 	}
 
 
@@ -890,7 +1046,7 @@ public class ShowStoryActivity extends Activity implements OnItemSelectedListene
 				params.put("storyId", story_id);
 				params.put("comment", value);
 				invokeWSforAddComment(params);
-				//Toast.makeText(getApplicationContext(), value, Toast.LENGTH_SHORT).show();
+				
 			}
 		});
 
@@ -903,9 +1059,12 @@ public class ShowStoryActivity extends Activity implements OnItemSelectedListene
 
 	}
 	public void seeOwnerProfile(View view){ 
-		if(!owner.equals(Utility.myUserName)){
-			startOtherProfileActivity(storyOwnerID);
-		}
+
+		navigateToProfileActivity(owner);
+		Log.e("seeOwnerProfile", owner + "");
+
+
+
 	}
 	public void seePlaceProfile(View view){ 
 		navigateToTimelineActivityForPlaces(place_id);
@@ -935,10 +1094,10 @@ public class ShowStoryActivity extends Activity implements OnItemSelectedListene
 					// JSON Object
 					JSONObject obj = new JSONObject(response);
 					// When the JSON response has status boolean value assigned with true
-					commentList.clear();
-					new MyTask().execute();
-					// Display successfully registered message using Toast
-					Log.e("invokeWSforAddComment.success", "You can successfully add comment!");
+
+					showExpPoint();
+					// Display successfully registered message
+					Log.e("invokeWSforAddComment.success", obj.toString());
 
 				} catch (JSONException e) {
 
@@ -969,7 +1128,30 @@ public class ShowStoryActivity extends Activity implements OnItemSelectedListene
 		});
 	}
 
+	public void showExpPoint() {
 
+		final AlertDialog.Builder alert = new AlertDialog.Builder(this);
+		final TextView input = new TextView(this);
+		alert.setMessage("You earn 1 points!");
+		alert.setTitle("CONRATULATIONS"); 
+		alert.setView(input);
+		alert.setPositiveButton("Profile for experience point", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) {
+				navigateToProfileActivity(Utility.myUserName);
+				dialog.dismiss();
+			}
+		});
+
+		alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) {
+				commentList.clear();
+				new MyTask().execute();
+				dialog.dismiss();
+			}
+		});
+		alert.show();   
+
+	}
 	private void readComments() {
 
 
@@ -1107,15 +1289,7 @@ public class ShowStoryActivity extends Activity implements OnItemSelectedListene
 		}
 
 	}
-	public void  startOtherProfileActivity(String other_user_id) {
 
-		Intent otherProfileIntent = new Intent(getApplicationContext(),OtherUserProfileActivity.class);
-		Bundle b = new Bundle();
-		b.putString("other_user_id",other_user_id);
-		otherProfileIntent.putExtras(b);
-		otherProfileIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		startActivity(otherProfileIntent);
-	}
 
 
 
@@ -1124,7 +1298,7 @@ public class ShowStoryActivity extends Activity implements OnItemSelectedListene
 	public boolean onCreateOptionsMenu(Menu menu) {
 
 		inflater = getMenuInflater();
-		inflater.inflate(R.menu.showstory_menu, menu);
+		inflater.inflate(R.menu.recommendation_menu, menu);
 
 		return super.onCreateOptionsMenu(menu);
 
@@ -1136,11 +1310,12 @@ public class ShowStoryActivity extends Activity implements OnItemSelectedListene
 		case R.id.addStory:
 			navigateToAddStoryActivity();
 			break;
+
+		case R.id.recommendation:
+			navigateToRecommendationActivity();
+			break;
 		case R.id.map:
 			navigateToHomeMapActivity();
-			break;
-		case R.id.ownProfile:
-			navigateToProfileActivity();
 			break;
 		case R.id.advancedSearch:
 			navigateToAdvancedSearchActivity();
@@ -1149,14 +1324,18 @@ public class ShowStoryActivity extends Activity implements OnItemSelectedListene
 
 		return super.onOptionsItemSelected(item);
 	}
-	public void navigateToSearchActivity() {
-		Intent searchIntent = new Intent(getApplicationContext(),AdvancedSearchActivity.class);
-		searchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		startActivity(searchIntent);
+
+	public void navigateToRecommendationActivity() {
+		Intent recomIntent = new Intent(getApplicationContext(),RecommendationActivity.class);
+		recomIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		startActivity(recomIntent);
 
 	}
 	public void navigateToAddStoryActivity() {
 		Intent addStoryIntent = new Intent(getApplicationContext(),AddStoryActivity.class);
+		Bundle b = new Bundle();
+		b.putString("tags","");
+		addStoryIntent.putExtras(b);
 		addStoryIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(addStoryIntent);
 
@@ -1168,8 +1347,11 @@ public class ShowStoryActivity extends Activity implements OnItemSelectedListene
 
 	}
 
-	public void navigateToProfileActivity() {
+	public void navigateToProfileActivity(String user_name) {
 		Intent profileIntent = new Intent(getApplicationContext(),ProfileActivity.class);
+		Bundle b = new Bundle();
+		b.putString("user_name",user_name);
+		profileIntent.putExtras(b);
 		profileIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(profileIntent);
 

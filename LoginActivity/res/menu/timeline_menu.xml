@@ -12,18 +12,19 @@
         android:orderInCategory="2"
         android:icon="@drawable/ic_action_new"
 		android:showAsAction="always"/>
-    <item
-        android:id="@+id/map"
-        android:title="@string/btnHomeMap"
-        android:orderInCategory="3"
-        android:icon="@drawable/ic_action_map"
-        android:showAsAction="always|collapseActionView"/>
+   
     
      <item
         android:id="@+id/ownProfile"
         android:title="@string/btnProfile"
-        android:orderInCategory="4"
+        android:orderInCategory="3"
         android:icon="@drawable/ic_action_edit"
+        android:showAsAction="always|collapseActionView"/>
+      <item
+        android:id="@+id/map"
+        android:title="@string/btnHomeMap"
+        android:orderInCategory="4"
+        android:icon="@drawable/ic_action_map"
         android:showAsAction="always|collapseActionView"/>
     <item
         android:id="@+id/advancedSearch"

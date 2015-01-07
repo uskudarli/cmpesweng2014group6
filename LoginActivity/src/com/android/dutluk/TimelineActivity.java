@@ -64,12 +64,13 @@ public class TimelineActivity extends Activity {
 	ArrayList<HashMap<String, String>> storyList = new ArrayList<HashMap<String, String>>();
 	ArrayList<HashMap<String, String>> searchList = new ArrayList<HashMap<String, String>>();
 
-	ProgressDialog dialog;
+	ProgressDialog prgDialog;
 	Boolean isInput = true;
 	LinearLayout ll;
 	String searchedTerm;
 	String type = "";
 	String type_send = "";
+	String user_name = "";
 	ArrayList<Integer> storyIDs = new ArrayList<Integer>();
 	ArrayList<Integer> placeIDList = new ArrayList<Integer>();
 	ArrayList<String> placeNameList = new ArrayList<String>();
@@ -86,20 +87,30 @@ public class TimelineActivity extends Activity {
 
 		Intent comingIntent = getIntent();
 		type = comingIntent.getStringExtra("type");
-
+		
+	
 		if(type.equals("myStories")){		
 			type_send = ""+0;
+			user_name = comingIntent.getStringExtra("user_name");
 		}
 		if(type.equals("placesStories")){  
 			type_send = comingIntent.getStringExtra("placeID");
 		}
 		if(type.equals("subsStories")){
 			type_send = ""+1;
+			user_name = comingIntent.getStringExtra("user_name");
 		}
 
 
 		lv = (ListView) findViewById(R.id.listView1);
 
+		// Instantiate Progress Dialog object
+		prgDialog = new ProgressDialog(this);
+		// Set Progress Dialog Text
+		prgDialog.setMessage("Please wait...");
+		// Set Cancelable as False
+		prgDialog.setCancelable(false);
+		
 
 		actionBar = getActionBar();
 		actionBar.setBackgroundDrawable(new ColorDrawable(Color.rgb(0, 0, 0)));
@@ -168,7 +179,7 @@ public class TimelineActivity extends Activity {
 			placeIDList.clear();
 			placeNameList.clear();
 			List<NameValuePair> pairs = new ArrayList<NameValuePair>();
-			pairs.add(new BasicNameValuePair("email", Utility.myUserName));
+			pairs.add(new BasicNameValuePair("email", user_name));
 			pairs.add(new BasicNameValuePair("type", type_send));
 			String url = Utility.SERVER_NAME + "GetStory?" + URLEncodedUtils.format(pairs, "utf-8");		
 			HttpGet httpget = new HttpGet(url);
@@ -230,11 +241,15 @@ public class TimelineActivity extends Activity {
 	}
 	public void  startShowStoryActivity(String story_id, String owner, String place_id, String placeName) {
 
+		Utility.IDFromName(owner);
+		String storyOwnerID = Utility.userIDFromName;
+
+		
 		Intent showStoryIntent = new Intent(getApplicationContext(),ShowStoryActivity.class);
 		Bundle b = new Bundle();
 		b.putString("story_id",story_id);
 		b.putString("owner", owner);
-		b.putString("type", type);
+		b.putString("storyOwnerID", storyOwnerID);
 		b.putString("place_id",place_id);
 		b.putString("placeName", placeName);
 		showStoryIntent.putExtras(b);
@@ -269,7 +284,7 @@ public class TimelineActivity extends Activity {
 				placeNameList.clear(); // for story search
 				if(type_send.equals("0") || type_send.equals("1") ){
 					
-					client.post(Utility.SERVER_NAME + "Search?func=story&term=" + query, new AsyncHttpResponseHandler() {
+					client.post(Utility.SERVER_NAME + "Search?func=story&isSemantic=false&term=" + query, new AsyncHttpResponseHandler() {
 						@Override
 						public void onSuccess(String response) {
 						
@@ -307,7 +322,7 @@ public class TimelineActivity extends Activity {
 				}
 				else {
 					
-					client.post(Utility.SERVER_NAME + "Search?func=place&term=" + query, new AsyncHttpResponseHandler() {
+					client.post(Utility.SERVER_NAME + "Search?func=place&isSemantic=false&term=" + query, new AsyncHttpResponseHandler() {
 						@Override
 						public void onSuccess(String response) {
 							try {
@@ -362,6 +377,8 @@ public class TimelineActivity extends Activity {
 				m.findItem(R.id.map).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 				m.findItem(R.id.ownProfile);
 				m.findItem(R.id.ownProfile).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+				m.findItem(R.id.advancedSearch);
+				m.findItem(R.id.advancedSearch).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 				return true;
 			}
 
@@ -375,7 +392,8 @@ public class TimelineActivity extends Activity {
 				m.findItem(R.id.map).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 				m.findItem(R.id.ownProfile);
 				m.findItem(R.id.ownProfile).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-
+				m.findItem(R.id.advancedSearch);
+				m.findItem(R.id.advancedSearch).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 				return true;
 			}
 		});
@@ -430,11 +448,11 @@ public class TimelineActivity extends Activity {
 		case R.id.addStory:
 			navigateToAddStoryActivity();
 			break;
+		case R.id.ownProfile:
+			navigateToProfileActivity(Utility.myUserName);
+			break;
 		case R.id.map:
 			navigateToHomeMapActivity();
-			break;
-		case R.id.ownProfile:
-			navigateToProfileActivity();
 			break;
 		case R.id.advancedSearch:
 			navigateToAdvancedSearchActivity();
@@ -451,6 +469,9 @@ public class TimelineActivity extends Activity {
 	}
 	public void navigateToAddStoryActivity() {
 		Intent addStoryIntent = new Intent(getApplicationContext(),AddStoryActivity.class);
+		Bundle b = new Bundle();
+		b.putString("tags","");
+		addStoryIntent.putExtras(b);
 		addStoryIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(addStoryIntent);
 
@@ -461,8 +482,11 @@ public class TimelineActivity extends Activity {
 		startActivity(homeMapIntent);
 
 	}
-	public void navigateToProfileActivity() {
+	public void navigateToProfileActivity(String user_name) {
 		Intent profileIntent = new Intent(getApplicationContext(),ProfileActivity.class);
+		Bundle b = new Bundle();
+		b.putString("user_name",user_name);
+		profileIntent.putExtras(b);
 		profileIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(profileIntent);
 

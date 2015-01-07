@@ -37,8 +37,8 @@
 
                 <ImageView
                     android:id="@+id/imageViewProfile"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"
                     android:contentDescription="@string/hello_world"
                     android:src="@drawable/ic_launcher" />
             </LinearLayout>
@@ -53,6 +53,27 @@
                 android:onClick="goImageSelector"
                 android:src="@drawable/paperclip" />
         </RelativeLayout>
+        
+          <!-- Email Part -->
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="100sp"
+                android:layout_height="wrap_content"
+                android:text="@string/email"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/emailProfile"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18sp" />
+        </LinearLayout>
         <!-- Name Part -->
 
         <LinearLayout
@@ -64,7 +85,7 @@
                 android:layout_width="100sp"
                 android:layout_height="wrap_content"
                 android:text="@string/name"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:textStyle="bold" />
 
             <EditText
@@ -72,8 +93,54 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/changeName"
-                android:textSize="20sp" />
+                android:textSize="18sp" />
         </LinearLayout>
+        
+          <!-- Phone Part -->
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="100sp"
+                android:layout_height="wrap_content"
+                android:text="@string/phone"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/phoneProfile"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/changePhone"
+                android:inputType="phone"
+                android:textSize="18sp" />
+        </LinearLayout>
+        
+             <!-- Biography Part -->
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="100sp"
+                android:layout_height="wrap_content"
+                android:text="@string/biography"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/biographyProfile"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/changeBiography"
+                android:textSize="18sp" />
+        </LinearLayout>
+        
  		<!-- Birth Date Part -->
         <RelativeLayout
             android:layout_width="fill_parent"
@@ -94,7 +161,7 @@
                     android:layout_height="48dp"
                     android:gravity="center_vertical"
                     android:text="@string/birthDate"
-                    android:textSize="20sp"
+                    android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -103,7 +170,7 @@
                     android:layout_height="48dp"
                     android:gravity="center|center_vertical"
                     android:hint="@string/changeBirthDate"
-                    android:textSize="20sp" />
+                    android:textSize="18sp" />
 
             </LinearLayout>
 
@@ -127,8 +194,9 @@
                 android:layout_width="100sp"
                 android:layout_height="wrap_content"
                 android:text="@string/gender"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:textStyle="bold" />
+			  
 
             <Spinner
                 android:id="@+id/spinnerGender"
@@ -137,50 +205,9 @@
                 android:spinnerMode="dropdown" />
         </LinearLayout>
 
-        <!-- Email Part -->
+      
 
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal" >
-
-            <TextView
-                android:layout_width="100sp"
-                android:layout_height="wrap_content"
-                android:text="@string/email"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/emailProfile"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:textSize="20sp" />
-        </LinearLayout>
-
-        <!-- Phone Part -->
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal" >
-
-            <TextView
-                android:layout_width="100sp"
-                android:layout_height="wrap_content"
-                android:text="@string/phone"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-
-            <EditText
-                android:id="@+id/phoneProfile"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/changePhone"
-                android:inputType="phone"
-                android:textSize="20sp" />
-        </LinearLayout>
-
+      
         <!-- XP Part -->
 
         <LinearLayout
@@ -192,14 +219,14 @@
                 android:layout_width="100sp"
                 android:layout_height="wrap_content"
                 android:text="@string/XP"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/xpProfile"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:textSize="20sp" />
+                android:textSize="18sp" />
         </LinearLayout>
 
         <!-- Level Part -->
@@ -213,17 +240,16 @@
                 android:layout_width="100sp"
                 android:layout_height="wrap_content"
                 android:text="@string/level"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/levelProfile"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:textSize="20sp" />
+                android:textSize="18sp" />
         </LinearLayout>
-
-        <!-- Biography Part -->
+            <!-- Subscriber Number Part -->
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -233,18 +259,18 @@
             <TextView
                 android:layout_width="100sp"
                 android:layout_height="wrap_content"
-                android:text="@string/biography"
-                android:textSize="20sp"
+                android:text="@string/subscriberCount"
+                android:textSize="18sp"
                 android:textStyle="bold" />
 
-            <EditText
-                android:id="@+id/biographyProfile"
+            <TextView
+                android:id="@+id/subscriberCountProfile"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/changeBiography"
-                android:textSize="20sp" />
+                android:textSize="18sp" />
         </LinearLayout>
 
+   
         <!-- Save button -->
 
         <Button
@@ -266,6 +292,16 @@
             android:background="#10BCC9"
             android:onClick="navigateToTimelineActivityForMe"
             android:text="@string/btnShowMyStories"
+            android:textColor="#fff" />
+         <!-- Show Subs Stories button -->
+           <Button
+            android:id="@+id/btnShowSubscribersStoriesProfile"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dip"
+            android:background="#10BCC9"
+            android:onClick="navigateToTimelineActivityForSubs"
+            android:text="@string/btnShowSubsStories"
             android:textColor="#fff" />
     </LinearLayout>
 
