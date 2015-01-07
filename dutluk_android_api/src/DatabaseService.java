@@ -1656,12 +1656,13 @@ public class DatabaseService {
         JsonObject  jobject = jelement.getAsJsonObject();
         JsonArray jsonArray = jobject.getAsJsonArray("result");
         int tmp = 0;
-        if(jsonArray.size() > 3)
-        	tmp = 3;
+        if(jsonArray.size() > 5)
+        	tmp = 5;
         else
         	tmp = jsonArray.size();
         for(int i = 0; i < tmp; i++) {
-            jobject = jsonArray.get(i).getAsJsonObject();	
+            jobject = jsonArray.get(i).getAsJsonObject();
+            jobject = jobject.getAsJsonObject("notable");
             System.out.println(jobject.get("name").getAsString());
             sim.add(jobject.get("name").getAsString());
         }
