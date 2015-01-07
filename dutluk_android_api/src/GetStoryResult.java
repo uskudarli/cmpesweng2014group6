@@ -13,6 +13,9 @@ public class GetStoryResult {
     private Date updatedOn;
     private Date absoluteDate;
     private String approximateDate;
+    public String placeName;
+    public int placeId;
+    public int rememberNumber;
     
     public GetStoryResult() {
     	
@@ -83,6 +86,30 @@ public class GetStoryResult {
 	}
 	public void setApproximateDate(String approximateDate) {
 		this.approximateDate = approximateDate;
+	}
+
+	public String getPlaceName() {
+		return placeName;
+	}
+
+	public void setPlaceName(String placeName) {
+		this.placeName = placeName;
+	}
+
+	public int getPlaceId() {
+		return placeId;
+	}
+
+	public void setPlaceId(int placeId) {
+		this.placeId = placeId;
+	}
+
+	public int getRememberNumber() {
+		return rememberNumber;
+	}
+
+	public void setRememberNumber(int rememberNumber) {
+		this.rememberNumber = rememberNumber;
 	}
     
     

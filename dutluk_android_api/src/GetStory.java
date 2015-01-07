@@ -66,8 +66,11 @@ public class GetStory extends HttpServlet {
 			result[j].setCreatedOn(stories2[j].getCreatedOn());
 			result[j].setUpdatedOn(stories2[j].getUpdatedOn());
 			result[j].setAbsoluteDate(stories2[j].getAbsoluteDate());
+			result[j].setPlaceName(stories2[j].getPlaceName());
+			result[j].setPlaceId(stories2[j].getPlaceId());
 			result[j].setApproximateDate(stories2[j].getApproximateDate());
 			result[j].setMail(tmpUser.getEmail());
+			result[j].setRememberNumber(db.getRememberedNumber(stories2[j].getStoryId()));
 		}
 		response.reset();
 		response.setContentType("application/json");

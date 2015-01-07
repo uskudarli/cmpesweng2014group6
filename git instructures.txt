@@ -1,0 +1,4 @@
+git pull origin develop-android
+git add --all
+git commit -m "mesaj yaz"
+git push origin develop-android

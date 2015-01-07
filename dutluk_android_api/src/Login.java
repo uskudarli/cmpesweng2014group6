@@ -42,10 +42,10 @@ public class Login extends HttpServlet {
 			HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		// TODO Auto-generated method stub
-		Operations operations = new Operations();
+		DatabaseService db = new DatabaseService();
 		String mail = request.getParameter("mail");
 		String password = request.getParameter("password");
-		boolean result = operations.checkUser(mail, password);
+		boolean result = db.checkUser(mail, password);
 		response.reset();
 		response.setContentType("application/json");
 		response.setCharacterEncoding("UTF-8");

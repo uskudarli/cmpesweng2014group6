@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,16 +17,16 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 
 /**
- * Servlet implementation class GetOneStory
+ * Servlet implementation class GetThemes
  */
-@WebServlet("/GetOneStory")
-public class GetOneStory extends HttpServlet {
+@WebServlet("/GetThemes")
+public class GetThemes extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public GetOneStory() {
+    public GetThemes() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -35,40 +36,27 @@ public class GetOneStory extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		int storyId = Integer.parseInt(request.getParameter("storyId"));
 		DatabaseService db = new DatabaseService();
-		String sql = "select * from Stories where StoryID =" + storyId + " limit 1";
+		String sql = "select * from Themes";
 		ResultSet rs = null;
-	    Connection con;
+		Connection con;
 		try {
 			con = db.getConnection();
-			Statement statement = con.createStatement() ;
-			rs =statement.executeQuery(sql) ;
-			int count = 1;
-    	  	Story story = new Story();
+			Statement statement = con.createStatement();
+			rs =statement.executeQuery(sql);
+			ArrayList<Theme> themes = new ArrayList<Theme>();
 			while(rs.next()) {
-	    	  	story.setContent(rs.getString("Content"));
-			  	story.setUserId(rs.getInt("UserID"));
-			  	story.setThemeId(rs.getInt("ThemeID"));
-			  	story.setStoryId(rs.getInt("StoryID"));
-			  	story.setIsDeleted(rs.getInt("isDeleted"));
-			  	story.setReportCount(rs.getInt("ReportCount"));
-			  	story.setAvgRate(rs.getInt("AvgRate"));
-				story.setCreatedOn(rs.getDate("CreationDate"));
-				story.setUpdatedOn(rs.getDate("LastUpdate"));
-				story.setAbsoluteDate(rs.getDate("StoryDateAbsolute"));
-			  	story.setPlaceName(db.findPlacebyPlaceId(db.findPlaceIdByStoryId(rs.getInt("StoryID"))).getName());
-			  	story.setPlaceId(db.findPlaceIdByStoryId(rs.getInt("StoryID")));
-				story.setRememberNumber(db.getRememberedNumber(rs.getInt("StoryID")));
-	            count++;
+				Theme theme = new Theme();
+				theme.setName(rs.getString("Name"));
+				theme.setThemeID(rs.getInt("themeID"));
+				themes.add(theme);
 			}
-			
 			response.reset();
 			response.setContentType("application/json");
 			response.setCharacterEncoding("UTF-8");
 			Gson gson = new Gson();
 			PrintWriter pw = response.getWriter();
-			pw.print(gson.toJson(story));
+			pw.print(gson.toJson(themes));
 			pw.flush();
 			pw.close();
 			con.close();

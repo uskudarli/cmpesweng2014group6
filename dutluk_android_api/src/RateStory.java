@@ -83,6 +83,10 @@ public class RateStory extends HttpServlet {
     		response.setCharacterEncoding("UTF-8");
     		if(rateCount>0){
     			registerResult.setMessage("successfully rated");
+                //gamification
+                //Rating a story = +1 points for story owner
+    			int tmpId = db.findUserIdByStoryId(Integer.parseInt(storyId));
+                db.gamification(tmpId, 1, -1, 0);
     			registerResult.setResult(true);
     		}else {
     			registerResult.setMessage("rate operation halted");

@@ -72,6 +72,42 @@
     <servlet-name>GetStoryRate</servlet-name>
     <servlet-class>GetStoryRate</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>GetThemes</servlet-name>
+    <servlet-class>GetThemes</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>GetUserId</servlet-name>
+    <servlet-class>GetUserId</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>GetUserMail</servlet-name>
+    <servlet-class>GetUserMail</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>GetRecommendedStories</servlet-name>
+    <servlet-class>GetRecommendedStories</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>GetStoryPicture</servlet-name>
+    <servlet-class>GetStoryPicture</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>UploadPicture</servlet-name>
+    <servlet-class>UploadPicture</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>GetThemeName</servlet-name>
+    <servlet-class>GetThemeName</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>isRate</servlet-name>
+    <servlet-class>isRate</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>GetProfilePicture</servlet-name>
+    <servlet-class>GetProfilePicture</servlet-class>
+  </servlet>  
   <servlet-mapping>
     <servlet-name>Register</servlet-name>
     <url-pattern>/Register</url-pattern>
@@ -141,11 +177,43 @@
     <url-pattern>/isFollowingUser</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
-    <servlet-name>isFollowingUser</servlet-name>
-    <url-pattern>/isFollowingUser</url-pattern>
+    <servlet-name>GetStoryRate</servlet-name>
+    <url-pattern>/GetStoryRate</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
-    <servlet-name>GetRateStory</servlet-name>
-    <url-pattern>/GetRateStory</url-pattern>
+    <servlet-name>GetThemes</servlet-name>
+    <url-pattern>/GetThemes</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>GetUserId</servlet-name>
+    <url-pattern>/GetUserId</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>GetUserMail</servlet-name>
+    <url-pattern>/GetUserMail</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>GetRecommendedStories</servlet-name>
+    <url-pattern>/GetRecommendedStories</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>GetStoryPicture</servlet-name>
+    <url-pattern>/GetStoryPicture</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>UploadPicture</servlet-name>
+    <url-pattern>/UploadPicture</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>GetThemeName</servlet-name>
+    <url-pattern>/GetThemeName</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>isRate</servlet-name>
+    <url-pattern>/isRate</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>GetProfilePicture</servlet-name>
+    <url-pattern>/GetProfilePicture</url-pattern>
   </servlet-mapping>  
 </web-app>

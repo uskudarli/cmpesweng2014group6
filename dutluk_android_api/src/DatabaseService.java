@@ -1,5 +1,9 @@
 
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -7,20 +11,57 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Scanner;
 
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathFactory;
+
+import org.xml.sax.InputSource;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 public class DatabaseService {
-	static final String JDBC_DRIVER = "com.mysql.jdbc.Driver"; 
-	static final String DB_URL = "jdbc:mysql://titan.cmpe.boun.edu.tr:3306/database6";
-	static final String USER = "project6";
-	static final String PASS = "xXumhNf4";
+    private String JDBC_DRIVER; 
+    private String DB_URL;
+    private String USER;
+    private String PASS;
 	private Connection conn;
 	private Statement stmt;
 	private PreparedStatement pstmt;
 	public DatabaseService()
 	{
-		
+		this.readConfig();
 	}
+	
+    public void readConfig(){
+        try{
+                //So be careful, if it can't find your config.xml, it will catch an exception
+                //with the message "CONFIGNOTFOUND". If you can't even login, seek for this
+                //message in your console/catalina output.
+
+                //Also, titan's tomcat returns  "/dutluk"
+                //Instead of putting config.xml to that directory, I had change the wd
+                //string to /home/project6/tomcat, where I put config.xml file
+
+                String working_directory=new File("dutluk").getAbsolutePath();
+                //System.out.println("CONFIG WD>>>\n"+working_directory+"\n<<<");
+                //Titan's tomcat returns /. here, so I modify it by hand.
+                if(working_directory.equals("/dutluk")) 
+                	working_directory="/home/project6/tomcat";   
+                XPath xpath = XPathFactory.newInstance().newXPath();
+                InputSource inputSource = new InputSource(working_directory+"/config.xml");
+                DB_URL = (String) xpath.evaluate("//config//jdbc//url",inputSource);
+                JDBC_DRIVER = (String) xpath.evaluate("//config//jdbc//driver",inputSource);
+                USER = (String) xpath.evaluate("//config//jdbc//username",inputSource);
+                PASS = (String) xpath.evaluate("//config//jdbc//password",inputSource);
+        }catch(Exception e){
+                System.err.println("CONFIGNOTFOUND: " + e.getMessage());
+        }
+}
+	
 	Boolean executeSql(String sql)
 	{
 		Boolean result = false;
@@ -60,6 +101,15 @@ public class DatabaseService {
         return conn;
     }
 	
+	public boolean checkUser(String mail, String password) {
+		User user = findUserByEmail(mail);
+		boolean b = password.equals(user.getPassword());
+		if(b) {
+			return true;
+		}
+		return false;
+	}
+    
     public User findUserById(int userId) {
 		User user = new User();
 		try
@@ -110,6 +160,102 @@ public class DatabaseService {
 		return null;
     }
     
+    public Boolean UpdateProfile(User user)
+    {
+            try{
+                    conn = getConnection();
+                    pstmt = conn.prepareStatement("UPDATE Users SET Name = ? , Gender = ? ,  LastUpdate = NOW() WHERE UserID= ?");
+                    pstmt.setString(1, user.getName());
+                    pstmt.setString(2, user.getGender().toString());
+                    pstmt.setInt(3, user.getUserId());
+                    pstmt.executeUpdate();
+                    if(user.getBirthdate() != null){
+                            pstmt = conn.prepareStatement("UPDATE Users SET Birthdate = ?, LastUpdate = NOW() WHERE UserID= ?");
+                            pstmt.setDate(1, new java.sql.Date(user.getBirthdate().getTime()));
+                            pstmt.setInt(2, user.getUserId());
+                            pstmt.executeUpdate();
+                    }
+                    if(user.getPhone() != null){
+                            pstmt = conn.prepareStatement("UPDATE Users SET Phone = ?, LastUpdate = NOW() WHERE UserID= ?");
+                            pstmt.setString(1, user.getPhone());
+                            pstmt.setInt(2,user.getUserId());
+                            pstmt.executeUpdate();
+                    }
+                    if(user.getBio() != null){
+                            pstmt = conn.prepareStatement("UPDATE Users SET Bio = ?, LastUpdate = NOW() WHERE UserID= ?");
+                            pstmt.setString(1, user.getBio());
+                            pstmt.setInt(2,user.getUserId());
+                            pstmt.executeUpdate();
+                    }
+                    if(user.getPicId() > 0){
+                            pstmt = conn.prepareStatement("UPDATE Users SET PicID = ?, LastUpdate = NOW() WHERE UserID= ?");
+                            pstmt.setInt(1, user.getPicId());
+                            pstmt.setInt(2, user.getUserId());
+                            pstmt.executeUpdate();
+                    }
+                    return true;
+            }catch(SQLException | ClassNotFoundException se){
+                    //Handle errors for JDBC
+                    se.printStackTrace();
+            }catch(Exception e){
+                    //Handle errors for Class.forName
+                    e.printStackTrace();
+            }finally{
+                    //finally block used to close resources
+                    try{
+                            if(stmt!=null)
+                                    stmt.close();
+                    }catch(SQLException se2){
+                    }// nothing we can do
+                    try{
+                            if(conn!=null)
+                                    conn.close();
+                    }catch(SQLException se){
+                            se.printStackTrace();
+                    }//end finally try
+            }               
+            return false;
+
+    }
+    
+    public Theme findThemeById(int id) {
+    	Theme theme = new Theme();
+		try {
+			Class.forName(JDBC_DRIVER);
+			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			pstmt = conn.prepareStatement("SELECT * FROM Themes WHERE themeID = ?");
+			pstmt.setInt(1, id);
+			ResultSet rs = pstmt.executeQuery();
+			
+			while(rs.next())
+			{
+				theme.setName(rs.getString("Name"));
+				theme.setThemeID(id);
+			}
+			return theme;
+		}catch(SQLException se){
+		     //Handle errors for JDBC
+		     se.printStackTrace();
+		}catch(Exception e){
+		     //Handle errors for Class.forName
+		     e.printStackTrace();
+		}finally{
+		     //finally block used to close resources
+			try{
+				if(stmt!=null)
+					stmt.close();
+			}catch(SQLException se2){
+			}// nothing we can do
+			try{
+				if(conn!=null)
+					conn.close();
+			}catch(SQLException se){
+				se.printStackTrace();
+			}//end finally try
+		}
+		return null;
+    }
+    
 	User findUserByEmail(String mail)
 	{
 		User user = new User();
@@ -127,7 +273,13 @@ public class DatabaseService {
 				user.setEmail(mail);
 				user.setUserId(rs.getInt("UserID"));
 				user.setBirthdate(rs.getDate("Birthdate"));
-				user.setPhone(rs.getString("Phone"));
+				user.setPhone(rs.getString("Phone")); 
+				if(rs.getString("Gender")!=null&&rs.getString("Gender").equals("Male"))
+                    user.setGender("male");
+				else if(rs.getString("Gender")!=null&&rs.getString("Gender").equals("Female"))
+                    user.setGender("female");
+				else
+                    user.setGender("unspecified");
 				user.setExperiencePoint(rs.getInt("ExperiencePoint"));
 				user.setLevel(rs.getInt("Level"));
 				user.setIsDeleted(0);
@@ -136,6 +288,7 @@ public class DatabaseService {
 				user.setPassword(rs.getString("Password"));
 				user.setCreatedOn(rs.getDate("CreationDate"));
 				user.setUpdatedOn(rs.getDate("LastUpdate"));
+				user.setFollowerNumber(getFollowerNumber(rs.getInt("UserID")));
 			}
 			return user;
 		}catch(SQLException se){
@@ -204,6 +357,45 @@ public class DatabaseService {
                     }//end finally try
         }
             return place;
+    }
+    
+    public int findPlaceIdByStoryId(int storyId) {
+        int placeId = 0;
+        try
+        {
+                Class.forName(JDBC_DRIVER);
+                conn = DriverManager.getConnection(DB_URL, USER, PASS);
+                pstmt = conn.prepareStatement("SELECT PlaceID FROM StoriesInPlaces WHERE StoryID = ?");
+                pstmt.setInt(1, storyId);
+                ResultSet rs = pstmt.executeQuery();
+                
+                while(rs.next())
+                {
+                        placeId = rs.getInt("PlaceID");
+                }
+                return placeId;
+                
+        }catch(SQLException se){
+         //Handle errors for JDBC
+         se.printStackTrace();
+        }catch(Exception e){
+         //Handle errors for Class.forName
+         e.printStackTrace();
+    }finally{
+         //finally block used to close resources
+                try{
+                        if(stmt!=null)
+                                stmt.close();
+                }catch(SQLException se2){
+                }// nothing we can do
+                try{
+                        if(conn!=null)
+                                conn.close();
+                }catch(SQLException se){
+                        se.printStackTrace();
+                }//end finally try
+    }
+        return 0;
     }
     
     public ArrayList<Place> findAllPlaces()
@@ -335,6 +527,8 @@ public class DatabaseService {
                             story.setIsDeleted(rs.getInt("IsDeleted"));
                             story.setContent(rs.getString("Content"));
                             story.setAvgRate(rs.getInt("AvgRate"));
+    					  	story.setPlaceName(findPlacebyPlaceId(findPlaceIdByStoryId(rs.getInt("StoryID"))).getName());
+    					  	story.setPlaceId(findPlaceIdByStoryId(rs.getInt("StoryID")));
                     }
                     return story;
                     
@@ -359,6 +553,37 @@ public class DatabaseService {
                     }//end finally try
         }
             return story;
+    }
+    
+    public void pictureProfileConnection(int userId, int pictureId) {
+        try
+        {
+                Class.forName(JDBC_DRIVER);
+                conn = DriverManager.getConnection(DB_URL, USER, PASS);
+                pstmt = conn.prepareStatement("UPDATE Users SET PicID = ?, LastUpdate=NOW() WHERE UserID = ?");
+                pstmt.setInt(1, pictureId);
+                pstmt.setInt(2, userId);
+                pstmt.executeUpdate();
+        }catch(SQLException se){
+         //Handle errors for JDBC
+         se.printStackTrace();
+        }catch(Exception e){
+         //Handle errors for Class.forName
+         e.printStackTrace();
+    }finally{
+         //finally block used to close resources
+                try{
+                        if(stmt!=null)
+                                stmt.close();
+                }catch(SQLException se2){
+                }// nothing we can do
+                try{
+                        if(conn!=null)
+                                conn.close();
+                }catch(SQLException se){
+                        se.printStackTrace();
+                }//end finally try
+    }
     }
     
     public int insertPhoto(String filePath)
@@ -487,6 +712,10 @@ public class DatabaseService {
             return 0;
     }
     
+	public void uploadPhoto() {
+
+    }
+    
     public void insertPhotoStoryConnection(int storyID, int pictureID)
     {
             try
@@ -520,38 +749,153 @@ public class DatabaseService {
         }
     }
     
-    public ArrayList<String> getPicturePathsOfaPlace(int placeID){
-            ArrayList<String> paths = new ArrayList<String>();
-            try
-            {
-                    Class.forName(JDBC_DRIVER);
-                    conn = DriverManager.getConnection(DB_URL, USER, PASS);
-                    pstmt = conn.prepareStatement("SELECT DISTINCT(Path) from Pictures WHERE PicID IN (SELECT PicID FROM PicturesInStories WHERE StoryID IN (SELECT StoryID FROM StoriesInPlaces WHERE PlaceID = ?))");
-                    pstmt.setInt(1, placeID);
-                    ResultSet rs = pstmt.executeQuery();
-                    while(rs.next())
-                            paths.add(rs.getString("Path"));
-                    return paths;
-                    
-            }catch(SQLException se){
-             //Handle errors for JDBC
-             se.printStackTrace();
-            }catch(Exception e){
-             //Handle errors for Class.forName
-             e.printStackTrace();
+    public ArrayList<Story> getRecommendedStories(int themeId) {
+    	ArrayList<Story> stories = new ArrayList<Story>();
+    	String sql;
+    	if(themeId == 0) {
+    		sql = "SELECT * from Stories order by AvgRate desc limit 5";
+    	}else {
+    		sql = "SELECT * from Stories WHERE themeID = ? order by AvgRate desc limit 5";    		
+    	}
+        try
+        {
+	        Class.forName(JDBC_DRIVER);
+	        conn = DriverManager.getConnection(DB_URL, USER, PASS);
+	        pstmt = conn.prepareStatement(sql);
+	        if(themeId > 0)
+	        	pstmt.setInt(1, themeId);
+	        ResultSet rs = pstmt.executeQuery();
+	        while(rs.next())
+	        	stories.add(findStorybyStoryId(rs.getInt("StoryID")));
+	        return stories;
+                
+        }catch(SQLException se){
+         //Handle errors for JDBC
+         se.printStackTrace();
+        }catch(Exception e){
+         //Handle errors for Class.forName
+         e.printStackTrace();
+		}finally{
+		     //finally block used to close resources
+		    try{
+		            if(stmt!=null)
+		                    stmt.close();
+		    }catch(SQLException se2){
+		    }// nothing we can do
+		    try{
+		            if(conn!=null)
+		                    conn.close();
+		    }catch(SQLException se){
+		            se.printStackTrace();
+		    }//end finally try
+		}
+        return null;
+    }
+    
+    public String getProfilePicturePath(int userId) {
+    	String path = "";
+        try
+        {
+            Class.forName(JDBC_DRIVER);
+            conn = DriverManager.getConnection(DB_URL, USER, PASS);
+            pstmt = conn.prepareStatement("SELECT DISTINCT(Path) from Pictures WHERE PicID IN (SELECT PicID FROM Users WHERE UserID = ?)");
+            pstmt.setInt(1, userId);
+            ResultSet rs = pstmt.executeQuery();
+            while(rs.next())
+            	path = "http://titan.cmpe.boun.edu.tr:8085/image/" + rs.getString("Path");
+            return path;
+                
+        }catch(SQLException se){
+         //Handle errors for JDBC
+         se.printStackTrace();
+        }catch(Exception e){
+         //Handle errors for Class.forName
+         e.printStackTrace();
         }finally{
              //finally block used to close resources
-                    try{
-                            if(stmt!=null)
-                                    stmt.close();
-                    }catch(SQLException se2){
-                    }// nothing we can do
-                    try{
-                            if(conn!=null)
-                                    conn.close();
-                    }catch(SQLException se){
-                            se.printStackTrace();
-                    }//end finally try
+            try{
+                    if(stmt!=null)
+                            stmt.close();
+            }catch(SQLException se2){
+            }// nothing we can do
+            try{
+                    if(conn!=null)
+                            conn.close();
+            }catch(SQLException se){
+                    se.printStackTrace();
+            }//end finally try
+        }    	
+    	return null;
+    }
+    
+    public ArrayList<String> getStoryPicturePath(int storyId) {
+    	ArrayList<String> paths = new ArrayList<String>();
+        try
+        {
+            Class.forName(JDBC_DRIVER);
+            conn = DriverManager.getConnection(DB_URL, USER, PASS);
+            pstmt = conn.prepareStatement("SELECT DISTINCT(Path) from Pictures WHERE PicID IN (SELECT PicID FROM PicturesInStories WHERE StoryID = ?)");
+            pstmt.setInt(1, storyId);
+            ResultSet rs = pstmt.executeQuery();
+            while(rs.next())
+            	paths.add("http://titan.cmpe.boun.edu.tr:8085/image/" + rs.getString("Path"));
+            return paths;
+                
+        }catch(SQLException se){
+         //Handle errors for JDBC
+         se.printStackTrace();
+        }catch(Exception e){
+         //Handle errors for Class.forName
+         e.printStackTrace();
+        }finally{
+             //finally block used to close resources
+            try{
+                    if(stmt!=null)
+                            stmt.close();
+            }catch(SQLException se2){
+            }// nothing we can do
+            try{
+                    if(conn!=null)
+                            conn.close();
+            }catch(SQLException se){
+                    se.printStackTrace();
+            }//end finally try
+        }    	
+    	return null;
+    }
+    
+    public ArrayList<String> getPicturePathsOfaPlace(int placeID){
+        ArrayList<String> paths = new ArrayList<String>();
+        try
+        {
+            Class.forName(JDBC_DRIVER);
+            conn = DriverManager.getConnection(DB_URL, USER, PASS);
+            pstmt = conn.prepareStatement("SELECT DISTINCT(Path) from Pictures WHERE PicID IN (SELECT PicID FROM PicturesInStories WHERE StoryID IN (SELECT StoryID FROM StoriesInPlaces WHERE PlaceID = ?))");
+            pstmt.setInt(1, placeID);
+            ResultSet rs = pstmt.executeQuery();
+            while(rs.next())
+                    paths.add(rs.getString("Path"));
+            return paths;
+                
+        }catch(SQLException se){
+         //Handle errors for JDBC
+         se.printStackTrace();
+        }catch(Exception e){
+         //Handle errors for Class.forName
+         e.printStackTrace();
+        }finally{
+             //finally block used to close resources
+            try{
+                    if(stmt!=null)
+                            stmt.close();
+            }catch(SQLException se2){
+            }// nothing we can do
+            try{
+                    if(conn!=null)
+                            conn.close();
+            }catch(SQLException se){
+                    se.printStackTrace();
+            }//end finally try
         }
             return null;
     }
@@ -623,6 +967,84 @@ public class DatabaseService {
                             se.printStackTrace();
                     }//end finally try
         }
+    }
+
+    public int getFollowerNumber(int userId) {
+    	int result = 0;
+        try
+        {
+                Class.forName(JDBC_DRIVER);
+                conn = DriverManager.getConnection(DB_URL, USER, PASS);
+                pstmt = conn.prepareStatement("SELECT count(1) FROM SubscriptionsToUsers WHERE FollowedID = ? and IsActive = 1");
+                pstmt.setInt(1, userId);
+                ResultSet rs = pstmt.executeQuery();
+                
+                while(rs.next())
+                {
+                        result = rs.getInt("count(1)");
+                }
+                return result;
+                
+        }catch(SQLException se){
+         //Handle errors for JDBC
+         se.printStackTrace();
+        }catch(Exception e){
+         //Handle errors for Class.forName
+         e.printStackTrace();
+    }finally{
+         //finally block used to close resources
+                try{
+                        if(stmt!=null)
+                                stmt.close();
+                }catch(SQLException se2){
+                }// nothing we can do
+                try{
+                        if(conn!=null)
+                                conn.close();
+                }catch(SQLException se){
+                        se.printStackTrace();
+                }//end finally try
+    }
+        return 0;
+    }
+    
+    public int getRememberedNumber(int storyId) {
+    	int result = 0;
+        try
+        {
+                Class.forName(JDBC_DRIVER);
+                conn = DriverManager.getConnection(DB_URL, USER, PASS);
+                pstmt = conn.prepareStatement("SELECT count(1) FROM IRememberThat WHERE StoryID = ?");
+                pstmt.setInt(1, storyId);
+                ResultSet rs = pstmt.executeQuery();
+                
+                while(rs.next())
+                {
+                        result = rs.getInt("count(1)");
+                }
+                return result;
+                
+        }catch(SQLException se){
+         //Handle errors for JDBC
+         se.printStackTrace();
+        }catch(Exception e){
+         //Handle errors for Class.forName
+         e.printStackTrace();
+    }finally{
+         //finally block used to close resources
+                try{
+                        if(stmt!=null)
+                                stmt.close();
+                }catch(SQLException se2){
+                }// nothing we can do
+                try{
+                        if(conn!=null)
+                                conn.close();
+                }catch(SQLException se){
+                        se.printStackTrace();
+                }//end finally try
+    }
+        return 0;
     }
     
     public boolean isRemembered(int userId, int storyId)
@@ -1218,6 +1640,33 @@ public class DatabaseService {
 				}
             }
     }
+
+    public ArrayList<String> getSimilar(String query) throws IOException{
+        ArrayList<String> sim = new ArrayList<String>();
+
+        String requestURL = "https://www.googleapis.com/freebase/v1/search?lang=en&indent=true&key=AIzaSyDaFirSUUeGlNSg7bxGcyqdf9L8NzHKA10&query=" + query;
+        URL freebaseRequest = new URL(requestURL);
+        URLConnection connection = freebaseRequest.openConnection();  
+        connection.setDoOutput(true);  
+
+        Scanner scanner = new Scanner(freebaseRequest.openStream());
+        String response = scanner.useDelimiter("\\Z").next();
+        scanner.close();
+        JsonElement jelement = new JsonParser().parse(response);
+        JsonObject  jobject = jelement.getAsJsonObject();
+        JsonArray jsonArray = jobject.getAsJsonArray("result");
+        int tmp = 0;
+        if(jsonArray.size() > 3)
+        	tmp = 3;
+        else
+        	tmp = jsonArray.size();
+        for(int i = 0; i < tmp; i++) {
+            jobject = jsonArray.get(i).getAsJsonObject();	
+            System.out.println(jobject.get("name").getAsString());
+            sim.add(jobject.get("name").getAsString());
+        }
+        return sim;
+}
     
     public ArrayList<String> findTagIds(String text)
     {
@@ -1305,6 +1754,47 @@ public class DatabaseService {
 				}
             }
             return stories;
+    }
+    
+    public ArrayList<User> searchUser(String text)
+    {
+            if(text == null || text.equals(""))
+                    return new ArrayList<User>();
+            text = text.toLowerCase();
+            ArrayList<User> users = new ArrayList<User>();
+            try{
+                    conn = getConnection();
+                    pstmt = conn.prepareStatement("SELECT DISTINCT(UserID) FROM Users WHERE Name LIKE ?");
+                    pstmt.setString(1,  "%" + text + "%");
+                    ResultSet rs = pstmt.executeQuery();
+                    while(rs.next())
+                    {
+                            users.add(findUserById(rs.getInt("UserID")));
+                    }
+                    return users;
+            }catch(SQLException | ClassNotFoundException se){
+                    //Handle errors for JDBC
+                    se.printStackTrace();
+            }catch(Exception e){
+                    //Handle errors for Class.forName
+                    e.printStackTrace();
+            }finally{
+                    //finally block used to close resources
+                    try{
+                            if(stmt!=null)
+                                    stmt.close();
+                    }catch(SQLException se2){
+                    }// nothing we can do
+                    try{
+                            if(conn!=null)
+                                    conn.close();
+                    }catch(SQLException se){
+                            se.printStackTrace();
+                    }//end finally try
+            }
+
+            return users;
+
     }
     
     //search in the content and tags of a story
@@ -1410,4 +1900,103 @@ public class DatabaseService {
 	{
 		
 	}
+	
+	public int findUserIdByStoryId(int storyId) {
+		int userId = 0;
+		try
+		{
+			Class.forName(JDBC_DRIVER);
+			conn = DriverManager.getConnection(DB_URL, USER, PASS);
+			pstmt = conn.prepareStatement("SELECT UserID FROM Stories WHERE StoryID = ? and IsDeleted = 0");
+			pstmt.setInt(1, storyId);
+			ResultSet rs = pstmt.executeQuery();
+			
+			while(rs.next())
+			{
+				userId = rs.getInt("UserID");
+			}
+			return userId;
+		}catch(SQLException se){
+	         //Handle errors for JDBC
+	         se.printStackTrace();
+		}catch(Exception e){
+	         //Handle errors for Class.forName
+	         e.printStackTrace();
+	    }finally{
+	         //finally block used to close resources
+	   		try{
+	   			if(stmt!=null)
+	   				stmt.close();
+	   		}catch(SQLException se2){
+	   		}// nothing we can do
+	   		try{
+	   			if(conn!=null)
+	   				conn.close();
+	   		}catch(SQLException se){
+	   			se.printStackTrace();
+	   		}//end finally try
+	    }
+		return 0;
+	}
+	
+    public int calculateLevel(int xp)
+    {
+            int level = (int) Math.sqrt(xp);
+            level = level-2;
+            return level;
+    }
+    
+    public void setXPandLevel(int userid, int point)
+    {
+            if(userid != -1 && point != 0)
+            {
+                    try{
+                            conn = getConnection();
+                            pstmt = conn.prepareStatement("SELECT * FROM Users WHERE UserID = ?");
+                            pstmt.setInt(1, userid);
+                            ResultSet rs = pstmt.executeQuery();
+                            int xp = 0;
+                            if(rs.next())
+                            {
+                                    xp = rs.getInt("ExperiencePoint");
+                            }
+                            xp += point;
+                            int level = 0;
+                            if(xp >= 9)
+                            {
+                                    level = calculateLevel(xp);
+                            }
+                            pstmt = conn.prepareStatement("UPDATE Users SET ExperiencePoint = ?, LastUpdate=NOW(), Level = ? WHERE UserID = ?");
+                            pstmt.setInt(1, xp);
+                            pstmt.setInt(2, level);
+                            pstmt.setInt(3, userid);
+                            pstmt.executeUpdate();
+                    }catch(SQLException | ClassNotFoundException se){
+                            //Handle errors for JDBC
+                            se.printStackTrace();
+                    }catch(Exception e){
+                            //Handle errors for Class.forName
+                            e.printStackTrace();
+                    }finally{
+                            //finally block used to close resources
+                            try{
+                                    if(stmt!=null)
+                                            stmt.close();
+                            }catch(SQLException se2){
+                            }// nothing we can do
+                            try{
+                                    if(conn!=null)
+                                            conn.close();
+                            }catch(SQLException se){
+                                    se.printStackTrace();
+                            }//end finally try
+                    }
+            }
+    }
+    
+    public void gamification(int userid1, int point1, int userid2, int point2)
+    {
+            setXPandLevel(userid1, point1);
+            setXPandLevel(userid2, point2);
+    }
 }

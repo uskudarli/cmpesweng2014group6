@@ -2,6 +2,7 @@
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,16 +13,16 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 
 /**
- * Servlet implementation class AddComment
+ * Servlet implementation class GetRecommendedStories
  */
-@WebServlet("/AddComment")
-public class AddComment extends HttpServlet {
+@WebServlet("/GetRecommendedStories")
+public class GetRecommendedStories extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public AddComment() {
+    public GetRecommendedStories() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -31,6 +32,17 @@ public class AddComment extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		int themeId = Integer.parseInt(request.getParameter("themeId"));
+		DatabaseService db = new DatabaseService();
+		ArrayList<Story> stories = db.getRecommendedStories(themeId);
+		response.reset();
+		response.setContentType("application/json");
+		response.setCharacterEncoding("UTF-8");
+		Gson gson = new Gson();
+		PrintWriter pw = response.getWriter();
+		pw.print(gson.toJson(stories));
+		pw.flush();
+		pw.close();
 	}
 
 	/**
@@ -38,25 +50,14 @@ public class AddComment extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		String email = request.getParameter("mail");
-		int storyId = Integer.parseInt(request.getParameter("storyId"));
-		String comment = request.getParameter("comment");
 		DatabaseService db = new DatabaseService();
-		User user = db.findUserByEmail(email);
-		db.insertComment(comment, storyId, user.getUserId());
-        //gamification
-        //Adding new comment = +1 points to commenter, +2 points to story owner
-		int tmpId = db.findUserIdByStoryId(storyId);
-        db.gamification(user.getUserId(), 1, tmpId, 2);
-    	RegisterResult registerResult  = new RegisterResult();
+		ArrayList<Story> stories = db.getRecommendedStories(0);
 		response.reset();
 		response.setContentType("application/json");
 		response.setCharacterEncoding("UTF-8");
-		registerResult.setMessage("comment is inserted successfully");
-		registerResult.setResult(true);
-        Gson gson = new Gson();
+		Gson gson = new Gson();
 		PrintWriter pw = response.getWriter();
-		pw.print(gson.toJson(registerResult));
+		pw.print(gson.toJson(stories));
 		pw.flush();
 		pw.close();
 	}

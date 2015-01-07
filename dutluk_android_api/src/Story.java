@@ -23,8 +23,11 @@ public class Story {
         private Date absoluteDate;
         private String approximateDate;
         private DatabaseService db;
+        public String placeName;
+        public int placeId;
+        public int rememberNumber;
 
-        public Story()
+		public Story()
         {
                 
         }
@@ -57,6 +60,12 @@ public class Story {
 					  	story.setIsDeleted(rs.getInt("isDeleted"));
 					  	story.setReportCount(rs.getInt("ReportCount"));
 					  	story.setAvgRate(rs.getInt("AvgRate"));
+					  	story.setPlaceName(db.findPlacebyPlaceId(db.findPlaceIdByStoryId(rs.getInt("StoryID"))).getName());
+					  	story.setPlaceId(db.findPlaceIdByStoryId(rs.getInt("StoryID")));
+						story.setCreatedOn(rs.getDate("CreationDate"));
+						story.setUpdatedOn(rs.getDate("LastUpdate"));
+						story.setAbsoluteDate(rs.getDate("StoryDateAbsolute"));
+						story.setApproximateDate(rs.getString("StoryDateApproximate"));
 			            stories[count] = story;
 			            count++;
 			        }
@@ -78,7 +87,7 @@ public class Story {
                 String sql = "INSERT INTO Stories (UserID, Content, ThemeID, IsDeleted, ReportCount, AvgRate, CreationDate, LastUpdate, StoryDateApproximate) VALUES(";
                 sql += "'" + userId + "',";
                 sql += "'" + content + "',";
-                sql += "'" + 4 + "',";  
+                sql += "'" + themeId + "',";  
                 sql += "'" + isDeleted + "',";
                 sql += "'" + reportCount + "',";
                 sql += "'" + avgRate + "',";
@@ -214,5 +223,29 @@ public class Story {
         public void setStoryId(int storyId) {
         	this.storyId = storyId;
         }
+
+		public String getPlaceName() {
+			return placeName;
+		}
+
+		public void setPlaceName(String placeName) {
+			this.placeName = placeName;
+		}
+
+		public int getPlaceId() {
+			return placeId;
+		}
+
+		public void setPlaceId(int placeId) {
+			this.placeId = placeId;
+		}
+
+		public int getRememberNumber() {
+			return rememberNumber;
+		}
+
+		public void setRememberNumber(int rememberNumber) {
+			this.rememberNumber = rememberNumber;
+		}
 
 }

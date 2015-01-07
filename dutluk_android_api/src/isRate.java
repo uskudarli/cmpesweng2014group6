@@ -2,10 +2,6 @@
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,16 +12,16 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 
 /**
- * Servlet implementation class GetStoryRate
+ * Servlet implementation class isRate
  */
-@WebServlet("/GetStoryRate")
-public class GetStoryRate extends HttpServlet {
+@WebServlet("/isRate")
+public class isRate extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public GetStoryRate() {
+    public isRate() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -35,44 +31,34 @@ public class GetStoryRate extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		int userId = Integer.parseInt(request.getParameter("userId"));
 		int storyId = Integer.parseInt(request.getParameter("storyId"));
 		DatabaseService db = new DatabaseService();
-		String sql = "SELECT ROUND(AVG(Rate),2) FROM Rate WHERE StoryID='"+storyId+"';";
-		ResultSet rs = null;
-		Connection con;
-		RegisterResult registerResult  = new RegisterResult();
-		try {
-			con = db.getConnection();
-			Statement statement = con.createStatement();
-			rs =statement.executeQuery(sql);
-			double averageRate = 0.0;
-			if(rs.next())
-				averageRate = rs.getDouble(1);
+		int rate = db.getRate(userId, storyId);
+		if(rate == 0) {
+	    	RegisterResult registerResult  = new RegisterResult();
 			response.reset();
 			response.setContentType("application/json");
 			response.setCharacterEncoding("UTF-8");
-			registerResult.setMessage("" + averageRate);
-			registerResult.setResult(true);
-			Gson gson = new Gson();
-			PrintWriter pw = response.getWriter();
-			pw.print(gson.toJson(registerResult));
-			pw.flush();
-			pw.close();
-			statement.close();
-			con.close();
-		} catch (ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			response.reset();
-			response.setContentType("application/json");
-			response.setCharacterEncoding("UTF-8");
-			registerResult.setMessage("error occured");
+			registerResult.setMessage("no rate is found for this story and user");
 			registerResult.setResult(false);
-			Gson gson = new Gson();
+	        Gson gson = new Gson();
 			PrintWriter pw = response.getWriter();
 			pw.print(gson.toJson(registerResult));
 			pw.flush();
 			pw.close();
-			e.printStackTrace();
+		}else {
+	    	RegisterResult registerResult  = new RegisterResult();
+			response.reset();
+			response.setContentType("application/json");
+			response.setCharacterEncoding("UTF-8");
+			registerResult.setMessage("ok!");
+			registerResult.setResult(true);
+	        Gson gson = new Gson();
+			PrintWriter pw = response.getWriter();
+			pw.print(gson.toJson(registerResult));
+			pw.flush();
+			pw.close();
 		}
 	}
 

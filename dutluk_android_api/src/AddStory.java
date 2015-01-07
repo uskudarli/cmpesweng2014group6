@@ -46,6 +46,9 @@ public class AddStory extends HttpServlet {
 		String email = request.getParameter("mail");
 		DatabaseService db = new DatabaseService();
 		user = db.findUserByEmail(email);
+        //gamification
+        //Adding new story = +10 points
+        db.gamification(user.getUserId(), 10, -1, 0);
 		String content = request.getParameter("story");
 		story.setContent(content);
 		Double lat = Double.parseDouble(request.getParameter("lat"));
@@ -53,8 +56,10 @@ public class AddStory extends HttpServlet {
 		String date = request.getParameter("time");
 		String placeTag = request.getParameter("placeTag");
 		String storyTag = request.getParameter("storyTag");
+		int themeId = Integer.parseInt(request.getParameter("themeId"));
 		story.setApproximateDate(date);
 		story.setUserId(user.getUserId());
+		story.setThemeId(themeId);
 		int storyId = story.addStory();
 		place.setLatitude(lat);
 		place.setLongtitude(lng);
@@ -71,7 +76,7 @@ public class AddStory extends HttpServlet {
 			db.insertTagStoryConnection(list, storyId);
 		}
 		if(placeId>0){
-			loginResult.setMessage("successful");
+			loginResult.setMessage("" + storyId);
 			loginResult.setResult(true);
 		}
 		response.reset();

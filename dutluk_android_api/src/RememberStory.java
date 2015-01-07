@@ -48,11 +48,15 @@ public class RememberStory extends HttpServlet {
 		response.setContentType("application/json");
 		response.setCharacterEncoding("UTF-8");
 		boolean result = false;
+		int tmpId = db.findUserIdByStoryId(Integer.parseInt(storyId));
         if(action.equals("remember"))
         {
                 result = db.remember(user.getUserId(), Integer.parseInt(storyId));
                 if(result == true) {
                 	registerResult.setMessage("user is remembered successfully");
+                    //gamification
+                    //Remembering story = +1 points for story owner
+                    db.gamification(tmpId, 1, -1, 0);
                 }else {
                 	registerResult.setMessage("error occured");
                 }
@@ -63,6 +67,7 @@ public class RememberStory extends HttpServlet {
                 result = db.dontRemember(user.getUserId(), Integer.parseInt(storyId));
                 if(result == true) {
                 	registerResult.setMessage("user is not remembered successfully");
+                    db.gamification(tmpId, -1, -1, 0);
                 }else {
                 	registerResult.setMessage("error occured");
                 }

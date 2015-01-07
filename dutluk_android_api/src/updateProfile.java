@@ -2,6 +2,9 @@
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -37,13 +40,21 @@ public class updateProfile extends HttpServlet {
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		User user = new User();
+		DatabaseService db = new DatabaseService();
 		user.setName(request.getParameter("name"));
-		//user.setBirthdate(request.getParameter("birthdate"));
+		String dateInString = request.getParameter("birthDate");
+		try {
+			user.setBirthdate(dateInString);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		user.setGender(request.getParameter("gender"));
 		user.setPhone(request.getParameter("phone"));
 		user.setBio(request.getParameter("bio"));
 		user.setEmail(request.getParameter("email"));
-		Boolean result = user.updateProfile(request.getParameter("email"));
+		user.setUserId(db.findUserByEmail(request.getParameter("email")).getUserId());
+		Boolean result = db.UpdateProfile(user);
 		updateProfileResult registerResult  = new updateProfileResult();
 		response.reset();
 		response.setContentType("application/json");

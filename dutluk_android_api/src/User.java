@@ -1,5 +1,7 @@
 
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import com.mysql.jdbc.log.Log;
@@ -8,8 +10,8 @@ public class User {
 	private String Name;
 	private String Email;
 	private Date Birthdate;
-	private enum Gender {
-		Male, Female
+	enum Gender {
+		Male, Female, Unspecified
 	};
 	private Gender gender;
 	private String Phone;
@@ -22,6 +24,7 @@ public class User {
 	private Date CreatedOn;
 	private Date UpdatedOn;
 	private DatabaseService db;
+	public int followerNumber;
 	public User()
 	{
 		
@@ -85,10 +88,16 @@ public class User {
 	public Gender getGender() {
 		return this.gender;
 	}
-
-	public void setGender(String gender) {
-
-	}
+	
+    public void setGender(String s) {
+        if(s.toLowerCase().startsWith("m")){
+                this.gender = Gender.Male;
+        }else if(s.toLowerCase().startsWith("f")){
+                this.gender = Gender.Female;
+        }else{
+                this.gender = Gender.Unspecified;
+        }
+    }
 	public String getEmail() {
 		return Email;
 	}
@@ -104,6 +113,12 @@ public class User {
 	public void setBirthdate(Date birthdate) {
 		Birthdate = birthdate;
 	}
+	
+    public void setBirthdate(String s) throws ParseException{
+        Date date = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH).parse(s);
+        //System.out.print(date);
+        this.setBirthdate(date);
+}
 
 	public String getPhone() {
 		return Phone;
@@ -183,6 +198,14 @@ public class User {
 
 	public void setDb(DatabaseService db) {
 		this.db = db;
+	}
+
+	public int getFollowerNumber() {
+		return followerNumber;
+	}
+
+	public void setFollowerNumber(int followerNumber) {
+		this.followerNumber = followerNumber;
 	}
 
 }
