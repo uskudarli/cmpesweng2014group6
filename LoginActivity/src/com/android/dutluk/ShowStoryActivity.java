@@ -106,7 +106,7 @@ public class ShowStoryActivity extends Activity implements OnItemSelectedListene
 	Button commentsButton;
 	Button subscribeWriterButton;
 	Button subscribePlaceButton;
-
+	int rememCount = -1;
 	String story_id = "" ;
 
 	String owner = "";
@@ -162,14 +162,37 @@ public class ShowStoryActivity extends Activity implements OnItemSelectedListene
 		story_id = comingIntent.getStringExtra("story_id");
 		place_id = comingIntent.getStringExtra("place_id");
 		placeName = comingIntent.getStringExtra("placeName");
+		owner = comingIntent.getStringExtra("owner");
+		storyOwnerID = comingIntent.getStringExtra("storyOwnerID");
+	
+		rateSpinner = (Spinner)findViewById(R.id.spinnerRate);
+		ArrayAdapter<String>adapter = new ArrayAdapter<String>(ShowStoryActivity.this,
+				android.R.layout.simple_spinner_item,rateList);
+
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+		rateList.add("Rate Story");
+		rateList.add("1");
+		rateList.add("2");
+		rateList.add("3");
+		rateList.add("4");
+		rateList.add("5");
+
+
+		rateSpinner.setAdapter(adapter);
+		rateSpinner.setSelection(0);
+		
+
+		lv = (ListView) findViewById(R.id.commentList);
+
+		
+		
 		RequestParams params = new RequestParams();
 		params.put("storyId", story_id);
 		invokeWSforGetStory(params);
 		GetStoryPicture();
-
-		owner = comingIntent.getStringExtra("owner");
-
-		storyOwnerID = comingIntent.getStringExtra("storyOwnerID");
+		
+		
 
 		Log.e("onCreate-owner-storyOwnerID", owner + "-" + storyOwnerID);
 
@@ -213,25 +236,6 @@ public class ShowStoryActivity extends Activity implements OnItemSelectedListene
 
 		}
 
-		rateSpinner = (Spinner)findViewById(R.id.spinnerRate);
-		ArrayAdapter<String>adapter = new ArrayAdapter<String>(ShowStoryActivity.this,
-				android.R.layout.simple_spinner_item,rateList);
-
-		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-		rateList.add("Rate Story");
-		rateList.add("1");
-		rateList.add("2");
-		rateList.add("3");
-		rateList.add("4");
-		rateList.add("5");
-
-
-		rateSpinner.setAdapter(adapter);
-		rateSpinner.setSelection(0);
-		
-
-		lv = (ListView) findViewById(R.id.commentList);
 
 
 		new MyTask().execute();
@@ -417,7 +421,7 @@ public class ShowStoryActivity extends Activity implements OnItemSelectedListene
 					else {
 						rateSpinner.setOnItemSelectedListener(ShowStoryActivity.this);
 					}
-						
+					
 						
 
 				} catch (JSONException e) {
@@ -519,7 +523,7 @@ public class ShowStoryActivity extends Activity implements OnItemSelectedListene
 		prgDialog.show();
 		// Make RESTful web service call using AsyncHttpClient object
 		AsyncHttpClient client = new AsyncHttpClient();
-		client.post(Utility.SERVER_NAME+ "GetStoryRate?",params ,new AsyncHttpResponseHandler() {
+		client.get(Utility.SERVER_NAME+ "GetStoryRate?",params ,new AsyncHttpResponseHandler() {
 			// When the response returned by REST has Http response code '200'
 			@Override
 			public void onSuccess(String response) {
@@ -528,8 +532,9 @@ public class ShowStoryActivity extends Activity implements OnItemSelectedListene
 				try {
 					// JSON Object
 					JSONObject obj = new JSONObject(response);
+		
 					// When the JSON response has status boolean value assigned with true
-					Double temp_rate = obj.getDouble("message");
+					String temp_rate = obj.getString("message");
 					rateTV.setText(temp_rate+ "");
 					Log.e("getRate.success", "a" + temp_rate);
 
@@ -1014,7 +1019,7 @@ public class ShowStoryActivity extends Activity implements OnItemSelectedListene
 			}
 		});
 	}
-int rememCount = -1;
+
 	public void setDefaultValues(JSONObject obj) throws JSONException{
 		
 		rememCount = obj.getInt("rememberNumber");
@@ -1025,8 +1030,8 @@ int rememCount = -1;
 
 
 		getThemeName(obj.getString("themeId"));
-
-		rateTV.setText(obj.getString("avgRate"));
+		getRate();
+	//	rateTV.setText(obj.getString("avgRate"));
 		
 	
 	}
@@ -1298,7 +1303,7 @@ int rememCount = -1;
 	public boolean onCreateOptionsMenu(Menu menu) {
 
 		inflater = getMenuInflater();
-		inflater.inflate(R.menu.recommendation_menu, menu);
+		inflater.inflate(R.menu.showstory_menu, menu);
 
 		return super.onCreateOptionsMenu(menu);
 

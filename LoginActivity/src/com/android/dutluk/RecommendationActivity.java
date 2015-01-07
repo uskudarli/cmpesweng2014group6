@@ -63,7 +63,7 @@ public class RecommendationActivity extends Activity {
 	ListView lvTopRated;
 	ListView lvRecomForYou;
 	Boolean isInput = true;
-
+	int count = 0 ;
 	ArrayList<Integer> storyIDsTopRated = new ArrayList<Integer>();
 	ArrayList<Integer> placeIDListTopRated = new ArrayList<Integer>();
 	ArrayList<String> placeNameListTopRated = new ArrayList<String>();
@@ -287,9 +287,10 @@ public class RecommendationActivity extends Activity {
 						story = content;
 					else 
 						story = content.substring(0,50)+ "...";
-					String user_id = objTopRated.getString("userId");
-					Utility.nameFromID(user_id);
-					String owner = Utility.userNameFromID;
+//					String user_id = objTopRated.getString("userId");
+//					Utility.nameFromID(user_id);
+//					String owner = Utility.userNameFromID;
+					String owner = objTopRated.getString("username");
 					int story_id = objTopRated.getInt("storyId");
 					String placeName = objTopRated.getString("placeName");
 					int place_id = objTopRated.getInt("placeId");
@@ -325,7 +326,13 @@ public class RecommendationActivity extends Activity {
 			//http://titan.cmpe.boun.edu.tr:8085/dutluk_android_api/GetRecommendedStories?themeId=1(GET)
 			String urlRecomForYou = Utility.SERVER_NAME + "GetRecommendedStories?" + URLEncodedUtils.format(pairs, "utf-8");	
 			HttpGet httpgetRecomForYou = new HttpGet(urlRecomForYou);
-			while(recomForYouList.size() == 0) {
+			while(recomForYouList.size() == 0 && count < 3) {
+				count++;
+				recomForYouList.clear();
+				storyIDsRecomForYou.clear();
+				ownerListRecomForYou.clear();
+				placeIDListRecomForYou.clear();
+				placeNameListRecomForYou.clear();
 				try {
 
 					HttpResponse getResponseRecomForYou = httpclient.execute(httpgetRecomForYou);
@@ -354,9 +361,12 @@ public class RecommendationActivity extends Activity {
 							story = content;
 						else 
 							story = content.substring(0,50)+ "...";
-						String user_id = objRecomForYou.getString("userId");
-						Utility.nameFromID(user_id);
-						String owner = Utility.userNameFromID;
+
+						
+//						String user_id = objRecomForYou.getString("userId");
+//						Utility.nameFromID(user_id);
+//						String owner = Utility.userNameFromID;
+						String owner = objRecomForYou.getString("username");
 						int story_id = objRecomForYou.getInt("storyId");
 						String placeName = objRecomForYou.getString("placeName");
 						int place_id = objRecomForYou.getInt("placeId");
@@ -428,7 +438,7 @@ public class RecommendationActivity extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 
 		inflater = getMenuInflater();
-		inflater.inflate(R.menu.profile_menu, menu);
+		inflater.inflate(R.menu.recommendation_menu, menu);
 
 		return super.onCreateOptionsMenu(menu);
 

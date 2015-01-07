@@ -305,10 +305,11 @@ boolean imageCheck = false;
 						showExpPoint();
 
 					
-						Log.e("AddStory.success", "You are successfully add new story!");
+						Log.e("AddStory.success", imageCheck + "a");
 
 						story_id = obj.getString("message");
-						Log.e("AddStory.story_id", story_id + "a");
+						//Log.e("AddStory.story_id", imageCheck + "a");
+						
 						if(imageCheck)
 							uploadImage();
 					} 
