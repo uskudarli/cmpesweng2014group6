@@ -1,0 +1,1 @@
+Click [here](http://i.imgur.com/7VnWwpU.png) to access the project plan.

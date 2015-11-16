@@ -1,0 +1,3 @@
+Please click [here](https://docs.google.com/spreadsheets/d/1Vi2MiNBQTjcoS23cacTYG-RMjFQHVfmNSH6DqE8FCu8/pubhtml?gid=0&amp;single=true&amp;widget=true&amp;headers=false) to display current responsibility assignment matrix.
+
+Please click [here](https://docs.google.com/spreadsheets/d/1Vi2MiNBQTjcoS23cacTYG-RMjFQHVfmNSH6DqE8FCu8/edit#gid=0) to update the matrix. Please be aware that it might require further authentication.
